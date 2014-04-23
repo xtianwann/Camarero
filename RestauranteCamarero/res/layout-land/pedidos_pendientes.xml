@@ -2,28 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="2" >
+    android:orientation="horizontal"
+    android:weightSum="3" >
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="1"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
         android:background="@drawable/resumen_color"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#000000"
-            android:weightSum="5" >
+            android:weightSum="18" >
 
             <TextView
-                android:id="@+id/tv_1"
+                android:id="@+id/seccionP"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Cant."
+                android:layout_weight="2"
+                android:text="Seccion"
                 android:textColor="#FFFFFF"
                 android:textSize="16dip"
                 android:textStyle="bold"
@@ -31,11 +31,56 @@
             </TextView>
 
             <TextView
-                android:id="@+id/tv_2"
+                android:id="@+id/mesaP"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="4"
+                android:text="Mesa"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:typeface="serif" >
+            </TextView>
+            <TextView
+                android:id="@+id/cantidadP"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="U"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:typeface="serif" >
+            </TextView>
+            
+            <TextView
+                android:id="@+id/productoP"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="9"
                 android:text="Producto"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:typeface="serif" >
+            </TextView>
+            <TextView
+                android:id="@+id/listoP"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="L"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:typeface="serif" >
+            </TextView>
+            <TextView
+                android:id="@+id/servidoP"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="S"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -44,20 +89,20 @@
         </LinearLayout>
 
         <ListView
-            android:id="@+id/lv_country"
+            android:id="@+id/pedidosPendientes"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
         </ListView>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0px"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         style="?android:attr/buttonBarButtonStyle"
         android:background="@drawable/acciones_color"
         android:orientation="vertical"
-        android:weightSum="6" >
+        android:weightSum="5" >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0px"
@@ -74,7 +119,7 @@
                 android:text="0"     
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:textStyle="bold" >
             </TextView>
             <Button
@@ -82,7 +127,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="2"
                 android:background="#FFFFFF"
                 android:text="X" />
@@ -100,7 +145,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="7" />
@@ -110,7 +155,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="8" />
@@ -120,7 +165,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="9" />
@@ -130,7 +175,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="Cambiar" />
@@ -147,7 +192,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="6" />
@@ -157,7 +202,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="5" />
@@ -167,7 +212,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="4" />
@@ -177,7 +222,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="+" />
@@ -194,7 +239,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="1" />
@@ -204,7 +249,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="2" />
@@ -214,7 +259,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="3" />
@@ -224,7 +269,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="-" />
@@ -240,7 +285,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="2"
                 android:background="#FFFFFF"
                 android:text="0" />
@@ -250,36 +295,10 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
+                android:layout_margin="3dip"
                 android:layout_weight="2"
                 android:background="#FFFFFF"
                 android:text="CE" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="1"
-            android:background="@drawable/acciones_color">
-
-            <Button
-                android:id="@+id/enviar"
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
-                android:layout_weight="2"
-                android:background="#FFFFFF"
-                android:text="Enviar" />
-
-            <Button
-                android:id="@+id/pedidosPendientes"
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_margin="2dip"
-                android:layout_weight="2"
-                android:background="#FFFFFF"
-                android:text="Pedidos" />
         </LinearLayout>
     </LinearLayout>
 

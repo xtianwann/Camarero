@@ -18,6 +18,7 @@ import prg.pi.restaurantecamarero.restaurante.Pedido;
 import prg.pi.restaurantecamarero.xml.XMLDameloTodo;
 import prg.pi.restaurantecamarero.xml.XMLPedidosComanda;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,14 +37,14 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class FragmentResumen extends Fragment {
 	private ListView resumen;
-	private Button limpiar, cambiar, mas, menos, x, enviar;
+	private Button pedidosPendientes, cambiar, mas, menos, x, enviar;
 	private Calculadora calculadora;
 	public HashMap<Producto, Integer> pedidos = new HashMap<Producto, Integer>();
 	private int seleccionado = -1;
 	private AdaptadorResumen adaptador;
 	private ResumenListener resumenListener;
 
-	public HashMap<Producto, Integer> getPedido() {
+	public HashMap<Producto, Integer>  getPedido() {
 		return pedidos;
 	}
 
@@ -284,6 +285,7 @@ public class FragmentResumen extends Fragment {
 									c.run();
 									try {
 										c.join();
+										borrarPedidos();
 									} catch (InterruptedException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -296,6 +298,13 @@ public class FragmentResumen extends Fragment {
 			}
 
 		});
+		pedidosPendientes = (Button) getView().findViewById(R.id.pedidosPendientes);
+		pedidosPendientes.setOnClickListener(new AdapterView.OnClickListener() {
+			public void onClick(View view) {
+				Intent intencion = new Intent(getView().getContext(),ActivityPedidosPendientes.class);
+				startActivity(intencion);
+			}
+		});
 	}
 
 	public interface ResumenListener {
@@ -304,5 +313,9 @@ public class FragmentResumen extends Fragment {
 
 	public void setResumenListener(ResumenListener resumenListener) {
 		this.resumenListener = resumenListener;
+	}
+	public void borrarPedidos() {
+		pedidos.clear();
+		adaptador.notifyDataSetChanged();
 	}
 }

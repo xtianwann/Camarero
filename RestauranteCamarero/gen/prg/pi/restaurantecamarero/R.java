@@ -29,9 +29,9 @@ public final class R {
         public static final int textos_color=0x7f020005;
     }
     public static final class id {
-        public static final int TextView01=0x7f080020;
-        public static final int TextView02=0x7f080021;
-        public static final int action_settings=0x7f080022;
+        public static final int TextView01=0x7f08002c;
+        public static final int TextView02=0x7f08002d;
+        public static final int action_settings=0x7f08002e;
         public static final int c0=0x7f080019;
         public static final int c1=0x7f080015;
         public static final int c2=0x7f080016;
@@ -43,6 +43,8 @@ public final class R {
         public static final int c8=0x7f08000e;
         public static final int c9=0x7f08000f;
         public static final int cambiar=0x7f080010;
+        public static final int cantidadP=0x7f080021;
+        public static final int cantidadPendiente=0x7f080027;
         public static final int ce=0x7f08001a;
         public static final int enviar=0x7f08001b;
         public static final int fragmentCategorias=0x7f080003;
@@ -50,14 +52,24 @@ public final class R {
         public static final int fragmentResumen=0x7f080002;
         public static final int fragmentSeccionMesas=0x7f080000;
         public static final int labelCantidadNombre=0x7f080004;
-        public static final int labelProductoNombre=0x7f08001f;
+        public static final int labelProductoNombre=0x7f08002b;
         public static final int labelProductos=0x7f080005;
         public static final int listaCategorias=0x7f080006;
         public static final int listaProductos=0x7f080007;
+        public static final int listoP=0x7f080023;
+        public static final int listoPendiente=0x7f080029;
         public static final int lv_country=0x7f08000a;
         public static final int mas=0x7f080014;
         public static final int menos=0x7f080018;
-        public static final int servir=0x7f08001c;
+        public static final int mesaP=0x7f080020;
+        public static final int mesaPendiente=0x7f080026;
+        public static final int pedidosPendientes=0x7f08001c;
+        public static final int productoP=0x7f080022;
+        public static final int productoPendiente=0x7f080028;
+        public static final int seccionP=0x7f08001f;
+        public static final int seccionPendiente=0x7f080025;
+        public static final int servidoP=0x7f080024;
+        public static final int servidoPendiente=0x7f08002a;
         public static final int spinnerMesas=0x7f08001d;
         public static final int spinnerSeccion=0x7f08001e;
         public static final int total=0x7f08000b;
@@ -74,8 +86,10 @@ public final class R {
         public static final int fragment_productos=0x7f030005;
         public static final int fragment_resumen=0x7f030006;
         public static final int mesasseccionspinner=0x7f030007;
-        public static final int productoslist=0x7f030008;
-        public static final int resumen_list=0x7f030009;
+        public static final int pedidos_pendientes=0x7f030008;
+        public static final int pedidos_pendientes_list=0x7f030009;
+        public static final int productoslist=0x7f03000a;
+        public static final int resumen_list=0x7f03000b;
     }
     public static final class menu {
         public static final int main=0x7f070000;

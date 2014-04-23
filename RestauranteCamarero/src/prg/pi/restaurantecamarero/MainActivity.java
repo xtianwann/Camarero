@@ -3,6 +3,7 @@ package prg.pi.restaurantecamarero;
 import prg.pi.restaurantecamarero.FragmentProductos.ProductoListener;
 import prg.pi.restaurantecamarero.FragmentCantidades.CantidadListener;
 import prg.pi.restaurantecamarero.FragmentResumen.ResumenListener;
+import prg.pi.restaurantecamarero.FragmentSeccionMesas.SeccionesMesasListener;
 import prg.pi.restaurantecamarero.restaurante.Cantidad;
 import prg.pi.restaurantecamarero.restaurante.Mesa;
 import prg.pi.restaurantecamarero.restaurante.Producto;
@@ -17,7 +18,7 @@ import android.view.WindowManager;
 import android.support.v4.app.FragmentActivity;
 
 public class MainActivity extends FragmentActivity implements CantidadListener,
-		ProductoListener,ResumenListener {
+		ProductoListener,ResumenListener,SeccionesMesasListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,8 @@ public class MainActivity extends FragmentActivity implements CantidadListener,
 		
 		FragmentSeccionMesas fragmentSeccionMesas = (FragmentSeccionMesas) getSupportFragmentManager()
 				.findFragmentById(R.id.fragmentSeccionMesas);
+		
+		fragmentSeccionMesas.setSeccionesMesasListener(this);
 		
 		FragmentResumen fragmentResumen = (FragmentResumen) getSupportFragmentManager()
 				.findFragmentById(R.id.fragmentResumen);
@@ -70,6 +73,17 @@ public class MainActivity extends FragmentActivity implements CantidadListener,
 		((FragmentSeccionMesas) getSupportFragmentManager().findFragmentById(
 				R.id.fragmentSeccionMesas)).addMesaActiva(mesa);
 		return mesa;
+	}
+	@Override
+	public boolean onExistenPedidos() {
+		return ((FragmentResumen) getSupportFragmentManager().findFragmentById(
+				R.id.fragmentResumen)).getPedido().size() > 0;
+	}
+
+	@Override
+	public void onBorrarPedidos() {
+		((FragmentResumen) getSupportFragmentManager().findFragmentById(
+				R.id.fragmentResumen)).borrarPedidos();
 	}
 
 }
