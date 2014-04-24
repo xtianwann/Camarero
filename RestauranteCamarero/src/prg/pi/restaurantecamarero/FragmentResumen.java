@@ -301,8 +301,7 @@ public class FragmentResumen extends Fragment {
 		pedidosPendientes = (Button) getView().findViewById(R.id.pedidosPendientes);
 		pedidosPendientes.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
-				Intent intencion = new Intent(getView().getContext(),ActivityPedidosPendientes.class);
-				startActivity(intencion);
+
 			}
 		});
 	}

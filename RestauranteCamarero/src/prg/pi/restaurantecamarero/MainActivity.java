@@ -16,9 +16,12 @@ import android.view.Menu;
 import android.view.Window;
 import android.view.WindowManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
 
 public class MainActivity extends FragmentActivity implements CantidadListener,
 		ProductoListener,ResumenListener,SeccionesMesasListener {
+	private DrawerLayout drawerLayout;
+	ActivityPedidosPendientes fragmentPedidosPendientes;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,11 @@ public class MainActivity extends FragmentActivity implements CantidadListener,
 				.findFragmentById(R.id.fragmentCategorias);
 
 		fragmentCategorias.setCantidadListener(this);
+		
+		fragmentPedidosPendientes = (ActivityPedidosPendientes) getSupportFragmentManager()
+				.findFragmentById(R.id.pedidosPendientes);
+		
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 	}
 
 	@Override

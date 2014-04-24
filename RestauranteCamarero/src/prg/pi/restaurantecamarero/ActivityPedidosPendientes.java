@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ActivityPedidosPendientes extends Activity{
+public class ActivityPedidosPendientes extends Fragment{
 	private ListView pedidos;
 	private Button limpiar,cambiar,mas,menos,x;
 	private Calculadora calculadora;
@@ -33,20 +35,19 @@ public class ActivityPedidosPendientes extends Activity{
 	private AdaptadorResumen adaptador;
 
 	@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-      //Remove title bar
-	    this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-	    //Remove notification bar
-	    this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.pedidos_pendientes);
-        prepararListeners();
-    }
-	
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.pedidos_pendientes, container, false);
+	}
+	@Override
+	public void onActivityCreated(Bundle state) {
+		super.onActivityCreated(state);
+		
+		prepararListeners();	
+	}
 	private class AdaptadorResumen extends BaseAdapter {
 		private LayoutInflater mInflater;
-
+		
 		public AdaptadorResumen(Context context) {
 			mInflater = LayoutInflater.from(context);
 		}
@@ -69,9 +70,17 @@ public class ActivityPedidosPendientes extends Activity{
 				convertView = mInflater.inflate(R.layout.pedidos_pendientes_list, null);
 				pedido = new PedidoPendiente();
 				pedido.cantidadTexto = (TextView) convertView
-						.findViewById(R.id.TextView01);
+						.findViewById(R.id.cantidadPendiente);
 				pedido.productoTexto = (TextView) convertView
-						.findViewById(R.id.TextView02);
+						.findViewById(R.id.productoPendiente);
+				pedido.seccionTexto = (TextView) convertView
+						.findViewById(R.id.seccionPendiente);
+				pedido.mesaTexto = (TextView) convertView
+						.findViewById(R.id.mesaPendiente);
+				pedido.listoTexto = (TextView) convertView
+						.findViewById(R.id.listoPendiente);
+				pedido.servidoTexto = (TextView) convertView
+						.findViewById(R.id.servidoPendiente);
 
 				convertView.setTag(pedido);
 			} else {
@@ -80,22 +89,33 @@ public class ActivityPedidosPendientes extends Activity{
 
 			Iterator iterador = pedidoMap.entrySet().iterator();
 			if (iterador.hasNext()) {
-				ArrayList<Producto> productos = new ArrayList(pedidoMap.keySet());
-				String producto = productos.get(position).getNombreProducto();
-				String categoria = productos.get(position).getCantidadPadre();
-				int cantidad = (Integer) (new ArrayList(pedidoMap.values()))
-						.get(position);
-				pedido.cantidadTexto.setText(cantidad + "");
-				pedido.productoTexto.setText(categoria+" "+producto);
+				pedido.cantidadTexto.setText("1");
+				pedido.productoTexto.setText("Producto");
+				pedido.seccionTexto.setText("Abajo");
+				pedido.mesaTexto.setText("Mesa 2");
+				pedido.listoTexto.setText("1");
+				pedido.servidoTexto.setText("1");
 			}
 			if (seleccionado == position) {
 				pedido.cantidadTexto.setBackgroundColor(Color
 						.parseColor("#F6A421"));
 				pedido.productoTexto.setBackgroundColor(Color
 						.parseColor("#F6A421"));
+				pedido.seccionTexto.setBackgroundColor(Color
+						.parseColor("#F6A421"));
+				pedido.mesaTexto.setBackgroundColor(Color
+						.parseColor("#F6A421"));
+				pedido.listoTexto.setBackgroundColor(Color
+						.parseColor("#F6A421"));
+				pedido.servidoTexto.setBackgroundColor(Color
+						.parseColor("#F6A421"));
 			} else {
 				pedido.cantidadTexto.setBackgroundColor(Color.TRANSPARENT);
 				pedido.productoTexto.setBackgroundColor(Color.TRANSPARENT);
+				pedido.seccionTexto.setBackgroundColor(Color.TRANSPARENT);
+				pedido.mesaTexto.setBackgroundColor(Color.TRANSPARENT);
+				pedido.listoTexto.setBackgroundColor(Color.TRANSPARENT);
+				pedido.servidoTexto.setBackgroundColor(Color.TRANSPARENT);
 			}
 			return convertView;
 		}
@@ -119,7 +139,7 @@ public class ActivityPedidosPendientes extends Activity{
 
 		public Calculadora(int botonesR[], int ceR, int totalR) {
 			for (int contador = 0; contador < botones.length; contador++) {
-				botones[contador] = (Button) findViewById(
+				botones[contador] = (Button) getView().findViewById(
 						botonesR[contador]);
 				botones[contador]
 						.setOnClickListener(new AdapterView.OnClickListener() {
@@ -133,13 +153,13 @@ public class ActivityPedidosPendientes extends Activity{
 							}
 						});
 			}
-			ce = (Button) findViewById(ceR);
+			ce = (Button) getView().findViewById(ceR);
 			ce.setOnClickListener(new AdapterView.OnClickListener() {
 				public void onClick(View view) {
 					total.setText(0+"");
 				}
 			});
-			total = (TextView) findViewById(totalR);
+			total = (TextView) getView().findViewById(totalR);
 		}
 
 		public void sumar(int sumando) {
@@ -169,8 +189,8 @@ public class ActivityPedidosPendientes extends Activity{
 		pedidos.invalidateViews();
 	}
 	private void prepararListeners() {
-		pedidos = (ListView) findViewById(R.id.pedidosPendientes);
-		adaptador = new AdaptadorResumen(this);
+		pedidos = (ListView) getView().findViewById(R.id.pedidosPendientes);
+		adaptador = new AdaptadorResumen(getView().getContext());
 		pedidos.setAdapter(adaptador);
 		pedidos.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -184,7 +204,7 @@ public class ActivityPedidosPendientes extends Activity{
 				new int[] { R.id.c0, R.id.c1, R.id.c2, R.id.c3, R.id.c4,
 						R.id.c5, R.id.c6, R.id.c7, R.id.c8, R.id.c9 }, R.id.ce,
 				R.id.total);
-		cambiar = (Button) findViewById(R.id.cambiar);
+		cambiar = (Button) getView().findViewById(R.id.cambiar);
 		cambiar.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
 				if(seleccionado > -1 && Integer.parseInt(calculadora.total.getText()+"") > 0){
@@ -196,7 +216,7 @@ public class ActivityPedidosPendientes extends Activity{
 			}
 
 		});
-		mas = (Button) findViewById(R.id.mas);
+		mas = (Button) getView().findViewById(R.id.mas);
 		mas.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
 				if(seleccionado > -1){
@@ -207,7 +227,7 @@ public class ActivityPedidosPendientes extends Activity{
 			}
 
 		});
-		menos = (Button) findViewById(R.id.menos);
+		menos = (Button) getView().findViewById(R.id.menos);
 		menos.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
 				if(seleccionado > -1){
@@ -225,10 +245,11 @@ public class ActivityPedidosPendientes extends Activity{
 			}
 
 		});
-		x = (Button) findViewById(R.id.x);
+		x = (Button) getView().findViewById(R.id.x);
 		x.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
-				
+				pedidoMap.put(new Pedido(new Producto(1,"Chocos"),3), 1);
+				pedidos.invalidateViews();
 			}
 
 		});

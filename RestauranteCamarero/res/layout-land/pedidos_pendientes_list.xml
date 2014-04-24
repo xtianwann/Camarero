@@ -7,67 +7,67 @@
     <TextView
         android:id="@+id/seccionPendiente"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
         android:layout_weight="4"
-        android:textColor="#FFFFFF"
-        android:textSize="16dip"
+        android:layout_height="match_parent"   
+        android:textSize="20dip"
         android:textStyle="bold"
-        android:typeface="serif" >
+        android:padding="10dp"
+        android:textColor="#FFFFFF">
     </TextView>
 
     <TextView
         android:id="@+id/mesaPendiente"
         android:layout_width="0px"
-        android:layout_height="match_parent"
         android:layout_weight="4"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
+        android:layout_height="match_parent"   
+        android:textSize="20dip"
         android:textStyle="bold"
-        android:typeface="serif" >
+        android:padding="10dp"
+        android:textColor="#FFFFFF" >
     </TextView>
 
     <TextView
         android:id="@+id/cantidadPendiente"
         android:layout_width="0px"
-        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
+        android:layout_height="match_parent"   
+        android:textSize="20dip"
         android:textStyle="bold"
-        android:typeface="serif" >
+        android:padding="10dp"
+        android:textColor="#FFFFFF">
     </TextView>
 
     <TextView
         android:id="@+id/productoPendiente"
         android:layout_width="0px"
-        android:layout_height="match_parent"
         android:layout_weight="7"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
+        android:layout_height="match_parent"   
+        android:textSize="20dip"
         android:textStyle="bold"
-        android:typeface="serif" >
+        android:padding="10dp"
+        android:textColor="#FFFFFF">
     </TextView>
 
     <TextView
         android:id="@+id/listoPendiente"
         android:layout_width="0px"
-        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
+        android:layout_height="match_parent"   
+        android:textSize="20dip"
         android:textStyle="bold"
-        android:typeface="serif" >
+        android:padding="10dp"
+        android:textColor="#FFFFFF">
     </TextView>
 
     <TextView
         android:id="@+id/servidoPendiente"
         android:layout_width="0px"
-        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
+        android:layout_height="match_parent"   
+        android:textSize="20dip"
         android:textStyle="bold"
-        android:typeface="serif" >
+        android:padding="10dp"
+        android:textColor="#FFFFFF">
     </TextView>
 
 </LinearLayout>
