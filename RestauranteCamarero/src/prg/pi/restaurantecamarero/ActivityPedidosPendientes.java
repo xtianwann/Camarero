@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import prg.pi.restaurantecamarero.FragmentResumen.Calculadora;
+import prg.pi.restaurantecamarero.restaurante.Mesa;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
+import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -30,7 +33,7 @@ public class ActivityPedidosPendientes extends Fragment{
 	private ListView pedidos;
 	private Button limpiar,cambiar,mas,menos,x;
 	private Calculadora calculadora;
-	public HashMap<Pedido, Integer> pedidoMap = new HashMap<Pedido, Integer>();
+	public ArrayList<PedidosPendientesCamarero> pedidosPendientes = new ArrayList<PedidosPendientesCamarero>();
 	private int seleccionado = -1;
 	private AdaptadorResumen adaptador;
 
@@ -39,12 +42,13 @@ public class ActivityPedidosPendientes extends Fragment{
 			Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.pedidos_pendientes, container, false);
 	}
+	
 	@Override
 	public void onActivityCreated(Bundle state) {
 		super.onActivityCreated(state);
-		
-		prepararListeners();	
+		prepararListeners();
 	}
+	
 	private class AdaptadorResumen extends BaseAdapter {
 		private LayoutInflater mInflater;
 		
@@ -53,7 +57,7 @@ public class ActivityPedidosPendientes extends Fragment{
 		}
 
 		public int getCount() {
-			return pedidoMap.size();
+			return pedidosPendientes.size();
 		}
 
 		public Object getItem(int position) {
@@ -65,71 +69,31 @@ public class ActivityPedidosPendientes extends Fragment{
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			PedidoPendiente pedido;
+			PedidoPendienteText pedidoText;
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.pedidos_pendientes_list, null);
-				pedido = new PedidoPendiente();
-				pedido.cantidadTexto = (TextView) convertView
-						.findViewById(R.id.cantidadPendiente);
-				pedido.productoTexto = (TextView) convertView
-						.findViewById(R.id.productoPendiente);
-				pedido.seccionTexto = (TextView) convertView
-						.findViewById(R.id.seccionPendiente);
-				pedido.mesaTexto = (TextView) convertView
-						.findViewById(R.id.mesaPendiente);
-				pedido.listoTexto = (TextView) convertView
-						.findViewById(R.id.listoPendiente);
-				pedido.servidoTexto = (TextView) convertView
-						.findViewById(R.id.servidoPendiente);
-
-				convertView.setTag(pedido);
+				pedidoText = new PedidoPendienteText(convertView);
+				convertView.setTag(pedidoText);
 			} else {
-				pedido = (PedidoPendiente) convertView.getTag();
+				pedidoText = (PedidoPendienteText) convertView.getTag();
 			}
-
-			Iterator iterador = pedidoMap.entrySet().iterator();
-			if (iterador.hasNext()) {
-				pedido.cantidadTexto.setText("1");
-				pedido.productoTexto.setText("Producto");
-				pedido.seccionTexto.setText("Abajo");
-				pedido.mesaTexto.setText("Mesa 2");
-				pedido.listoTexto.setText("1");
-				pedido.servidoTexto.setText("1");
-			}
+			PedidosPendientesCamarero pedidoPendiente = pedidosPendientes.get(position);
+			pedidoText.addTexto(pedidoPendiente.getNombreSeccion(), pedidoPendiente.getNombreMesa(), pedidoPendiente.getUnidades(),pedidoPendiente.getProducto().getCantidadPadre()+" "+pedidoPendiente.getProducto().getNombreProducto(), pedidoPendiente.getListos(), pedidoPendiente.getServidos());
 			if (seleccionado == position) {
-				pedido.cantidadTexto.setBackgroundColor(Color
-						.parseColor("#F6A421"));
-				pedido.productoTexto.setBackgroundColor(Color
-						.parseColor("#F6A421"));
-				pedido.seccionTexto.setBackgroundColor(Color
-						.parseColor("#F6A421"));
-				pedido.mesaTexto.setBackgroundColor(Color
-						.parseColor("#F6A421"));
-				pedido.listoTexto.setBackgroundColor(Color
-						.parseColor("#F6A421"));
-				pedido.servidoTexto.setBackgroundColor(Color
-						.parseColor("#F6A421"));
+				pedidoText.cambiaColor(Color.parseColor("#F6A421"));
 			} else {
-				pedido.cantidadTexto.setBackgroundColor(Color.TRANSPARENT);
-				pedido.productoTexto.setBackgroundColor(Color.TRANSPARENT);
-				pedido.seccionTexto.setBackgroundColor(Color.TRANSPARENT);
-				pedido.mesaTexto.setBackgroundColor(Color.TRANSPARENT);
-				pedido.listoTexto.setBackgroundColor(Color.TRANSPARENT);
-				pedido.servidoTexto.setBackgroundColor(Color.TRANSPARENT);
+				if(pedidoPendiente.existenListos()){
+					pedidoText.cambiaColor(Color.parseColor("#2DFF20"));
+				}
+				else{
+					pedidoText.cambiaColor(Color.TRANSPARENT);
+				}
 			}
+			
 			return convertView;
 		}
-
-		class PedidoPendiente {
-			TextView seccionTexto;
-			TextView mesaTexto;
-			TextView cantidadTexto;
-			TextView productoTexto;
-			TextView listoTexto;
-			TextView servidoTexto;
-		}
 	}
-
+	
 	public class Calculadora {
 		Button cero, uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve,
 				ce;
@@ -174,21 +138,13 @@ public class ActivityPedidosPendientes extends Fragment{
 		}
 	}
 
-//	public void apuntarPedido(Producto producto) {
-//		seleccionado = -1;
-//		if (pedidoMap.containsKey(producto)) {
-//			pedidoMap.put(producto, pedidoMap.get(producto) + 1);
-//		} else {
-//			pedidoMap.put(producto, 1);
-//		}
-//		pedidos.invalidateViews();
-//	}
-
 	public void limpiarPedidos() {
-		pedidoMap.clear();
+		pedidosPendientes.clear();
 		pedidos.invalidateViews();
 	}
+	
 	private void prepararListeners() {
+		Log.d("listener","listener");
 		pedidos = (ListView) getView().findViewById(R.id.pedidosPendientes);
 		adaptador = new AdaptadorResumen(getView().getContext());
 		pedidos.setAdapter(adaptador);
@@ -196,8 +152,13 @@ public class ActivityPedidosPendientes extends Fragment{
 			@Override
 			public void onItemClick(AdapterView<?> list, View view, int pos,
 					long id) {
-				seleccionado = pos;
-				adaptador.notifyDataSetChanged();
+				TextView seccion = (TextView)view.findViewById(R.id.seccionPendiente);
+				ColorDrawable color = (ColorDrawable) seccion.getBackground();
+				int codigoColor = color.getColor();
+				if(codigoColor == (Color.parseColor("#2DFF20"))){
+					seleccionado = pos;
+					adaptador.notifyDataSetChanged();
+				}
 			}
 		});
 		calculadora = new Calculadora(
@@ -207,10 +168,18 @@ public class ActivityPedidosPendientes extends Fragment{
 		cambiar = (Button) getView().findViewById(R.id.cambiar);
 		cambiar.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
-				if(seleccionado > -1 && Integer.parseInt(calculadora.total.getText()+"") > 0){
-					Pedido pedido = (Pedido)(new ArrayList(pedidoMap.keySet())).get(seleccionado);
-					pedidoMap.put(pedido, Integer.parseInt(calculadora.total.getText()+""));
-					adaptador.notifyDataSetChanged();
+				if(seleccionado > -1){
+					PedidosPendientesCamarero pedido = pedidosPendientes.get(seleccionado);
+					int numeroCalculadora = Integer.parseInt(calculadora.total.getText()+"");
+					if(numeroCalculadora <= pedido.getListos()){
+						pedido.setServidos(numeroCalculadora);
+						if(!pedido.existenListos()){
+							seleccionado = -1;
+							if(pedido.isServido())
+								pedidosPendientes.remove(pedido);
+						}
+						adaptador.notifyDataSetChanged();
+					}					
 					calculadora.total.setText("0");
 				}
 			}
@@ -220,8 +189,13 @@ public class ActivityPedidosPendientes extends Fragment{
 		mas.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
 				if(seleccionado > -1){
-					Pedido pedido = (Pedido)(new ArrayList(pedidoMap.keySet())).get(seleccionado);
-					pedidoMap.put(pedido, pedidoMap.get(pedido)+1);
+					PedidosPendientesCamarero pedido = pedidosPendientes.get(seleccionado);
+					pedido.setServidos(pedido.getServidos()+1);
+					if(!pedido.existenListos()){
+						seleccionado = -1;
+						if(pedido.isServido())
+							pedidosPendientes.remove(pedido);
+					}
 					adaptador.notifyDataSetChanged();
 				}
 			}
@@ -231,16 +205,11 @@ public class ActivityPedidosPendientes extends Fragment{
 		menos.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
 				if(seleccionado > -1){
-					Pedido pedido = (Pedido)(new ArrayList(pedidoMap.keySet())).get(seleccionado);
-					int cantidad = pedidoMap.get(pedido)-1;
-					if (cantidad < 1){
-						pedidoMap.remove(pedido);
-						seleccionado = -1;
+					PedidosPendientesCamarero pedido = pedidosPendientes.get(seleccionado);
+					if(pedido.getServidos() > 0){
+						pedido.setServidos(pedido.getServidos()-1);
+						adaptador.notifyDataSetChanged();
 					}
-					else{
-						pedidoMap.put(pedido,cantidad);
-					}
-					adaptador.notifyDataSetChanged();
 				}
 			}
 
@@ -248,11 +217,95 @@ public class ActivityPedidosPendientes extends Fragment{
 		x = (Button) getView().findViewById(R.id.x);
 		x.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
-				pedidoMap.put(new Pedido(new Producto(1,"Chocos"),3), 1);
-				pedidos.invalidateViews();
+
 			}
 
 		});
 		
+	}
+	
+	public class PedidoPendienteText {
+		private TextView seccionTexto;
+		private TextView mesaTexto;
+		private TextView cantidadTexto;
+		private TextView productoTexto;
+		private TextView listoTexto;
+		private TextView servidoTexto;
+		
+		public PedidoPendienteText (View view){
+			cantidadTexto = (TextView) view
+					.findViewById(R.id.cantidadPendiente);
+			productoTexto = (TextView) view
+					.findViewById(R.id.productoPendiente);
+			seccionTexto = (TextView) view
+					.findViewById(R.id.seccionPendiente);
+			mesaTexto = (TextView) view
+					.findViewById(R.id.mesaPendiente);
+			listoTexto = (TextView) view
+					.findViewById(R.id.listoPendiente);
+			servidoTexto = (TextView) view
+					.findViewById(R.id.servidoPendiente);
+		}
+		public void cambiaColor(int color){
+			cantidadTexto.setBackgroundColor(color);
+			productoTexto.setBackgroundColor(color);
+			seccionTexto.setBackgroundColor(color);
+			mesaTexto.setBackgroundColor(color);
+			listoTexto.setBackgroundColor(color);
+			servidoTexto.setBackgroundColor(color);
+		}
+		public void addTexto(String seccion,String mesa,int cantidad,String producto,int listo,int servido){
+			cantidadTexto.setText(cantidad+"");
+			productoTexto.setText(producto);
+			seccionTexto.setText(seccion);
+			mesaTexto.setText(mesa);
+			listoTexto.setText(listo+"");
+			servidoTexto.setText(servido+"");
+		}
+		
+		public TextView getSeccionTexto() {
+			return seccionTexto;
+		}
+		public void setSeccionTexto(TextView seccionTexto) {
+			this.seccionTexto = seccionTexto;
+		}
+		public TextView getMesaTexto() {
+			return mesaTexto;
+		}
+		public void setMesaTexto(TextView mesaTexto) {
+			this.mesaTexto = mesaTexto;
+		}
+		public TextView getCantidadTexto() {
+			return cantidadTexto;
+		}
+		public void setCantidadTexto(TextView cantidadTexto) {
+			this.cantidadTexto = cantidadTexto;
+		}
+		public TextView getProductoTexto() {
+			return productoTexto;
+		}
+		public void setProductoTexto(TextView productoTexto) {
+			this.productoTexto = productoTexto;
+		}
+		public TextView getListoTexto() {
+			return listoTexto;
+		}
+		public void setListoTexto(TextView listoTexto) {
+			this.listoTexto = listoTexto;
+		}
+		public TextView getServidoTexto() {
+			return servidoTexto;
+		}
+		public void setServidoTexto(TextView servidoTexto) {
+			this.servidoTexto = servidoTexto;
+		}
+	}
+
+	public void addPedidosPendientes(
+			PedidosPendientesCamarero[] pedidosAdd) {
+		for(PedidosPendientesCamarero pedido : pedidosAdd)
+			pedidosPendientes.add(pedido);
+		pedidos.invalidateViews();
+		adaptador.notifyDataSetChanged();
 	}
 }

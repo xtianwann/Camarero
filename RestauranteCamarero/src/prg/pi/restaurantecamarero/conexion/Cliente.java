@@ -9,6 +9,7 @@ import org.w3c.dom.NodeList;
 
 import prg.pi.restaurantecamarero.decodificador.DecodificadorAcuseRecibo;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorDameloTodo;
+import prg.pi.restaurantecamarero.decodificador.DecodificadorPedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorResumenMesa;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
 
@@ -26,7 +27,7 @@ public class Cliente extends Thread {
 	private String mensaje;
 	private String respuesta;
 	private DecodificadorDameloTodo todo;
-
+	private DecodificadorPedidosPendientesCamarero pedidosPendientes;
 	public Cliente(String mensaje) {
 		respuesta = "";
 		this.mensaje = mensaje;
@@ -61,6 +62,9 @@ public class Cliente extends Thread {
 							+ p.getEstado());
 				}
 			}
+			if (tipo.equals("PedidosPendientesCamarero")) {
+				pedidosPendientes = new DecodificadorPedidosPendientesCamarero(dom);
+			}
 
 		} else {
 			System.out.println("Agotado tiempo de espera...");
@@ -91,7 +95,6 @@ public class Cliente extends Thread {
 		do {
 			respuesta = conn.leerMensaje();
 		} while (respuesta.length() == 0 || espera < System.currentTimeMillis());
-
 		return respuesta;
 	}
 
@@ -113,5 +116,9 @@ public class Cliente extends Thread {
 
 	public void setTodo(DecodificadorDameloTodo todo) {
 		this.todo = todo;
+	}
+
+	public DecodificadorPedidosPendientesCamarero getPedidosPendientes() {
+		return pedidosPendientes;
 	}
 }

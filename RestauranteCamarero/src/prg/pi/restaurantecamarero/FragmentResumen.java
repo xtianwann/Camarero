@@ -10,13 +10,16 @@ import java.util.Map;
 import prg.pi.restaurantecamarero.FragmentCantidades.AdaptadorCantidades;
 import prg.pi.restaurantecamarero.FragmentProductos.ProductoListener;
 import prg.pi.restaurantecamarero.conexion.Cliente;
+import prg.pi.restaurantecamarero.decodificador.DecodificadorPedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Cantidad;
 import prg.pi.restaurantecamarero.restaurante.Comanda;
 import prg.pi.restaurantecamarero.restaurante.Mesa;
+import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
 import prg.pi.restaurantecamarero.xml.XMLDameloTodo;
 import prg.pi.restaurantecamarero.xml.XMLPedidosComanda;
+import XML.XML;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -37,14 +40,13 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class FragmentResumen extends Fragment {
 	private ListView resumen;
-	private Button pedidosPendientes, cambiar, mas, menos, x, enviar;
+	private Button cambiar, mas, menos, x, enviar;
 	private Calculadora calculadora;
 	public HashMap<Producto, Integer> pedidos = new HashMap<Producto, Integer>();
 	private int seleccionado = -1;
 	private AdaptadorResumen adaptador;
 	private ResumenListener resumenListener;
-
-	public HashMap<Producto, Integer>  getPedido() {
+	public HashMap<Producto, Integer> getPedido() {
 		return pedidos;
 	}
 
@@ -184,6 +186,7 @@ public class FragmentResumen extends Fragment {
 
 	public void limpiarPedidos() {
 		pedidos.clear();
+		seleccionado = -1;
 		resumen.invalidateViews();
 	}
 
@@ -274,47 +277,53 @@ public class FragmentResumen extends Fragment {
 						comanda.addPedido(new Pedido((Producto) mapa.getKey(),
 								(Integer) mapa.getValue()));
 					}
-					new Thread(new Runnable(){
+					new Thread(new Runnable() {
 						public void run() {
 							getActivity().runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
-									XMLPedidosComanda xmlEnviarComanda = new XMLPedidosComanda(comanda);
-				                    String mensaje = xmlEnviarComanda.xmlToString(xmlEnviarComanda.getDOM());
+									XMLPedidosComanda xmlEnviarComanda = new XMLPedidosComanda(
+											comanda);
+									String mensaje = xmlEnviarComanda
+											.xmlToString(xmlEnviarComanda
+													.getDOM());
 									Cliente c = new Cliente(mensaje);
 									c.run();
 									try {
 										c.join();
-										borrarPedidos();
 									} catch (InterruptedException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
 									}
+									PedidosPendientesCamarero pedidosPendientes[] = c
+											.getPedidosPendientes()
+											.getPedidosPendientes();
+									resumenListener.onPedidosPendientes(pedidosPendientes);
+									borrarPedidos();
 								}
 							});
-						}		
+						}
 					}).start();
 				}
 			}
 
 		});
-		pedidosPendientes = (Button) getView().findViewById(R.id.pedidosPendientes);
-		pedidosPendientes.setOnClickListener(new AdapterView.OnClickListener() {
-			public void onClick(View view) {
-
-			}
-		});
 	}
 
 	public interface ResumenListener {
-		Mesa onEnviar();
+		public Mesa onEnviar();
+
+		public void onPedidosPendientes(
+				PedidosPendientesCamarero pedidosPendientes[]);
 	}
 
 	public void setResumenListener(ResumenListener resumenListener) {
 		this.resumenListener = resumenListener;
 	}
+
 	public void borrarPedidos() {
 		pedidos.clear();
+		seleccionado = -1;
 		adaptador.notifyDataSetChanged();
 	}
 }

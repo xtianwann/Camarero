@@ -6,14 +6,16 @@ public class PedidosPendientesCamarero {
 	private String nombreMesa;
 	private int idComanda;
 	private Producto producto;
+	private int unidades;
 	private int listos;
 	private int servidos;
 	
-	public PedidosPendientesCamarero(String nombreSeccion, String nombreMesa, int idComanda, Producto producto, int listos, int servidos){
+	public PedidosPendientesCamarero(String nombreSeccion, String nombreMesa, int idComanda, Producto producto, int unidades,int listos, int servidos){
 		this.nombreSeccion= nombreSeccion;
 		this.nombreMesa = nombreMesa;
 		this.idComanda = idComanda;
 		this.producto = producto;
+		this.unidades = unidades;
 		this.listos = listos;
 		this.servidos = servidos;
 	}
@@ -65,7 +67,18 @@ public class PedidosPendientesCamarero {
 	public void setServidos(int servidos) {
 		this.servidos = servidos;
 	}
+	public boolean existenListos(){
+		return listos > servidos;
+	}
+	public boolean isServido(){
+		return unidades == servidos;
+	}
 
-	
+	public int getUnidades() {
+		return unidades;
+	}
 
+	public void setUnidades(int unidades) {
+		this.unidades = unidades;
+	}
 }

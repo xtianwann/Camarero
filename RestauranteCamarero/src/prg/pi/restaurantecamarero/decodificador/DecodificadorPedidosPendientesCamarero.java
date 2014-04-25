@@ -52,7 +52,7 @@ public class DecodificadorPedidosPendientesCamarero {
             int listos = Integer.parseInt(nodeListDatos.item(3).getFirstChild().getNodeValue());
             int servidos = Integer.parseInt(nodeListDatos.item(4).getFirstChild().getNodeValue());
             
-            pedidosPendientes.add(new PedidosPendientesCamarero(nombreSeccion, nombreMesa, idComanda, new Producto(idMenu, nombreProducto, nombreCantidad), listos, servidos));
+            pedidosPendientes.add(new PedidosPendientesCamarero(nombreSeccion, nombreMesa, idComanda, new Producto(idMenu, nombreProducto, nombreCantidad),unidades, listos, servidos));
 		}
 	}
 }
