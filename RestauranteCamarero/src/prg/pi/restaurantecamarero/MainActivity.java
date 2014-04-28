@@ -1,11 +1,14 @@
 package prg.pi.restaurantecamarero;
 
+import prg.pi.restaurantecamarero.MainActivity;
+import prg.pi.restaurantecamarero.servidor.Servidor;
 import prg.pi.restaurantecamarero.FragmentProductos.ProductoListener;
 import prg.pi.restaurantecamarero.FragmentCantidades.CantidadListener;
 import prg.pi.restaurantecamarero.FragmentResumen.ResumenListener;
 import prg.pi.restaurantecamarero.FragmentSeccionMesas.SeccionesMesasListener;
 import prg.pi.restaurantecamarero.restaurante.Cantidad;
 import prg.pi.restaurantecamarero.restaurante.Mesa;
+import prg.pi.restaurantecamarero.restaurante.PedidoListo;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
 import android.content.Intent;
@@ -29,6 +32,7 @@ public class MainActivity extends FragmentActivity implements CantidadListener,
 	FragmentResumen fragmentResumen;
 	FragmentProductos fragmentProductos;
 	FragmentCantidades fragmentCategorias;
+	private Servidor servidor;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,6 +69,7 @@ public class MainActivity extends FragmentActivity implements CantidadListener,
 				.findFragmentById(R.id.fragmentPedidosPendientes);
 		
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		servidor = new Servidor(MainActivity.this);
 	}
 
 	@Override
@@ -99,5 +104,9 @@ public class MainActivity extends FragmentActivity implements CantidadListener,
 			PedidosPendientesCamarero[] pedidosPendientes) {
 		fragmentPedidosPendientes.addPedidosPendientes(pedidosPendientes);
 		
+	}
+
+	public void addPedidosListos(PedidoListo[] pedidosListos) {
+		fragmentPedidosPendientes.addPedidosListos(pedidosListos);
 	}
 }

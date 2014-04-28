@@ -49,14 +49,14 @@ public class FragmentSeccionMesas extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle state) {
 		super.onActivityCreated(state);
-//		hilo = new SeccionesThread();
-//		hilo.start();
-//		try {
-//			hilo.join();
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		hilo = new SeccionesThread();
+		hilo.start();
+		try {
+			hilo.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private String[] dameSecciones() {

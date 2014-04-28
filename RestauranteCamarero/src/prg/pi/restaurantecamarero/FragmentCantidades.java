@@ -41,14 +41,14 @@ public class FragmentCantidades extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle state) {
 		super.onActivityCreated(state);
-//		hilo = new CantidadesThread(this);
-//		hilo.start();
-//		try {
-//			hilo.join();
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		hilo = new CantidadesThread(this);
+		hilo.start();
+		try {
+			hilo.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public interface CantidadListener {

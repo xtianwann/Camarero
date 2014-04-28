@@ -215,10 +215,10 @@ public class ActivityPedidosPendientes extends Fragment{
 
 		});
 		//Trabajo
-		pedidosPendientes.add(new PedidosPendientesCamarero("Abajo", "Rincon", 1, 
-				new Producto(1, "Chocos", "Racion"),3,1,0));
-		pedidosPendientes.add(new PedidosPendientesCamarero("Arriba", "Centro", 2, 
-				new Producto(2, "Huevas", "Tapa"),5,2,0));
+//		pedidosPendientes.add(new PedidosPendientesCamarero("Abajo", "Rincon", 1, 
+//				new Producto(1, "Chocos", "Racion"),3,1,0));
+//		pedidosPendientes.add(new PedidosPendientesCamarero("Arriba", "Centro", 2, 
+//				new Producto(2, "Huevas", "Tapa"),5,2,0));
 		//////////////////////////////////////////////////
 		
 	}
@@ -304,6 +304,18 @@ public class ActivityPedidosPendientes extends Fragment{
 			PedidosPendientesCamarero[] pedidosAdd) {
 		for(PedidosPendientesCamarero pedido : pedidosAdd)
 			pedidosPendientes.add(pedido);
+		pedidos.invalidateViews();
+		adaptador.notifyDataSetChanged();
+	}
+
+	public void addPedidosListos(PedidoListo[] pedidosListos) {
+		for(PedidoListo pedidoListo : pedidosListos){
+			for(PedidosPendientesCamarero pedido: pedidosPendientes){
+				if(pedido.getIdComanda() == pedidoListo.getIdComanda() && pedido.getProducto().getIdMenu() == pedidoListo.getIdMenu()){
+					pedido.setListos(pedidoListo.getListos());
+				}
+			}
+		}
 		pedidos.invalidateViews();
 		adaptador.notifyDataSetChanged();
 	}

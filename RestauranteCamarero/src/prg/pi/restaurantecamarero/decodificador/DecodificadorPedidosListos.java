@@ -32,7 +32,6 @@ public class DecodificadorPedidosListos {
 			int idComanda = Integer.parseInt(elementoPedido.getAttribute("idCom"));
 			int idMenu = Integer.parseInt(nodePedido.getChildNodes().item(0).getFirstChild().getNodeValue());
 			int listos = Integer.parseInt(nodePedido.getChildNodes().item(1).getFirstChild().getNodeValue());
-			
 			pedidosListos.add(new PedidoListo(idComanda, idMenu, listos));
 		}
 	}
