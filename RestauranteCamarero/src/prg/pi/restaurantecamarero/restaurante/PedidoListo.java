@@ -35,7 +35,4 @@ public class PedidoListo {
 	public void setListos(int listos) {
 		this.listos = listos;
 	}
-	
-	
-
 }

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import prg.pi.restaurantecamarero.FragmentResumen.Calculadora;
 import prg.pi.restaurantecamarero.restaurante.Mesa;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
+import prg.pi.restaurantecamarero.restaurante.PedidoListo;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
 import android.app.Activity;
@@ -31,7 +32,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class ActivityPedidosPendientes extends Fragment{
 	private ListView pedidos;
-	private Button limpiar,cambiar,mas,menos,x;
+	private Button limpiar,cambiar,mas,menos,enviar,deshacer;
 	private Calculadora calculadora;
 	public ArrayList<PedidosPendientesCamarero> pedidosPendientes = new ArrayList<PedidosPendientesCamarero>();
 	private int seleccionado = -1;
@@ -83,7 +84,7 @@ public class ActivityPedidosPendientes extends Fragment{
 				pedidoText.cambiaColor(Color.parseColor("#F6A421"));
 			} else {
 				if(pedidoPendiente.existenListos()){
-					pedidoText.cambiaColor(Color.parseColor("#2DFF20"));
+					pedidoText.cambiaColor(Color.parseColor("#0EA7F4"));
 				}
 				else{
 					pedidoText.cambiaColor(Color.TRANSPARENT);
@@ -144,7 +145,6 @@ public class ActivityPedidosPendientes extends Fragment{
 	}
 	
 	private void prepararListeners() {
-		Log.d("listener","listener");
 		pedidos = (ListView) getView().findViewById(R.id.pedidosPendientes);
 		adaptador = new AdaptadorResumen(getView().getContext());
 		pedidos.setAdapter(adaptador);
@@ -155,7 +155,7 @@ public class ActivityPedidosPendientes extends Fragment{
 				TextView seccion = (TextView)view.findViewById(R.id.seccionPendiente);
 				ColorDrawable color = (ColorDrawable) seccion.getBackground();
 				int codigoColor = color.getColor();
-				if(codigoColor == (Color.parseColor("#2DFF20"))){
+				if(codigoColor == (Color.parseColor("#0EA7F4"))){
 					seleccionado = pos;
 					adaptador.notifyDataSetChanged();
 				}
@@ -214,13 +214,12 @@ public class ActivityPedidosPendientes extends Fragment{
 			}
 
 		});
-		x = (Button) getView().findViewById(R.id.x);
-		x.setOnClickListener(new AdapterView.OnClickListener() {
-			public void onClick(View view) {
-
-			}
-
-		});
+		//Trabajo
+		pedidosPendientes.add(new PedidosPendientesCamarero("Abajo", "Rincon", 1, 
+				new Producto(1, "Chocos", "Racion"),3,1,0));
+		pedidosPendientes.add(new PedidosPendientesCamarero("Arriba", "Centro", 2, 
+				new Producto(2, "Huevas", "Tapa"),5,2,0));
+		//////////////////////////////////////////////////
 		
 	}
 	

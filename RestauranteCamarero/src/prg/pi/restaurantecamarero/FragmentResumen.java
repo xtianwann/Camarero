@@ -1,6 +1,7 @@
 package prg.pi.restaurantecamarero;
 
 import prg.pi.restaurantecamarero.FragmentSeccionMesas;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,7 +21,9 @@ import prg.pi.restaurantecamarero.restaurante.Pedido;
 import prg.pi.restaurantecamarero.xml.XMLDameloTodo;
 import prg.pi.restaurantecamarero.xml.XMLPedidosComanda;
 import XML.XML;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -45,6 +48,7 @@ public class FragmentResumen extends Fragment {
 	public HashMap<Producto, Integer> pedidos = new HashMap<Producto, Integer>();
 	private int seleccionado = -1;
 	private AdaptadorResumen adaptador;
+	private AlertDialog.Builder dialog;
 	private ResumenListener resumenListener;
 	public HashMap<Producto, Integer> getPedido() {
 		return pedidos;
@@ -305,8 +309,20 @@ public class FragmentResumen extends Fragment {
 						}
 					}).start();
 				}
-			}
-
+				else{
+					dialog = new AlertDialog.Builder(getActivity());
+					dialog.setMessage("No hay pedidos a enviar");
+					dialog.setCancelable(false);
+					dialog.setNeutralButton("OK",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.cancel();
+								}
+							});
+					dialog.show();
+				}
+			}	
 		});
 	}
 

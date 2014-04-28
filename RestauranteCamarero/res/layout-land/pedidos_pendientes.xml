@@ -116,7 +116,7 @@
         android:layout_weight="1"
         android:background="@drawable/acciones_color"
         android:orientation="vertical"
-        android:weightSum="5" >
+        android:weightSum="6" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -129,7 +129,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_margin="3dip"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:background="#000000"
                 android:gravity="center"
                 android:text="0"
@@ -137,16 +137,6 @@
                 android:textSize="16sp"
                 android:textStyle="bold" >
             </TextView>
-
-            <Button
-                android:id="@+id/x"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                android:layout_margin="3dip"
-                android:layout_weight="2"
-                android:background="#FFFFFF"
-                android:text="X" />
         </LinearLayout>
 
         <LinearLayout
@@ -194,7 +184,7 @@
                 android:layout_margin="3dip"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
-                android:text="Cambiar" />
+                android:text="↔" />
         </LinearLayout>
 
         <LinearLayout
@@ -316,6 +306,32 @@
                 android:layout_weight="2"
                 android:background="#FFFFFF"
                 android:text="CE" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:background="@drawable/acciones_color" >
+
+            <Button
+                android:id="@+id/enviar"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_margin="3dip"
+                android:layout_weight="2"
+                android:background="#FFFFFF"
+                android:text="Enviar" />
+
+            <Button
+                android:id="@+id/deshacer"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_margin="3dip"
+                android:layout_weight="2"
+                android:background="#FFFFFF"
+                android:text="Deshacer" />
         </LinearLayout>
     </LinearLayout>
 
