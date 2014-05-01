@@ -271,58 +271,8 @@ public class FragmentResumen extends Fragment {
 		enviar = (Button) getView().findViewById(R.id.enviar);
 		enviar.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
-				final Comanda comanda;
-				if (pedidos.size() > 0) {
-					comanda = new Comanda(resumenListener.onEnviar(),
-							new ArrayList<Pedido>());
-					Iterator iterador = pedidos.entrySet().iterator();
-					while (iterador.hasNext()) {
-						Map.Entry mapa = (Map.Entry) iterador.next();
-						comanda.addPedido(new Pedido((Producto) mapa.getKey(),
-								(Integer) mapa.getValue()));
-					}
-					new Thread(new Runnable() {
-						public void run() {
-							getActivity().runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									XMLPedidosComanda xmlEnviarComanda = new XMLPedidosComanda(
-											comanda);
-									String mensaje = xmlEnviarComanda
-											.xmlToString(xmlEnviarComanda
-													.getDOM());
-									Cliente c = new Cliente(mensaje);
-									c.run();
-									try {
-										c.join();
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									PedidosPendientesCamarero pedidosPendientes[] = c
-											.getPedidosPendientes()
-											.getPedidosPendientes();
-									resumenListener.onPedidosPendientes(pedidosPendientes);
-									borrarPedidos();
-								}
-							});
-						}
-					}).start();
-				}
-				else{
-					dialog = new AlertDialog.Builder(getActivity());
-					dialog.setMessage("No hay pedidos a enviar");
-					dialog.setCancelable(false);
-					dialog.setNeutralButton("OK",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									dialog.cancel();
-								}
-							});
-					dialog.show();
-				}
-			}	
+				enviarPedido();
+			}
 		});
 	}
 
@@ -341,5 +291,58 @@ public class FragmentResumen extends Fragment {
 		pedidos.clear();
 		seleccionado = -1;
 		adaptador.notifyDataSetChanged();
+	}
+	public void enviarPedido(){
+		final Comanda comanda;
+		if (pedidos.size() > 0) {
+			comanda = new Comanda(resumenListener.onEnviar(),
+					new ArrayList<Pedido>());
+			Iterator iterador = pedidos.entrySet().iterator();
+			while (iterador.hasNext()) {
+				Map.Entry mapa = (Map.Entry) iterador.next();
+				comanda.addPedido(new Pedido((Producto) mapa.getKey(),
+						(Integer) mapa.getValue()));
+			}
+			new Thread(new Runnable() {
+				public void run() {
+					getActivity().runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							XMLPedidosComanda xmlEnviarComanda = new XMLPedidosComanda(
+									comanda);
+							String mensaje = xmlEnviarComanda
+									.xmlToString(xmlEnviarComanda
+											.getDOM());
+							Cliente c = new Cliente(mensaje);
+							c.run();
+							try {
+								c.join();
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							PedidosPendientesCamarero pedidosPendientes[] = c
+									.getPedidosPendientes()
+									.getPedidosPendientes();
+							resumenListener.onPedidosPendientes(pedidosPendientes);
+							borrarPedidos();
+						}
+					});
+				}
+			}).start();
+		}
+		else{
+			dialog = new AlertDialog.Builder(getActivity());
+			dialog.setMessage("No hay pedidos a enviar");
+			dialog.setCancelable(false);
+			dialog.setNeutralButton("OK",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+						}
+					});
+			dialog.show();
+		}
 	}
 }

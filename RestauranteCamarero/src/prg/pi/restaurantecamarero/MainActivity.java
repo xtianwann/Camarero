@@ -95,11 +95,6 @@ public class MainActivity extends FragmentActivity implements CantidadListener,
 	}
 
 	@Override
-	public void onBorrarPedidos() {
-		fragmentResumen.borrarPedidos();
-	}
-
-	@Override
 	public void onPedidosPendientes(
 			PedidosPendientesCamarero[] pedidosPendientes) {
 		fragmentPedidosPendientes.addPedidosPendientes(pedidosPendientes);
@@ -108,5 +103,10 @@ public class MainActivity extends FragmentActivity implements CantidadListener,
 
 	public void addPedidosListos(PedidoListo[] pedidosListos) {
 		fragmentPedidosPendientes.addPedidosListos(pedidosListos);
+	}
+
+	@Override
+	public void onEnviarPedidosSinEnviar() {
+		fragmentResumen.enviarPedido();
 	}
 }

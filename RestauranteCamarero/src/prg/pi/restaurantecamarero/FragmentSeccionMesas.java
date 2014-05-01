@@ -49,14 +49,14 @@ public class FragmentSeccionMesas extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle state) {
 		super.onActivityCreated(state);
-		hilo = new SeccionesThread();
-		hilo.start();
-		try {
-			hilo.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		hilo = new SeccionesThread();
+//		hilo.start();
+//		try {
+//			hilo.join();
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	private String[] dameSecciones() {
@@ -191,7 +191,7 @@ public class FragmentSeccionMesas extends Fragment {
 	public interface SeccionesMesasListener {
 		public boolean onExistenPedidos();
 
-		public void onBorrarPedidos();
+		public void onEnviarPedidosSinEnviar();
 
 	}
 
@@ -203,7 +203,7 @@ public class FragmentSeccionMesas extends Fragment {
 	public void mostrarNotificacion() {
 		AlertDialog.Builder dialog = new AlertDialog.Builder(getView()
 				.getContext());
-		dialog.setMessage("Los pedidos sin enviar se borraran¿Continuar?");
+		dialog.setMessage("Hay pedidos sin enviar¿Desea enviarlos?");
 		dialog.setCancelable(false);
 		dialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
 
@@ -211,7 +211,7 @@ public class FragmentSeccionMesas extends Fragment {
 			public void onClick(DialogInterface dialog, int which) {
 				seccion.setClickable(true);
 				mesa.setClickable(true);
-				seccionesMesasListener.onBorrarPedidos();
+				seccionesMesasListener.onEnviarPedidosSinEnviar();
 				dialog.cancel();
 			}
 		});
