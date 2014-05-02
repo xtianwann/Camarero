@@ -73,6 +73,20 @@ public class GestorMensajes extends Thread {
 					}
 				}).start();
 			}
+			if(tipo.equals("ModificacionCB")){
+				new Thread(new Runnable() {
+
+					public void run() {
+						principal.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								DecodificadorPedidosListos pedidos = new DecodificadorPedidosListos(dom);
+								principal.addPedidosListos(pedidos.getPedidosListos());
+							}
+						});
+					}
+				}).start();
+			}
 
 		} catch (SAXException ex) {
 			Logger.getLogger(Dispatcher.class.getName()).log(Level.SEVERE,

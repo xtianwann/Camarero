@@ -5,13 +5,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import prg.pi.restaurantecamarero.FragmentResumen.Calculadora;
+import prg.pi.restaurantecamarero.conexion.Cliente;
 import prg.pi.restaurantecamarero.restaurante.Mesa;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
 import prg.pi.restaurantecamarero.restaurante.PedidoListo;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
+import prg.pi.restaurantecamarero.xml.XMLModificacionCamarero;
+import prg.pi.restaurantecamarero.xml.XMLPedidosServidos;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -33,13 +39,16 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 public class ActivityPedidosPendientes extends Fragment {
 	private ListView pedidos;
-	private Button limpiar, cambiar, mas, menos, deshacer;
+	private Button limpiar, cambiar, mas, menos, deshacer, enviar;
 	private Calculadora calculadora;
 	public ArrayList<PedidosPendientesCamarero> pedidosPendientes = new ArrayList<PedidosPendientesCamarero>();
 	public ArrayList<PedidosPendientesCamarero> pedidosServidos = new ArrayList<PedidosPendientesCamarero>();
 	private int seleccionado = -1;
 	private int corregido = -1;
 	private AdaptadorResumen adaptador;
+	int unidadesAnterior;
+	int servidoAnterior;
+	private AlertDialog.Builder dialog;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -180,8 +189,16 @@ public class ActivityPedidosPendientes extends Fragment {
 				int codigoColor = color.getColor();
 				if (codigoColor == (Color.parseColor("#0EA7F4"))
 						|| isServido(pos)) {
+					if (seleccionado > -1) {
+						if(pedidosPendientes.get(seleccionado).getServidos() == servidoAnterior){
+							if(isServido(seleccionado)){
+								pedidosServidos.remove(pedidosPendientes.get(seleccionado));
+							}
+						}
+					}
 					seleccionado = pos;
 					corregido = -1;
+					servidoAnterior = pedidosPendientes.get(seleccionado).getServidos();
 					adaptador.notifyDataSetChanged();
 				}
 			}
@@ -191,8 +208,18 @@ public class ActivityPedidosPendientes extends Fragment {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
-				corregido = arg2;
-				seleccionado = -1;
+				if (corregido > -1) {
+					notificacionDeshacer();
+					pedidosPendientes.get(corregido).setUnidades(
+							unidadesAnterior);
+					corregido = -1;
+					seleccionado = -1;
+				} else {
+					corregido = arg2;
+					unidadesAnterior = pedidosPendientes.get(corregido)
+							.getUnidades();
+					seleccionado = -1;
+				}
 				adaptador.notifyDataSetChanged();
 				return false;
 			}
@@ -221,7 +248,7 @@ public class ActivityPedidosPendientes extends Fragment {
 							.get(corregido);
 					int numeroCalculadora = Integer.parseInt(calculadora.total
 							.getText() + "");
-					if (numeroCalculadora >= pedido.getListos()) {
+					if (numeroCalculadora <= unidadesAnterior) {
 						pedido.setUnidades(numeroCalculadora);
 						adaptador.notifyDataSetChanged();
 					}
@@ -247,7 +274,7 @@ public class ActivityPedidosPendientes extends Fragment {
 					PedidosPendientesCamarero pedido = pedidosPendientes
 							.get(corregido);
 					int suma = pedido.getUnidades() + 1;
-					if (suma >= pedido.getListos()) {
+					if (suma <= unidadesAnterior) {
 						pedido.setUnidades(suma);
 						adaptador.notifyDataSetChanged();
 					}
@@ -271,10 +298,49 @@ public class ActivityPedidosPendientes extends Fragment {
 					PedidosPendientesCamarero pedido = pedidosPendientes
 							.get(corregido);
 					int resta = pedido.getUnidades() - 1;
-					if (resta >= pedido.getListos()) {
-						pedido.setUnidades(pedido.getUnidades() - 1);
+					if (resta > -1) {
+						pedido.setUnidades(resta);
 						adaptador.notifyDataSetChanged();
 					}
+				}
+			}
+
+		});
+		enviar = (Button) getView().findViewById(R.id.enviar);
+		enviar.setOnClickListener(new AdapterView.OnClickListener() {
+			public void onClick(View view) {
+				if (pedidosServidos.size() > 0) {
+					new Thread(new Runnable() {
+						public void run() {
+							getActivity().runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									XMLPedidosServidos xmlPedidosServidos = new XMLPedidosServidos(
+											pedidosServidos
+													.toArray(new PedidosPendientesCamarero[0]));
+									String mensaje = xmlPedidosServidos
+											.xmlToString(xmlPedidosServidos
+													.getDOM());
+									Cliente c = new Cliente(mensaje);
+									c.run();
+									try {
+										c.join();
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									for(PedidosPendientesCamarero pedido : pedidosServidos){
+										if(pedido.isServido())
+											pedidosPendientes.remove(pedido);
+									}
+									pedidosServidos.clear();
+									pedidos.invalidateViews();
+									seleccionado = -1;
+									adaptador.notifyDataSetChanged();
+								}
+							});
+						}
+					}).start();
 				}
 			}
 
@@ -283,22 +349,50 @@ public class ActivityPedidosPendientes extends Fragment {
 		deshacer.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
 				if (corregido > -1) {
-					PedidosPendientesCamarero pedido = pedidosPendientes
-							.get(corregido);
-					pedidosServidos.remove(pedido);
-					// Mandar al servidor
-					corregido = -1;
-					pedidos.invalidateViews();
-					adaptador.notifyDataSetChanged();
+					new Thread(new Runnable() {
+						public void run() {
+							getActivity().runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									PedidosPendientesCamarero modificado = pedidosPendientes.get(corregido);
+									XMLModificacionCamarero xmlModificacionCamarero = new XMLModificacionCamarero(new PedidosPendientesCamarero[]{modificado});
+									String mensaje = xmlModificacionCamarero
+											.xmlToString(xmlModificacionCamarero
+													.getDOM());
+									Cliente c = new Cliente(mensaje);
+									c.run();
+									try {
+										c.join();
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									if(modificado.getUnidades() < modificado.getListos()){
+										modificado.setListos(modificado.getUnidades());
+										if(modificado.getUnidades() < modificado.getServidos()){
+											modificado.setListos(modificado.getUnidades());
+										}
+									}
+									if(modificado.isServido())
+										pedidosPendientes.remove(modificado);
+									corregido = -1;
+									pedidos.invalidateViews();
+									adaptador.notifyDataSetChanged();
+								}
+							});
+						}
+					}).start();
 				}
 			}
 
 		});
 		// Trabajo
-		pedidosPendientes.add(new PedidosPendientesCamarero("Abajo", "Rincon",
-				1, new Producto(1, "Chocos", "Racion"), 3, 1, 0));
-		pedidosPendientes.add(new PedidosPendientesCamarero("Arriba", "Centro",
-				2, new Producto(2, "Huevas", "Tapa"), 5, 2, 0));
+		// pedidosPendientes.add(new PedidosPendientesCamarero("Abajo",
+		// "Rincon",
+		// 1, new Producto(1, "Chocos", "Racion"), 3, 1, 0));
+		// pedidosPendientes.add(new PedidosPendientesCamarero("Arriba",
+		// "Centro",
+		// 2, new Producto(2, "Huevas", "Tapa"), 5, 2, 0));
 		// ////////////////////////////////////////////////
 
 	}
@@ -391,13 +485,27 @@ public class ActivityPedidosPendientes extends Fragment {
 	}
 
 	public void addPedidosPendientes(PedidosPendientesCamarero[] pedidosAdd) {
-		for (PedidosPendientesCamarero pedido : pedidosAdd)
-			pedidosPendientes.add(pedido);
+		boolean encontrado;
+		for (PedidosPendientesCamarero pedido : pedidosAdd) {
+			encontrado = false;
+			for (PedidosPendientesCamarero pedidoP : pedidosPendientes) {
+				if (pedido.getIdComanda() == pedidoP.getIdComanda()
+						&& pedido.getProducto().getIdMenu() == pedidoP
+								.getProducto().getIdMenu()) {
+					pedidoP.setListos(pedido.getListos() + pedidoP.getListos());
+					encontrado = true;
+					break;
+				}
+			}
+			if (!encontrado)
+				pedidosPendientes.add(pedido);
+		}
 		pedidos.invalidateViews();
 		adaptador.notifyDataSetChanged();
 	}
 
 	public void addPedidosListos(PedidoListo[] pedidosListos) {
+		Log.d("entra","entra");
 		for (PedidoListo pedidoListo : pedidosListos) {
 			for (PedidosPendientesCamarero pedido : pedidosPendientes) {
 				if (pedido.getIdComanda() == pedidoListo.getIdComanda()
@@ -430,5 +538,18 @@ public class ActivityPedidosPendientes extends Fragment {
 			}
 		}
 		return listo;
+	}
+
+	private void notificacionDeshacer() {
+		dialog = new AlertDialog.Builder(getView().getContext());
+		dialog.setMessage("No se ha terminado la acción de deshacer.");
+		dialog.setCancelable(false);
+		dialog.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		dialog.show();
 	}
 }

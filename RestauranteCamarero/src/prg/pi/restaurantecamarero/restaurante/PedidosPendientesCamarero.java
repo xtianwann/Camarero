@@ -71,7 +71,7 @@ public class PedidosPendientesCamarero {
 		return listos > servidos;
 	}
 	public boolean isServido(){
-		return unidades == servidos;
+		return unidades <= servidos;
 	}
 
 	public int getUnidades() {
