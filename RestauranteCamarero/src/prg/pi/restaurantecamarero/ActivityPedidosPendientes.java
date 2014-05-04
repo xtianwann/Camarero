@@ -39,7 +39,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 public class ActivityPedidosPendientes extends Fragment {
 	private ListView pedidos;
-	private Button limpiar, cambiar, mas, menos, deshacer, enviar;
+	private Button limpiar, cambiar, mas, menos, devolver, enviar;
 	private Calculadora calculadora;
 	public ArrayList<PedidosPendientesCamarero> pedidosPendientes = new ArrayList<PedidosPendientesCamarero>();
 	public ArrayList<PedidosPendientesCamarero> pedidosServidos = new ArrayList<PedidosPendientesCamarero>();
@@ -90,6 +90,11 @@ public class ActivityPedidosPendientes extends Fragment {
 				convertView.setTag(pedidoText);
 			} else {
 				pedidoText = (PedidoPendienteText) convertView.getTag();
+			}
+			if (corregido > -1) {
+				enviar.setText("Deshacer");
+			} else {
+				enviar.setText("Enviar");
 			}
 			PedidosPendientesCamarero pedidoPendiente = pedidosPendientes
 					.get(position);
@@ -190,15 +195,17 @@ public class ActivityPedidosPendientes extends Fragment {
 				if (codigoColor == (Color.parseColor("#0EA7F4"))
 						|| isServido(pos)) {
 					if (seleccionado > -1) {
-						if(pedidosPendientes.get(seleccionado).getServidos() == servidoAnterior){
-							if(isServido(seleccionado)){
-								pedidosServidos.remove(pedidosPendientes.get(seleccionado));
+						if (pedidosPendientes.get(seleccionado).getServidos() == servidoAnterior) {
+							if (isServido(seleccionado)) {
+								pedidosServidos.remove(pedidosPendientes
+										.get(seleccionado));
 							}
 						}
 					}
 					seleccionado = pos;
 					corregido = -1;
-					servidoAnterior = pedidosPendientes.get(seleccionado).getServidos();
+					servidoAnterior = pedidosPendientes.get(seleccionado)
+							.getServidos();
 					adaptador.notifyDataSetChanged();
 				}
 			}
@@ -309,90 +316,162 @@ public class ActivityPedidosPendientes extends Fragment {
 		enviar = (Button) getView().findViewById(R.id.enviar);
 		enviar.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
-				if (pedidosServidos.size() > 0) {
-					new Thread(new Runnable() {
-						public void run() {
-							getActivity().runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									XMLPedidosServidos xmlPedidosServidos = new XMLPedidosServidos(
-											pedidosServidos
-													.toArray(new PedidosPendientesCamarero[0]));
-									String mensaje = xmlPedidosServidos
-											.xmlToString(xmlPedidosServidos
-													.getDOM());
-									Cliente c = new Cliente(mensaje);
-									c.run();
-									try {
-										c.join();
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
+				if (enviar.getText().equals("Enviar")) {
+					if (pedidosServidos.size() > 0) {
+						new Thread(new Runnable() {
+							public void run() {
+								getActivity().runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										// XMLPedidosServidos xmlPedidosServidos
+										// = new XMLPedidosServidos(
+										// pedidosServidos
+										// .toArray(new
+										// PedidosPendientesCamarero[0]));
+										// String mensaje = xmlPedidosServidos
+										// .xmlToString(xmlPedidosServidos
+										// .getDOM());
+										// Cliente c = new Cliente(mensaje);
+										// c.run();
+										// try {
+										// c.join();
+										// } catch (InterruptedException e) {
+										// // TODO Auto-generated catch block
+										// e.printStackTrace();
+										// }
+										// for(PedidosPendientesCamarero pedido
+										// : pedidosServidos){
+										// if(pedido.isServido())
+										// pedidosPendientes.remove(pedido);
+										// }
+										pedidosServidos.clear();
+										pedidos.invalidateViews();
+										seleccionado = -1;
+										adaptador.notifyDataSetChanged();
 									}
-									for(PedidosPendientesCamarero pedido : pedidosServidos){
-										if(pedido.isServido())
-											pedidosPendientes.remove(pedido);
+								});
+							}
+						}).start();
+					}
+				} else {
+					if (corregido > -1) {
+						new Thread(new Runnable() {
+							public void run() {
+								getActivity().runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										PedidosPendientesCamarero modificado = pedidosPendientes
+												.get(corregido);
+										// XMLModificacionCamarero
+										// xmlModificacionCamarero = new
+										// XMLModificacionCamarero(new
+										// PedidosPendientesCamarero[]{modificado});
+										// String mensaje =
+										// xmlModificacionCamarero
+										// .xmlToString(xmlModificacionCamarero
+										// .getDOM());
+										// Cliente c = new Cliente(mensaje);
+										// c.run();
+										// try {
+										// c.join();
+										// } catch (InterruptedException e) {
+										// // TODO Auto-generated catch block
+										// e.printStackTrace();
+										// }
+										if (modificado.getUnidades() < modificado
+												.getListos()) {
+											modificado.setListos(modificado
+													.getUnidades());
+											if (modificado.getUnidades() < modificado
+													.getServidos()) {
+												modificado
+														.setServidos(modificado
+																.getUnidades());
+											}
+										}
+										if (modificado.isServido())
+											pedidosPendientes
+													.remove(modificado);
+										corregido = -1;
+										pedidos.invalidateViews();
+										adaptador.notifyDataSetChanged();
 									}
-									pedidosServidos.clear();
-									pedidos.invalidateViews();
-									seleccionado = -1;
-									adaptador.notifyDataSetChanged();
-								}
-							});
-						}
-					}).start();
+								});
+							}
+						}).start();
+					}
 				}
 			}
 
 		});
-		deshacer = (Button) getView().findViewById(R.id.deshacer);
-		deshacer.setOnClickListener(new AdapterView.OnClickListener() {
+		devolver = (Button) getView().findViewById(R.id.devolver);
+		devolver.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
 				if (corregido > -1) {
-					new Thread(new Runnable() {
-						public void run() {
-							getActivity().runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									PedidosPendientesCamarero modificado = pedidosPendientes.get(corregido);
-									XMLModificacionCamarero xmlModificacionCamarero = new XMLModificacionCamarero(new PedidosPendientesCamarero[]{modificado});
-									String mensaje = xmlModificacionCamarero
-											.xmlToString(xmlModificacionCamarero
-													.getDOM());
-									Cliente c = new Cliente(mensaje);
-									c.run();
-									try {
-										c.join();
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
+					if (pedidosPendientes.get(corregido).getUnidades() <= pedidosPendientes
+							.get(corregido).getServidos()) {
+						new Thread(new Runnable() {
+							public void run() {
+								getActivity().runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										PedidosPendientesCamarero modificado = pedidosPendientes
+												.get(corregido);
+										// XMLModificacionCamarero
+										// xmlModificacionCamarero = new
+										// XMLModificacionCamarero(new
+										// PedidosPendientesCamarero[]{modificado});
+										// String mensaje =
+										// xmlModificacionCamarero
+										// .xmlToString(xmlModificacionCamarero
+										// .getDOM());
+										// Cliente c = new Cliente(mensaje);
+										// c.run();
+										// try {
+										// c.join();
+										// } catch (InterruptedException e) {
+										// // TODO Auto-generated catch block
+										// e.printStackTrace();
+										// }
+										modificado.setListos(modificado.getListos() - modificado
+												.getUnidades());
+										modificado.setServidos(modificado.getServidos()-modificado
+												.getUnidades());
+										modificado.setUnidades(unidadesAnterior-modificado.getUnidades());
+										if (modificado.isServido())
+											pedidosPendientes
+													.remove(modificado);
+										corregido = -1;
+										pedidos.invalidateViews();
+										adaptador.notifyDataSetChanged();
 									}
-									if(modificado.getUnidades() < modificado.getListos()){
-										modificado.setListos(modificado.getUnidades());
-										if(modificado.getUnidades() < modificado.getServidos()){
-											modificado.setListos(modificado.getUnidades());
-										}
+								});
+							}
+						}).start();
+					} else {
+						dialog = new AlertDialog.Builder(getView().getContext());
+						dialog.setMessage("No se pueden devolver pedidos que no estan servidos.");
+						dialog.setCancelable(false);
+						dialog.setNeutralButton("OK",
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.cancel();
 									}
-									if(modificado.isServido())
-										pedidosPendientes.remove(modificado);
-									corregido = -1;
-									pedidos.invalidateViews();
-									adaptador.notifyDataSetChanged();
-								}
-							});
-						}
-					}).start();
+								});
+						dialog.show();
+						corregido = -1;
+					}
 				}
 			}
 
 		});
 		// Trabajo
-		// pedidosPendientes.add(new PedidosPendientesCamarero("Abajo",
-		// "Rincon",
-		// 1, new Producto(1, "Chocos", "Racion"), 3, 1, 0));
-		// pedidosPendientes.add(new PedidosPendientesCamarero("Arriba",
-		// "Centro",
-		// 2, new Producto(2, "Huevas", "Tapa"), 5, 2, 0));
+		pedidosPendientes.add(new PedidosPendientesCamarero("Abajo", "Rincon",
+				1, new Producto(1, "Chocos", "Racion"), 3, 2, 2));
+		pedidosPendientes.add(new PedidosPendientesCamarero("Arriba", "Centro",
+				2, new Producto(2, "Huevas", "Tapa"), 4, 2, 2));
 		// ////////////////////////////////////////////////
 
 	}
@@ -505,7 +584,6 @@ public class ActivityPedidosPendientes extends Fragment {
 	}
 
 	public void addPedidosListos(PedidoListo[] pedidosListos) {
-		Log.d("entra","entra");
 		for (PedidoListo pedidoListo : pedidosListos) {
 			for (PedidosPendientesCamarero pedido : pedidosPendientes) {
 				if (pedido.getIdComanda() == pedidoListo.getIdComanda()

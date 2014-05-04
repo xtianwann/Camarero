@@ -46,7 +46,7 @@ public final class R {
         public static final int cantidadP=0x7f080023;
         public static final int cantidadPendiente=0x7f08002b;
         public static final int ce=0x7f08001c;
-        public static final int deshacer=0x7f080028;
+        public static final int devolver=0x7f080028;
         public static final int drawer_layout=0x7f080002;
         public static final int enviar=0x7f08001d;
         public static final int fragmentCategorias=0x7f080004;
