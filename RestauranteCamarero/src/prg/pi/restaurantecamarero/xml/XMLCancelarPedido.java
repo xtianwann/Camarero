@@ -14,6 +14,7 @@ public class XMLCancelarPedido extends XML{
 		addNodo("tipo", "CancelarPedido", "paquete");
 		addNodo("idCom", pedido.getIdComanda()+"", "paquete");
 		addNodo("idMenu", pedido.getIdMenu()+"", "paquete");
+		addNodo("unidades", pedido.getListos()+"", "paquete");
 	}
 
 }
