@@ -11,6 +11,7 @@ import prg.pi.restaurantecamarero.restaurante.Pedido;
 import prg.pi.restaurantecamarero.restaurante.PedidoListo;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
+import prg.pi.restaurantecamarero.xml.XMLCancelarPedido;
 import prg.pi.restaurantecamarero.xml.XMLModificacionCamarero;
 import prg.pi.restaurantecamarero.xml.XMLPedidosServidos;
 import android.app.Activity;
@@ -323,27 +324,27 @@ public class ActivityPedidosPendientes extends Fragment {
 								getActivity().runOnUiThread(new Runnable() {
 									@Override
 									public void run() {
-										// XMLPedidosServidos xmlPedidosServidos
-										// = new XMLPedidosServidos(
-										// pedidosServidos
-										// .toArray(new
-										// PedidosPendientesCamarero[0]));
-										// String mensaje = xmlPedidosServidos
-										// .xmlToString(xmlPedidosServidos
-										// .getDOM());
-										// Cliente c = new Cliente(mensaje);
-										// c.run();
-										// try {
-										// c.join();
-										// } catch (InterruptedException e) {
-										// // TODO Auto-generated catch block
-										// e.printStackTrace();
-										// }
-										// for(PedidosPendientesCamarero pedido
-										// : pedidosServidos){
-										// if(pedido.isServido())
-										// pedidosPendientes.remove(pedido);
-										// }
+										 XMLPedidosServidos xmlPedidosServidos
+										 = new XMLPedidosServidos(
+										 pedidosServidos
+										 .toArray(new
+										 PedidosPendientesCamarero[0]));
+										 String mensaje = xmlPedidosServidos
+										 .xmlToString(xmlPedidosServidos
+										 .getDOM());
+										 Cliente c = new Cliente(mensaje);
+										 c.run();
+										 try {
+										 c.join();
+										 } catch (InterruptedException e) {
+										 // TODO Auto-generated catch block
+										 e.printStackTrace();
+										 }
+										 for(PedidosPendientesCamarero pedido
+										 : pedidosServidos){
+										 if(pedido.isServido())
+										 pedidosPendientes.remove(pedido);
+										 }
 										pedidosServidos.clear();
 										pedidos.invalidateViews();
 										seleccionado = -1;
@@ -362,22 +363,22 @@ public class ActivityPedidosPendientes extends Fragment {
 									public void run() {
 										PedidosPendientesCamarero modificado = pedidosPendientes
 												.get(corregido);
-										// XMLModificacionCamarero
-										// xmlModificacionCamarero = new
-										// XMLModificacionCamarero(new
-										// PedidosPendientesCamarero[]{modificado});
-										// String mensaje =
-										// xmlModificacionCamarero
-										// .xmlToString(xmlModificacionCamarero
-										// .getDOM());
-										// Cliente c = new Cliente(mensaje);
-										// c.run();
-										// try {
-										// c.join();
-										// } catch (InterruptedException e) {
-										// // TODO Auto-generated catch block
-										// e.printStackTrace();
-										// }
+										 XMLModificacionCamarero
+										 xmlModificacionCamarero = new
+										 XMLModificacionCamarero(new
+										 PedidosPendientesCamarero[]{modificado});
+										 String mensaje =
+										 xmlModificacionCamarero
+										 .xmlToString(xmlModificacionCamarero
+										 .getDOM());
+										 Cliente c = new Cliente(mensaje);
+										 c.run();
+										 try {
+										 c.join();
+										 } catch (InterruptedException e) {
+										 // TODO Auto-generated catch block
+										 e.printStackTrace();
+										 }
 										if (modificado.getUnidades() < modificado
 												.getListos()) {
 											modificado.setListos(modificado
@@ -417,22 +418,22 @@ public class ActivityPedidosPendientes extends Fragment {
 									public void run() {
 										PedidosPendientesCamarero modificado = pedidosPendientes
 												.get(corregido);
-										// XMLModificacionCamarero
-										// xmlModificacionCamarero = new
-										// XMLModificacionCamarero(new
-										// PedidosPendientesCamarero[]{modificado});
-										// String mensaje =
-										// xmlModificacionCamarero
-										// .xmlToString(xmlModificacionCamarero
-										// .getDOM());
-										// Cliente c = new Cliente(mensaje);
-										// c.run();
-										// try {
-										// c.join();
-										// } catch (InterruptedException e) {
-										// // TODO Auto-generated catch block
-										// e.printStackTrace();
-										// }
+										 XMLCancelarPedido
+										 xmlCancelarPedido = new
+										 XMLCancelarPedido(new
+										 PedidoListo(modificado.getIdComanda(),modificado.getProducto().getIdMenu(),modificado.getUnidades()));
+										 String mensaje =
+												 xmlCancelarPedido
+										 .xmlToString(xmlCancelarPedido
+										 .getDOM());
+										 Cliente c = new Cliente(mensaje);
+										 c.run();
+										 try {
+										 c.join();
+										 } catch (InterruptedException e) {
+										 // TODO Auto-generated catch block
+										 e.printStackTrace();
+										 }
 										modificado.setListos(modificado.getListos() - modificado
 												.getUnidades());
 										modificado.setServidos(modificado.getServidos()-modificado
@@ -468,10 +469,10 @@ public class ActivityPedidosPendientes extends Fragment {
 
 		});
 		// Trabajo
-		pedidosPendientes.add(new PedidosPendientesCamarero("Abajo", "Rincon",
-				1, new Producto(1, "Chocos", "Racion"), 3, 2, 2));
-		pedidosPendientes.add(new PedidosPendientesCamarero("Arriba", "Centro",
-				2, new Producto(2, "Huevas", "Tapa"), 4, 2, 2));
+//		pedidosPendientes.add(new PedidosPendientesCamarero("Abajo", "Rincon",
+//				1, new Producto(1, "Chocos", "Racion"), 3, 2, 2));
+//		pedidosPendientes.add(new PedidosPendientesCamarero("Arriba", "Centro",
+//				2, new Producto(2, "Huevas", "Tapa"), 4, 2, 2));
 		// ////////////////////////////////////////////////
 
 	}
