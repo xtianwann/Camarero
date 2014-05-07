@@ -1,12 +1,14 @@
 package prg.pi.restaurantecamarero.conexion;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import prg.pi.restaurantecamarero.MainActivity;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorAcuseRecibo;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorDameloTodo;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorPedidosPendientesCamarero;
@@ -14,6 +16,9 @@ import prg.pi.restaurantecamarero.decodificador.DecodificadorResumenMesa;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
 
 import XML.XML;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 
 import Conexion.Conexion;
@@ -28,6 +33,15 @@ public class Cliente extends Thread {
 	private String respuesta;
 	private DecodificadorDameloTodo todo;
 	private DecodificadorPedidosPendientesCamarero pedidosPendientes;
+	private AlertDialog.Builder dialog;
+	private Context contexto;
+
+	public Cliente(String mensaje, Context contexto) {
+		respuesta = "";
+		this.mensaje = mensaje;
+		this.contexto = contexto;
+	}
+
 	public Cliente(String mensaje) {
 		respuesta = "";
 		this.mensaje = mensaje;
@@ -35,8 +49,19 @@ public class Cliente extends Thread {
 
 	public void run() {
 
-		enviarMensaje(mensaje);
+		try {
+			enviarMensaje(mensaje);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try{
 		respuesta = recibirMensaje();
+		} catch (NullPointerException e){
+			 return;
+		}
 		if (respuesta.length() > 0) {
 			Document dom = XML.stringToXml(respuesta);
 			NodeList nodeListTipo = dom.getElementsByTagName("tipo");
@@ -63,7 +88,8 @@ public class Cliente extends Thread {
 				}
 			}
 			if (tipo.equals("PedidosPendientesCamarero")) {
-				pedidosPendientes = new DecodificadorPedidosPendientesCamarero(dom);
+				pedidosPendientes = new DecodificadorPedidosPendientesCamarero(
+						dom);
 			}
 
 		} else {
@@ -77,8 +103,10 @@ public class Cliente extends Thread {
 	 * 
 	 * @param msg
 	 *            mensaje a enviar
+	 * @throws IOException
+	 * @throws ConnectException
 	 */
-	public void enviarMensaje(String msg) {
+	public void enviarMensaje(String msg) throws ConnectException, IOException {
 		conexion();
 		conn.escribirMensaje(msg);
 	}
@@ -91,7 +119,7 @@ public class Cliente extends Thread {
 	 */
 	public String recibirMensaje() {
 		String respuesta = null;
-		long espera = System.currentTimeMillis() + 10000;
+		long espera = System.currentTimeMillis() + 1000;
 		do {
 			respuesta = conn.leerMensaje();
 		} while (respuesta.length() == 0 || espera < System.currentTimeMillis());
@@ -100,14 +128,12 @@ public class Cliente extends Thread {
 
 	/**
 	 * Establece conexión con el servidor
+	 * 
+	 * @throws IOException
+	 *             ,ConnectException
 	 */
-	private void conexion() {
-		try {
-			conn = new Conexion("192.168.1.9", 27014);
-		} catch (IOException ex) {
-			Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null,
-					ex);
-		}
+	private void conexion() throws IOException, ConnectException {
+		conn = new Conexion("192.168.20.3", 27014);
 	}
 
 	public DecodificadorDameloTodo getTodo() {

@@ -572,7 +572,7 @@ public class ActivityPedidosPendientes extends Fragment {
 				if (pedido.getIdComanda() == pedidoP.getIdComanda()
 						&& pedido.getProducto().getIdMenu() == pedidoP
 								.getProducto().getIdMenu()) {
-					pedidoP.setListos(pedido.getListos() + pedidoP.getListos());
+					pedidoP.setUnidades(pedido.getUnidades() + pedidoP.getUnidades());
 					encontrado = true;
 					break;
 				}

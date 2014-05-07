@@ -109,4 +109,10 @@ public class MainActivity extends FragmentActivity implements CantidadListener,
 	public void onEnviarPedidosSinEnviar() {
 		fragmentResumen.enviarPedido();
 	}
+
+	@Override
+	public void onIniciarHilos() {
+		fragmentSeccionMesas.iniciarHilo();
+		fragmentCategorias.iniciarHilo();
+	}
 }
