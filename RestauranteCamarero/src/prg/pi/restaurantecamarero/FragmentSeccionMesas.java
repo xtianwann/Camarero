@@ -3,6 +3,7 @@ package prg.pi.restaurantecamarero;
 import java.util.ArrayList;
 
 import prg.pi.restaurantecamarero.conexion.Cliente;
+import prg.pi.restaurantecamarero.decodificador.DecodificadorDameloTodo;
 import prg.pi.restaurantecamarero.restaurante.Mesa;
 import prg.pi.restaurantecamarero.restaurante.Producto;
 import prg.pi.restaurantecamarero.restaurante.Seccion;
@@ -40,6 +41,11 @@ public class FragmentSeccionMesas extends Fragment {
 	private SeccionesMesasListener seccionesMesasListener;
 	private SeccionesThread hilo;
 	private AlertDialog.Builder dialog;
+	private DecodificadorDameloTodo decoTodo;
+
+	public DecodificadorDameloTodo getDecoTodo() {
+		return decoTodo;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +56,7 @@ public class FragmentSeccionMesas extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle state) {
 		super.onActivityCreated(state);
+		decoTodo = null;
 		iniciarHilo();
 	}
 	public void iniciarHilo(){
@@ -85,8 +92,10 @@ public class FragmentSeccionMesas extends Fragment {
 				public void run() {
 					XMLDameloTodo xml = new XMLDameloTodo();
 					String mensaje = xml.xmlToString(xml.getDOM());
-					Cliente c = new Cliente(mensaje, getView().getContext());
+					Log.e("SeccionesThread", "he llegado MESAS");
+					Cliente c = new Cliente(mensaje);
 					c.run();
+					Log.e("SeccionesThread", "he terminado MESAS");
 					try {
 						c.join();
 					} catch (InterruptedException e) {
@@ -94,7 +103,8 @@ public class FragmentSeccionMesas extends Fragment {
 						e.printStackTrace();
 					}
 					try {
-						seccionesT = c.getTodo().getSecciones()
+						decoTodo = c.getTodo();
+						seccionesT = decoTodo.getSecciones()
 								.toArray(new Seccion[0]);
 						secciones = seccionesT;
 						seccion = (Spinner) getView().findViewById(

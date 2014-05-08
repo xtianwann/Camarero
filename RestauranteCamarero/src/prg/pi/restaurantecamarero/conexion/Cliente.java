@@ -2,26 +2,17 @@ package prg.pi.restaurantecamarero.conexion;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import prg.pi.restaurantecamarero.MainActivity;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorAcuseRecibo;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorDameloTodo;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorPedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorResumenMesa;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
-
-import XML.XML;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.util.Log;
-
 import Conexion.Conexion;
+import XML.XML;
+
 
 /**
  * @author Juan Gabriel Pérez Leo
@@ -33,14 +24,6 @@ public class Cliente extends Thread {
 	private String respuesta;
 	private DecodificadorDameloTodo todo;
 	private DecodificadorPedidosPendientesCamarero pedidosPendientes;
-	private AlertDialog.Builder dialog;
-	private Context contexto;
-
-	public Cliente(String mensaje, Context contexto) {
-		respuesta = "";
-		this.mensaje = mensaje;
-		this.contexto = contexto;
-	}
 
 	public Cliente(String mensaje) {
 		respuesta = "";
@@ -51,18 +34,15 @@ public class Cliente extends Thread {
 
 		try {
 			enviarMensaje(mensaje);
-
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
-		try{
-		respuesta = recibirMensaje();
-		} catch (NullPointerException e){
-			 return;
+		try {
+			respuesta = recibirMensaje();
+		} catch (NullPointerException e) {
+			
 		}
-		if (respuesta.length() > 0) {
+		if (respuesta != null && respuesta.length() > 0) {
 			Document dom = XML.stringToXml(respuesta);
 			NodeList nodeListTipo = dom.getElementsByTagName("tipo");
 			String tipo = nodeListTipo.item(0).getChildNodes().item(0)
@@ -108,7 +88,10 @@ public class Cliente extends Thread {
 	 */
 	public void enviarMensaje(String msg) throws ConnectException, IOException {
 		conexion();
-		conn.escribirMensaje(msg);
+		try {
+			conn.escribirMensaje(msg);
+		} catch (NullPointerException e) {
+		}
 	}
 
 	/**
@@ -132,8 +115,8 @@ public class Cliente extends Thread {
 	 * @throws IOException
 	 *             ,ConnectException
 	 */
-	private void conexion() throws IOException, ConnectException {
-		conn = new Conexion("192.168.20.3", 27014);
+	private void conexion() {
+		conn = new Conexion("192.168.1.9", 27014);
 	}
 
 	public DecodificadorDameloTodo getTodo() {

@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,13 +48,16 @@ public class FragmentCantidades extends Fragment {
 		super.onActivityCreated(state);
 		iniciarHilo();
 	}
-	public void iniciarHilo(){
+
+	public void iniciarHilo() {
 		hilo = new CantidadesThread(this);
 		hilo.start();
 	}
 
 	public interface CantidadListener {
 		void onCantidadSeleccionada(Cantidad cantidad);
+
+		Cantidad[] onHiloTerminado();
 	}
 
 	public void setCantidadListener(CantidadListener cantidadListener) {
@@ -101,21 +105,18 @@ public class FragmentCantidades extends Fragment {
 				public void run() {
 					XMLDameloTodo xml = new XMLDameloTodo();
 					String mensaje = xml.xmlToString(xml.getDOM());
-					Cliente c = new Cliente(mensaje, getView().getContext());
-					c.run();
+					Log.e("CantidadesThread", "he llegado CANTIDADES");
 					try {
-						c.join();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					try {
-						cantidadesT = c.getTodo().getCantidades()
-								.toArray(new Cantidad[0]);
-					} catch (NullPointerException e) {
 
+						cantidades = cantidadListener.onHiloTerminado();
+					} catch (NullPointerException we) {
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
-					cantidades = cantidadesT;
 					listaCantidades = (ListView) getView().findViewById(
 							R.id.listaCategorias);
 					try {

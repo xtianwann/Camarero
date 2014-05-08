@@ -115,4 +115,9 @@ public class MainActivity extends FragmentActivity implements CantidadListener,
 		fragmentSeccionMesas.iniciarHilo();
 		fragmentCategorias.iniciarHilo();
 	}
+
+	@Override
+	public Cantidad[] onHiloTerminado() {
+		return fragmentSeccionMesas.getDecoTodo().getCantidades().toArray(new Cantidad[0]);
+	}
 }
