@@ -13,7 +13,6 @@ import prg.pi.restaurantecamarero.restaurante.Pedido;
 import Conexion.Conexion;
 import XML.XML;
 
-
 /**
  * @author Juan Gabriel Pérez Leo
  * @author Cristian Marín Honor
@@ -40,7 +39,7 @@ public class Cliente extends Thread {
 		try {
 			respuesta = recibirMensaje();
 		} catch (NullPointerException e) {
-			
+
 		}
 		if (respuesta != null && respuesta.length() > 0) {
 			Document dom = XML.stringToXml(respuesta);
