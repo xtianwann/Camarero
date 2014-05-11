@@ -10,8 +10,12 @@ import prg.pi.restaurantecamarero.restaurante.Seccion;
 import prg.pi.restaurantecamarero.xml.XMLDameloTodo;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo.DetailedState;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
@@ -57,7 +61,37 @@ public class FragmentSeccionMesas extends Fragment {
 	public void onActivityCreated(Bundle state) {
 		super.onActivityCreated(state);
 		decoTodo = null;
-		iniciarHilo();
+		final ConnectivityManager connMgr = (ConnectivityManager) getView().getContext()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		final android.net.NetworkInfo wifi = connMgr
+				.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+		final android.net.NetworkInfo mobile = connMgr
+				.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		if (wifi.isAvailable() && wifi.getDetailedState() == DetailedState.CONNECTED) {
+			iniciarHilo();
+		} else {
+			dialog = new AlertDialog.Builder(getView().getContext());
+			dialog.setMessage("El wifi no esta activado");
+			dialog.setCancelable(false);
+			dialog.setNeutralButton("Activar",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog,
+								int which) {
+							activarWifi();
+							try {
+								Thread.sleep(15000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							seccionesMesasListener.onIniciarHilos();
+							dialog.cancel();
+						}
+					});
+			dialog.show();
+		}
 	}
 	public void iniciarHilo(){
 		hilo = new SeccionesThread();
@@ -258,6 +292,12 @@ public class FragmentSeccionMesas extends Fragment {
 
 	public SeccionesThread getHilo() {
 		return hilo;
+	}
+	
+	private void activarWifi() {
+		WifiManager wifiManager = (WifiManager) getView().getContext()
+				.getSystemService(Context.WIFI_SERVICE);
+		wifiManager.setWifiEnabled(true);
 	}
 
 }
