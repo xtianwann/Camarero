@@ -1,7 +1,7 @@
 package prg.pi.restaurantecamarero;
 
 import java.util.ArrayList;
-
+import prg.pi.restaurantecamarero.MainFragments;
 import prg.pi.restaurantecamarero.preferencias.Preferencias;
 import prg.pi.restaurantecamarero.preferencias.PreferenciasSet;
 import android.app.Activity;
@@ -46,17 +46,17 @@ public class MainActivity extends Activity {
 		botonLogin = (Button) findViewById(R.id.botonLogin);
 		botonLogin.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
-				if (seleccionado > 0) {
-					String usuario = usuarios[seleccionado];
+				//if (seleccionado > 0) {
+					//String usuario = usuarios[seleccionado];
 					// Mandar el nombre del user al servidor y si funciona
-					// Intent intencion = new Intent(this,MainFragments.class);
-					// intent.putExtra("usuario", idUsuario);
-					// startActivity(intencion);
+					Intent intencion = new Intent(MainActivity.this,MainFragments.class);
+					//intent.putExtra("usuario", idUsuario);
+					startActivity(intencion);
 					// En MainFragments
 					// Bundle extras = getIntent().getExtras();
 					// int idUsuario = extras.getInt("idUsuario");
 				}
-			}
+			//}
 
 		});
 	}

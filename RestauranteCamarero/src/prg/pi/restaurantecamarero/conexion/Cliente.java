@@ -103,7 +103,15 @@ public class Cliente extends Thread {
 		String respuesta = null;
 		long espera = System.currentTimeMillis() + 1000;
 		do {
-			respuesta = conn.leerMensaje();
+			try {
+				respuesta = conn.leerMensaje();
+			} catch (NullPointerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} while (respuesta.length() == 0 || espera < System.currentTimeMillis());
 		return respuesta;
 	}
@@ -115,7 +123,15 @@ public class Cliente extends Thread {
 	 *             ,ConnectException
 	 */
 	private void conexion() {
-		conn = new Conexion("192.168.20.3", 27000);
+		try {
+			conn = new Conexion("192.168.20.3", 27000);
+		} catch (NullPointerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public DecodificadorDameloTodo getTodo() {
