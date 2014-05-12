@@ -115,7 +115,7 @@ public class Cliente extends Thread {
 	 *             ,ConnectException
 	 */
 	private void conexion() {
-		conn = new Conexion("192.168.1.9", 27014);
+		conn = new Conexion("192.168.20.3", 27000);
 	}
 
 	public DecodificadorDameloTodo getTodo() {
