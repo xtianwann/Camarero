@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import prg.pi.restaurantecamarero.MainActivity;
+import prg.pi.restaurantecamarero.MainFragments;
 
 import android.app.Service;
 import android.content.Intent;
@@ -24,9 +24,9 @@ import android.util.Log;
 public class Servidor extends Service{
     
     private HiloPrincipal hiloPrincipal;
-    private MainActivity principal;
+    private MainFragments principal;
     
-    public Servidor(MainActivity principal){
+    public Servidor(MainFragments principal){
     	this.principal = principal;
         try {
             hiloPrincipal = new HiloPrincipal(27000);

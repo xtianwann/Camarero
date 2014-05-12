@@ -16,7 +16,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import prg.pi.restaurantecamarero.MainActivity;
+import prg.pi.restaurantecamarero.MainFragments;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorPedidosListos;
 
 import android.util.Log;
@@ -34,9 +34,9 @@ public class GestorMensajes extends Thread {
 	private Socket socket;
 	Conexion conn;
 	private String mensaje;
-	private MainActivity principal;
+	private MainFragments principal;
 
-	public GestorMensajes(Socket socket, MainActivity principal) {
+	public GestorMensajes(Socket socket, MainFragments principal) {
 		this.principal = principal;
 		this.socket = socket;
 		conn = new Conexion(socket);

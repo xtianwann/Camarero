@@ -1,48 +1,33 @@
 package prg.pi.restaurantecamarero;
 
-import prg.pi.restaurantecamarero.MainActivity;
-import prg.pi.restaurantecamarero.servidor.Servidor;
-import prg.pi.restaurantecamarero.FragmentProductos.ProductoListener;
-import prg.pi.restaurantecamarero.FragmentCantidades.CantidadListener;
-import prg.pi.restaurantecamarero.FragmentResumen.ResumenListener;
-import prg.pi.restaurantecamarero.FragmentSeccionMesas.SeccionesMesasListener;
-import prg.pi.restaurantecamarero.restaurante.Cantidad;
-import prg.pi.restaurantecamarero.restaurante.Mesa;
-import prg.pi.restaurantecamarero.restaurante.PedidoListo;
-import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
-import prg.pi.restaurantecamarero.restaurante.Producto;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
+import java.util.ArrayList;
+
+import prg.pi.restaurantecamarero.preferencias.Preferencias;
+import prg.pi.restaurantecamarero.preferencias.PreferenciasSet;
+import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo.DetailedState;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 
-public class MainActivity extends FragmentActivity implements CantidadListener,
-		ProductoListener, ResumenListener, SeccionesMesasListener {
-	private DrawerLayout drawerLayout;
-	ActivityPedidosPendientes fragmentPedidosPendientes;
-	FragmentSeccionMesas fragmentSeccionMesas;
-	FragmentResumen fragmentResumen;
-	FragmentProductos fragmentProductos;
-	FragmentCantidades fragmentCategorias;
-	private Servidor servidor;
-	private AlertDialog.Builder dialog;
+public class MainActivity extends Activity {
+	private Spinner spinnerUsuarios;
+	private Button botonLogin;
+	private String[] usuarios = {"Manolin","Pepe"};
+	private int seleccionado = 0;
+	private ArrayAdapter<String> adaptador;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 				.permitAll().build();
@@ -53,83 +38,49 @@ public class MainActivity extends FragmentActivity implements CantidadListener,
 		// Remove notification bar
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.login);
+		adaptador = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, usuarios);
+		spinnerUsuarios = (Spinner) findViewById(R.id.spinnerLogin);
+		spinnerUsuarios.setAdapter(adaptador);
+		botonLogin = (Button) findViewById(R.id.botonLogin);
+		botonLogin.setOnClickListener(new AdapterView.OnClickListener() {
+			public void onClick(View view) {
+				if (seleccionado > 0) {
+					String usuario = usuarios[seleccionado];
+					// Mandar el nombre del user al servidor y si funciona
+					// Intent intencion = new Intent(this,MainFragments.class);
+					// intent.putExtra("usuario", idUsuario);
+					// startActivity(intencion);
+					// En MainFragments
+					// Bundle extras = getIntent().getExtras();
+					// int idUsuario = extras.getInt("idUsuario");
+				}
+			}
 
-		fragmentSeccionMesas = (FragmentSeccionMesas) getSupportFragmentManager()
-				.findFragmentById(R.id.fragmentSeccionMesas);
-
-		fragmentSeccionMesas.setSeccionesMesasListener(this);
-
-		fragmentResumen = (FragmentResumen) getSupportFragmentManager()
-				.findFragmentById(R.id.fragmentResumen);
-
-		fragmentResumen.setResumenListener(this);
-
-		fragmentProductos = (FragmentProductos) getSupportFragmentManager()
-				.findFragmentById(R.id.fragmentProductos);
-
-		fragmentProductos.setProductoListener(this);
-
-		fragmentCategorias = (FragmentCantidades) getSupportFragmentManager()
-				.findFragmentById(R.id.fragmentCategorias);
-
-		fragmentCategorias.setCantidadListener(this);
-
-		fragmentPedidosPendientes = (ActivityPedidosPendientes) getSupportFragmentManager()
-				.findFragmentById(R.id.fragmentPedidosPendientes);
-
-		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		servidor = new Servidor(MainActivity.this);
+		});
 	}
 
 	@Override
-	public void onCantidadSeleccionada(Cantidad cantidad) {
-		fragmentProductos.rellenarProductos(cantidad);
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return true;
+		/** true -> el menú ya está visible */
 	}
 
 	@Override
-	public void onProductoSeleccionado(Producto producto) {
-		fragmentResumen.apuntarPedido(producto);
+	public boolean onOptionsItemSelected(MenuItem item) {
 
-	}
+		switch (item.getItemId()) {
+		case R.id.configuracion:
+			startActivity(new Intent(this, PreferenciasSet.class));
+			break;
+		}
 
-	@Override
-	public Mesa onEnviar() {
-		Mesa mesa = fragmentSeccionMesas.getMesaSeleccionada();
-		fragmentSeccionMesas.addMesaActiva(mesa);
-		return mesa;
-	}
-
-	@Override
-	public boolean onExistenPedidos() {
-		return fragmentResumen.getPedido().size() > 0;
-	}
-
-	@Override
-	public void onPedidosPendientes(
-			PedidosPendientesCamarero[] pedidosPendientes) {
-		fragmentPedidosPendientes.addPedidosPendientes(pedidosPendientes);
-
-	}
-
-	public void addPedidosListos(PedidoListo[] pedidosListos) {
-		fragmentPedidosPendientes.addPedidosListos(pedidosListos);
-	}
-
-	@Override
-	public void onEnviarPedidosSinEnviar() {
-		fragmentResumen.enviarPedido();
-	}
-
-	@Override
-	public void onIniciarHilos() {
-		fragmentSeccionMesas.iniciarHilo();
-		fragmentCategorias.iniciarHilo();
-	}
-
-	@Override
-	public Cantidad[] onHiloTerminado() {
-		return fragmentSeccionMesas.getDecoTodo().getCantidades()
-				.toArray(new Cantidad[0]);
+		return true;
+		/** true -> consumimos el item, no se propaga */
 	}
 }
