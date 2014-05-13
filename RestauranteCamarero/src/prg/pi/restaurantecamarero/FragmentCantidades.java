@@ -46,7 +46,6 @@ public class FragmentCantidades extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle state) {
 		super.onActivityCreated(state);
-		iniciarHilo();
 	}
 
 	public void iniciarHilo() {
@@ -106,17 +105,7 @@ public class FragmentCantidades extends Fragment {
 					XMLDameloTodo xml = new XMLDameloTodo();
 					String mensaje = xml.xmlToString(xml.getDOM());
 					Log.e("CantidadesThread", "he llegado CANTIDADES");
-					try {
-
-						cantidades = cantidadListener.onHiloTerminado();
-					} catch (NullPointerException we) {
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
+					cantidades = cantidadListener.onHiloTerminado();
 					listaCantidades = (ListView) getView().findViewById(
 							R.id.listaCategorias);
 					try {
@@ -125,7 +114,6 @@ public class FragmentCantidades extends Fragment {
 						e.printStackTrace();
 					}
 					listaCantidades.setAdapter(adaptador);
-
 					listaCantidades
 							.setOnItemClickListener(new OnItemClickListener() {
 								@Override

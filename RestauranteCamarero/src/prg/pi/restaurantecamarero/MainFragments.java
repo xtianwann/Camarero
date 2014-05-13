@@ -123,7 +123,6 @@ public class MainFragments extends FragmentActivity implements CantidadListener,
 
 	@Override
 	public void onIniciarHilos() {
-		fragmentSeccionMesas.iniciarHilo();
 		fragmentCategorias.iniciarHilo();
 	}
 

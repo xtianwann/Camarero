@@ -2,6 +2,7 @@ package prg.pi.restaurantecamarero.conexion;
 
 import java.io.IOException;
 import java.net.ConnectException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -30,16 +31,11 @@ public class Cliente extends Thread {
 	}
 
 	public void run() {
-
 		try {
 			enviarMensaje(mensaje);
-		} catch (IOException e) {
-		}
-
-		try {
 			respuesta = recibirMensaje();
-		} catch (NullPointerException e) {
-
+		} catch (IOException | NullPointerException e) {
+			throw new NullPointerException();
 		}
 		if (respuesta != null && respuesta.length() > 0) {
 			Document dom = XML.stringToXml(respuesta);
@@ -70,8 +66,20 @@ public class Cliente extends Thread {
 				pedidosPendientes = new DecodificadorPedidosPendientesCamarero(
 						dom);
 			}
+			try {
+				conn.cerrarConexion();
+			} catch (NullPointerException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		} else {
+			try {
+				conn.cerrarConexion();
+			} catch (NullPointerException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println("Agotado tiempo de espera...");
 		}
 	}
@@ -85,12 +93,10 @@ public class Cliente extends Thread {
 	 * @throws IOException
 	 * @throws ConnectException
 	 */
-	public void enviarMensaje(String msg) throws ConnectException, IOException {
+	public void enviarMensaje(String msg) throws IOException,
+			NullPointerException {
 		conexion();
-		try {
-			conn.escribirMensaje(msg);
-		} catch (NullPointerException e) {
-		}
+		conn.escribirMensaje(msg);
 	}
 
 	/**
@@ -99,19 +105,11 @@ public class Cliente extends Thread {
 	 * @return String de respuestas del servidor
 	 * @return null si excede el límite de tiempo
 	 */
-	public String recibirMensaje() {
+	public String recibirMensaje() throws IOException, NullPointerException {
 		String respuesta = null;
 		long espera = System.currentTimeMillis() + 1000;
 		do {
-			try {
-				respuesta = conn.leerMensaje();
-			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			respuesta = conn.leerMensaje();
 		} while (respuesta.length() == 0 || espera < System.currentTimeMillis());
 		return respuesta;
 	}
@@ -122,16 +120,8 @@ public class Cliente extends Thread {
 	 * @throws IOException
 	 *             ,ConnectException
 	 */
-	private void conexion() {
-		try {
-			conn = new Conexion("192.168.20.3", 27000);
-		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	private void conexion() throws IOException, NullPointerException {
+		conn = new Conexion("10.6.24.33", 27000);
 	}
 
 	public DecodificadorDameloTodo getTodo() {

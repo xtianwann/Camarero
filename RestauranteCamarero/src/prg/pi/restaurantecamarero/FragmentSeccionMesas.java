@@ -1,5 +1,6 @@
 package prg.pi.restaurantecamarero;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import prg.pi.restaurantecamarero.conexion.Cliente;
@@ -61,39 +62,40 @@ public class FragmentSeccionMesas extends Fragment {
 	public void onActivityCreated(Bundle state) {
 		super.onActivityCreated(state);
 		decoTodo = null;
-		final ConnectivityManager connMgr = (ConnectivityManager) getView().getContext()
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		final ConnectivityManager connMgr = (ConnectivityManager) getView()
+				.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		final android.net.NetworkInfo wifi = connMgr
 				.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
 		final android.net.NetworkInfo mobile = connMgr
 				.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-		if (wifi.isAvailable() && wifi.getDetailedState() == DetailedState.CONNECTED) {
-			iniciarHilo();
-		} else {
-			dialog = new AlertDialog.Builder(getView().getContext());
-			dialog.setMessage("El wifi no esta activado");
-			dialog.setCancelable(false);
-			dialog.setNeutralButton("Activar",
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog,
-								int which) {
-							activarWifi();
-							try {
-								Thread.sleep(15000);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							seccionesMesasListener.onIniciarHilos();
-							dialog.cancel();
-						}
-					});
-			dialog.show();
-		}
+		// if (wifi.isAvailable()
+		// && wifi.getDetailedState() == DetailedState.CONNECTED) {
+		iniciarHilo();
+		// } else {
+		// dialog = new AlertDialog.Builder(getView().getContext());
+		// dialog.setMessage("El wifi no esta activado");
+		// dialog.setCancelable(false);
+		// dialog.setNeutralButton("Activar",
+		// new DialogInterface.OnClickListener() {
+		// @Override
+		// public void onClick(DialogInterface dialog, int which) {
+		// activarWifi();
+		// try {
+		// Thread.sleep(15000);
+		// } catch (InterruptedException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// seccionesMesasListener.onIniciarHilos();
+		// dialog.cancel();
+		// }
+		// });
+		// dialog.show();
+		// }
 	}
-	public void iniciarHilo(){
+
+	public void iniciarHilo() {
 		hilo = new SeccionesThread();
 		hilo.start();
 	}
@@ -128,92 +130,11 @@ public class FragmentSeccionMesas extends Fragment {
 					String mensaje = xml.xmlToString(xml.getDOM());
 					Log.e("SeccionesThread", "he llegado MESAS");
 					Cliente c = new Cliente(mensaje);
-					c.run();
-					Log.e("SeccionesThread", "he terminado MESAS");
+					
 					try {
+						c.run();
 						c.join();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					try {
-						decoTodo = c.getTodo();
-						seccionesT = decoTodo.getSecciones()
-								.toArray(new Seccion[0]);
-						secciones = seccionesT;
-						seccion = (Spinner) getView().findViewById(
-								R.id.spinnerSeccion);
-						mesa = (Spinner) getView().findViewById(
-								R.id.spinnerMesas);
-						adaptadorSeccion = new ArrayAdapter<String>(getView()
-								.getContext(),
-								android.R.layout.simple_spinner_item,
-								dameSecciones());
-						adaptadorSeccion
-								.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-						seccion.setAdapter(adaptadorSeccion);
-
-						seccion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-							public void onItemSelected(AdapterView<?> parent,
-									View view, int pos, long id) {
-								posicionSeccion = pos;
-								Seccion seccion = secciones[pos];
-								adaptadorMesa = new ArrayAdapter<String>(
-										getView().getContext(),
-										android.R.layout.simple_spinner_item,
-										dameMesas(seccion));
-								adaptadorMesa
-										.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-								mesa.setAdapter(adaptadorMesa);
-								mesaSeleccionada = seccion.getMesas().get(0);
-								mesa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-									public void onItemSelected(
-											AdapterView<?> parent, View view,
-											int pos, long id) {
-										posicionMesa = pos;
-										mesaSeleccionada = secciones[posicionSeccion]
-												.getMesas().get(pos);
-									}
-
-									public void onNothingSelected(
-											AdapterView<?> parent) {
-										// Do nothing, just another required
-										// interface callback
-									}
-								});
-							}
-
-							public void onNothingSelected(AdapterView<?> parent) {
-								// Do nothing, just another required interface
-								// callback
-							}
-						});
-						seccion.setOnTouchListener(new View.OnTouchListener() {
-							@Override
-							public boolean onTouch(View v, MotionEvent event) {
-								if (seccionesMesasListener.onExistenPedidos()) {
-									seccion.setClickable(false);
-									mostrarNotificacion();
-								} else {
-									seccion.setClickable(true);
-								}
-								return false;
-							}
-						});
-						mesa.setOnTouchListener(new View.OnTouchListener() {
-							@Override
-							public boolean onTouch(View v, MotionEvent event) {
-								if (seccionesMesasListener.onExistenPedidos()) {
-									mesa.setClickable(false);
-									mostrarNotificacion();
-								} else {
-									mesa.setClickable(true);
-								}
-								return false;
-							}
-
-						});
-					} catch (NullPointerException e) {
+					} catch (InterruptedException | NullPointerException e) {
 						dialog = new AlertDialog.Builder(getView().getContext());
 						dialog.setMessage("No se pudo conectar con el servidor¿Reintentar?.");
 						dialog.setCancelable(false);
@@ -222,12 +143,90 @@ public class FragmentSeccionMesas extends Fragment {
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										seccionesMesasListener.onIniciarHilos();
+										iniciarHilo();
 										dialog.cancel();
 									}
 								});
 						dialog.show();
+						return;
 					}
+					seccionesMesasListener.onIniciarHilos();
+					Log.e("SeccionesThread", "he terminado MESAS");
+					decoTodo = c.getTodo();
+					seccionesT = decoTodo.getSecciones()
+							.toArray(new Seccion[0]);
+					secciones = seccionesT;
+					seccion = (Spinner) getView().findViewById(
+							R.id.spinnerSeccion);
+					mesa = (Spinner) getView().findViewById(R.id.spinnerMesas);
+					adaptadorSeccion = new ArrayAdapter<String>(getView()
+							.getContext(),
+							android.R.layout.simple_spinner_item,
+							dameSecciones());
+					adaptadorSeccion
+							.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+					seccion.setAdapter(adaptadorSeccion);
+
+					seccion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+						public void onItemSelected(AdapterView<?> parent,
+								View view, int pos, long id) {
+							posicionSeccion = pos;
+							Seccion seccion = secciones[pos];
+							adaptadorMesa = new ArrayAdapter<String>(getView()
+									.getContext(),
+									android.R.layout.simple_spinner_item,
+									dameMesas(seccion));
+							adaptadorMesa
+									.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+							mesa.setAdapter(adaptadorMesa);
+							mesaSeleccionada = seccion.getMesas().get(0);
+							mesa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+								public void onItemSelected(
+										AdapterView<?> parent, View view,
+										int pos, long id) {
+									posicionMesa = pos;
+									mesaSeleccionada = secciones[posicionSeccion]
+											.getMesas().get(pos);
+								}
+
+								public void onNothingSelected(
+										AdapterView<?> parent) {
+									// Do nothing, just another required
+									// interface callback
+								}
+							});
+						}
+
+						public void onNothingSelected(AdapterView<?> parent) {
+							// Do nothing, just another required interface
+							// callback
+						}
+					});
+					seccion.setOnTouchListener(new View.OnTouchListener() {
+						@Override
+						public boolean onTouch(View v, MotionEvent event) {
+							if (seccionesMesasListener.onExistenPedidos()) {
+								seccion.setClickable(false);
+								mostrarNotificacion();
+							} else {
+								seccion.setClickable(true);
+							}
+							return false;
+						}
+					});
+					mesa.setOnTouchListener(new View.OnTouchListener() {
+						@Override
+						public boolean onTouch(View v, MotionEvent event) {
+							if (seccionesMesasListener.onExistenPedidos()) {
+								mesa.setClickable(false);
+								mostrarNotificacion();
+							} else {
+								mesa.setClickable(true);
+							}
+							return false;
+						}
+
+					});
 				}
 
 			});
@@ -255,7 +254,7 @@ public class FragmentSeccionMesas extends Fragment {
 		public boolean onExistenPedidos();
 
 		public void onEnviarPedidosSinEnviar();
-		
+
 		public void onIniciarHilos();
 
 	}
@@ -293,7 +292,7 @@ public class FragmentSeccionMesas extends Fragment {
 	public SeccionesThread getHilo() {
 		return hilo;
 	}
-	
+
 	private void activarWifi() {
 		WifiManager wifiManager = (WifiManager) getView().getContext()
 				.getSystemService(Context.WIFI_SERVICE);

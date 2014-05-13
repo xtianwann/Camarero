@@ -314,18 +314,21 @@ public class FragmentResumen extends Fragment {
 									.xmlToString(xmlEnviarComanda
 											.getDOM());
 							Cliente c = new Cliente(mensaje);
-							c.run();
 							try {
+								c.run();
 								c.join();
+								PedidosPendientesCamarero pedidosPendientes[] = c
+										.getPedidosPendientes()
+										.getPedidosPendientes();
+								resumenListener.onPedidosPendientes(pedidosPendientes);
+								borrarPedidos();
+							} catch (NullPointerException e){
+								
 							} catch (InterruptedException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							PedidosPendientesCamarero pedidosPendientes[] = c
-									.getPedidosPendientes()
-									.getPedidosPendientes();
-							resumenListener.onPedidosPendientes(pedidosPendientes);
-							borrarPedidos();
+							
 						}
 					});
 				}
