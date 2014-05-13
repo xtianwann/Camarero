@@ -134,7 +134,84 @@ public class FragmentSeccionMesas extends Fragment {
 					try {
 						c.run();
 						c.join();
-					} catch (InterruptedException | NullPointerException e) {
+						seccionesMesasListener.onIniciarHilos();
+						Log.e("SeccionesThread", "he terminado MESAS");
+						decoTodo = c.getTodo();
+						seccionesT = decoTodo.getSecciones()
+								.toArray(new Seccion[0]);
+						secciones = seccionesT;
+						seccion = (Spinner) getView().findViewById(
+								R.id.spinnerSeccion);
+						mesa = (Spinner) getView().findViewById(R.id.spinnerMesas);
+						adaptadorSeccion = new ArrayAdapter<String>(getView()
+								.getContext(),
+								android.R.layout.simple_spinner_item,
+								dameSecciones());
+						adaptadorSeccion
+								.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+						seccion.setAdapter(adaptadorSeccion);
+
+						seccion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+							public void onItemSelected(AdapterView<?> parent,
+									View view, int pos, long id) {
+								posicionSeccion = pos;
+								Seccion seccion = secciones[pos];
+								adaptadorMesa = new ArrayAdapter<String>(getView()
+										.getContext(),
+										android.R.layout.simple_spinner_item,
+										dameMesas(seccion));
+								adaptadorMesa
+										.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+								mesa.setAdapter(adaptadorMesa);
+								mesaSeleccionada = seccion.getMesas().get(0);
+								mesa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+									public void onItemSelected(
+											AdapterView<?> parent, View view,
+											int pos, long id) {
+										posicionMesa = pos;
+										mesaSeleccionada = secciones[posicionSeccion]
+												.getMesas().get(pos);
+									}
+
+									public void onNothingSelected(
+											AdapterView<?> parent) {
+										// Do nothing, just another required
+										// interface callback
+									}
+								});
+							}
+
+							public void onNothingSelected(AdapterView<?> parent) {
+								// Do nothing, just another required interface
+								// callback
+							}
+						});
+						seccion.setOnTouchListener(new View.OnTouchListener() {
+							@Override
+							public boolean onTouch(View v, MotionEvent event) {
+								if (seccionesMesasListener.onExistenPedidos()) {
+									seccion.setClickable(false);
+									mostrarNotificacion();
+								} else {
+									seccion.setClickable(true);
+								}
+								return false;
+							}
+						});
+						mesa.setOnTouchListener(new View.OnTouchListener() {
+							@Override
+							public boolean onTouch(View v, MotionEvent event) {
+								if (seccionesMesasListener.onExistenPedidos()) {
+									mesa.setClickable(false);
+									mostrarNotificacion();
+								} else {
+									mesa.setClickable(true);
+								}
+								return false;
+							}
+
+						});
+					} catch (NullPointerException e){
 						dialog = new AlertDialog.Builder(getView().getContext());
 						dialog.setMessage("No se pudo conectar con el servidor¿Reintentar?.");
 						dialog.setCancelable(false);
@@ -148,85 +225,9 @@ public class FragmentSeccionMesas extends Fragment {
 									}
 								});
 						dialog.show();
-						return;
+					} catch (InterruptedException e) {
+						
 					}
-					seccionesMesasListener.onIniciarHilos();
-					Log.e("SeccionesThread", "he terminado MESAS");
-					decoTodo = c.getTodo();
-					seccionesT = decoTodo.getSecciones()
-							.toArray(new Seccion[0]);
-					secciones = seccionesT;
-					seccion = (Spinner) getView().findViewById(
-							R.id.spinnerSeccion);
-					mesa = (Spinner) getView().findViewById(R.id.spinnerMesas);
-					adaptadorSeccion = new ArrayAdapter<String>(getView()
-							.getContext(),
-							android.R.layout.simple_spinner_item,
-							dameSecciones());
-					adaptadorSeccion
-							.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-					seccion.setAdapter(adaptadorSeccion);
-
-					seccion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-						public void onItemSelected(AdapterView<?> parent,
-								View view, int pos, long id) {
-							posicionSeccion = pos;
-							Seccion seccion = secciones[pos];
-							adaptadorMesa = new ArrayAdapter<String>(getView()
-									.getContext(),
-									android.R.layout.simple_spinner_item,
-									dameMesas(seccion));
-							adaptadorMesa
-									.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-							mesa.setAdapter(adaptadorMesa);
-							mesaSeleccionada = seccion.getMesas().get(0);
-							mesa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-								public void onItemSelected(
-										AdapterView<?> parent, View view,
-										int pos, long id) {
-									posicionMesa = pos;
-									mesaSeleccionada = secciones[posicionSeccion]
-											.getMesas().get(pos);
-								}
-
-								public void onNothingSelected(
-										AdapterView<?> parent) {
-									// Do nothing, just another required
-									// interface callback
-								}
-							});
-						}
-
-						public void onNothingSelected(AdapterView<?> parent) {
-							// Do nothing, just another required interface
-							// callback
-						}
-					});
-					seccion.setOnTouchListener(new View.OnTouchListener() {
-						@Override
-						public boolean onTouch(View v, MotionEvent event) {
-							if (seccionesMesasListener.onExistenPedidos()) {
-								seccion.setClickable(false);
-								mostrarNotificacion();
-							} else {
-								seccion.setClickable(true);
-							}
-							return false;
-						}
-					});
-					mesa.setOnTouchListener(new View.OnTouchListener() {
-						@Override
-						public boolean onTouch(View v, MotionEvent event) {
-							if (seccionesMesasListener.onExistenPedidos()) {
-								mesa.setClickable(false);
-								mostrarNotificacion();
-							} else {
-								mesa.setClickable(true);
-							}
-							return false;
-						}
-
-					});
 				}
 
 			});

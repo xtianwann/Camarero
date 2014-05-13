@@ -34,7 +34,9 @@ public class Cliente extends Thread {
 		try {
 			enviarMensaje(mensaje);
 			respuesta = recibirMensaje();
-		} catch (IOException | NullPointerException e) {
+		} catch (NullPointerException e){
+			throw new NullPointerException();
+		} catch (IOException e) {
 			throw new NullPointerException();
 		}
 		if (respuesta != null && respuesta.length() > 0) {
@@ -68,17 +70,16 @@ public class Cliente extends Thread {
 			}
 			try {
 				conn.cerrarConexion();
-			} catch (NullPointerException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (NullPointerException e){
+			} catch (IOException e) {
 			}
 
 		} else {
 			try {
 				conn.cerrarConexion();
-			} catch (NullPointerException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (NullPointerException e){
+				
+			} catch (IOException e) {
 			}
 			System.out.println("Agotado tiempo de espera...");
 		}
@@ -121,7 +122,7 @@ public class Cliente extends Thread {
 	 *             ,ConnectException
 	 */
 	private void conexion() throws IOException, NullPointerException {
-		conn = new Conexion("10.6.24.33", 27000);
+		conn = new Conexion("192.168.20.3", 27000);
 	}
 
 	public DecodificadorDameloTodo getTodo() {
