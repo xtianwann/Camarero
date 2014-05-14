@@ -130,19 +130,19 @@ public class FragmentSeccionMesas extends Fragment {
 					String mensaje = xml.xmlToString(xml.getDOM());
 					Log.e("SeccionesThread", "he llegado MESAS");
 					Cliente c = new Cliente(mensaje);
-					
+
 					try {
-						c.run();
-						c.join();
+						c.iniciar();
 						seccionesMesasListener.onIniciarHilos();
 						Log.e("SeccionesThread", "he terminado MESAS");
 						decoTodo = c.getTodo();
-						seccionesT = decoTodo.getSecciones()
-								.toArray(new Seccion[0]);
+						seccionesT = decoTodo.getSecciones().toArray(
+								new Seccion[0]);
 						secciones = seccionesT;
 						seccion = (Spinner) getView().findViewById(
 								R.id.spinnerSeccion);
-						mesa = (Spinner) getView().findViewById(R.id.spinnerMesas);
+						mesa = (Spinner) getView().findViewById(
+								R.id.spinnerMesas);
 						adaptadorSeccion = new ArrayAdapter<String>(getView()
 								.getContext(),
 								android.R.layout.simple_spinner_item,
@@ -156,8 +156,8 @@ public class FragmentSeccionMesas extends Fragment {
 									View view, int pos, long id) {
 								posicionSeccion = pos;
 								Seccion seccion = secciones[pos];
-								adaptadorMesa = new ArrayAdapter<String>(getView()
-										.getContext(),
+								adaptadorMesa = new ArrayAdapter<String>(
+										getView().getContext(),
 										android.R.layout.simple_spinner_item,
 										dameMesas(seccion));
 								adaptadorMesa
@@ -211,7 +211,7 @@ public class FragmentSeccionMesas extends Fragment {
 							}
 
 						});
-					} catch (NullPointerException e){
+					} catch (NullPointerException e) {
 						dialog = new AlertDialog.Builder(getView().getContext());
 						dialog.setMessage("No se pudo conectar con el servidor¿Reintentar?.");
 						dialog.setCancelable(false);
@@ -224,9 +224,10 @@ public class FragmentSeccionMesas extends Fragment {
 										dialog.cancel();
 									}
 								});
-						dialog.show();
-					} catch (InterruptedException e) {
-						
+
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 				}
 

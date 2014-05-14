@@ -2,6 +2,7 @@ package prg.pi.restaurantecamarero;
 
 import prg.pi.restaurantecamarero.FragmentSeccionMesas;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -315,8 +316,7 @@ public class FragmentResumen extends Fragment {
 											.getDOM());
 							Cliente c = new Cliente(mensaje);
 							try {
-								c.run();
-								c.join();
+								c.iniciar();
 								PedidosPendientesCamarero pedidosPendientes[] = c
 										.getPedidosPendientes()
 										.getPedidosPendientes();
@@ -324,10 +324,10 @@ public class FragmentResumen extends Fragment {
 								borrarPedidos();
 							} catch (NullPointerException e){
 								
-							} catch (InterruptedException e) {
+							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-							}
+							} 
 							
 						}
 					});

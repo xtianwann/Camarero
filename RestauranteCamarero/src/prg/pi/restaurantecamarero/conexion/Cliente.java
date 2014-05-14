@@ -18,7 +18,7 @@ import XML.XML;
  * @author Juan Gabriel Pérez Leo
  * @author Cristian Marín Honor
  */
-public class Cliente extends Thread {
+public class Cliente {
 	private Conexion conn;
 	private String mensaje;
 	private String respuesta;
@@ -30,15 +30,10 @@ public class Cliente extends Thread {
 		this.mensaje = mensaje;
 	}
 
-	public void run() {
-		try {
+	public void iniciar() throws IOException,
+	NullPointerException{
 			enviarMensaje(mensaje);
 			respuesta = recibirMensaje();
-		} catch (NullPointerException e){
-			throw new NullPointerException();
-		} catch (IOException e) {
-			throw new NullPointerException();
-		}
 		if (respuesta != null && respuesta.length() > 0) {
 			Document dom = XML.stringToXml(respuesta);
 			NodeList nodeListTipo = dom.getElementsByTagName("tipo");
@@ -71,7 +66,9 @@ public class Cliente extends Thread {
 			try {
 				conn.cerrarConexion();
 			} catch (NullPointerException e){
+				
 			} catch (IOException e) {
+				
 			}
 
 		} else {
@@ -80,6 +77,7 @@ public class Cliente extends Thread {
 			} catch (NullPointerException e){
 				
 			} catch (IOException e) {
+				
 			}
 			System.out.println("Agotado tiempo de espera...");
 		}

@@ -1,5 +1,6 @@
 package prg.pi.restaurantecamarero;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -333,13 +334,15 @@ public class ActivityPedidosPendientes extends Fragment {
 										 .xmlToString(xmlPedidosServidos
 										 .getDOM());
 										 Cliente c = new Cliente(mensaje);
-										 c.run();
 										 try {
-										 c.join();
-										 } catch (InterruptedException e) {
-										 // TODO Auto-generated catch block
-										 e.printStackTrace();
-										 }
+											c.iniciar();
+										} catch (NullPointerException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										} catch (IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
 										 for(PedidosPendientesCamarero pedido
 										 : pedidosServidos){
 										 if(pedido.isServido())
@@ -372,13 +375,15 @@ public class ActivityPedidosPendientes extends Fragment {
 										 .xmlToString(xmlModificacionCamarero
 										 .getDOM());
 										 Cliente c = new Cliente(mensaje);
-										 c.run();
 										 try {
-										 c.join();
-										 } catch (InterruptedException e) {
-										 // TODO Auto-generated catch block
-										 e.printStackTrace();
-										 }
+											c.iniciar();
+										} catch (NullPointerException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										} catch (IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
 										if (modificado.getUnidades() < modificado
 												.getListos()) {
 											modificado.setListos(modificado
@@ -427,13 +432,15 @@ public class ActivityPedidosPendientes extends Fragment {
 										 .xmlToString(xmlCancelarPedido
 										 .getDOM());
 										 Cliente c = new Cliente(mensaje);
-										 c.run();
 										 try {
-										 c.join();
-										 } catch (InterruptedException e) {
-										 // TODO Auto-generated catch block
-										 e.printStackTrace();
-										 }
+											c.iniciar();
+										} catch (NullPointerException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										} catch (IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
 										modificado.setListos(modificado.getListos() - modificado
 												.getUnidades());
 										modificado.setServidos(modificado.getServidos()-modificado
