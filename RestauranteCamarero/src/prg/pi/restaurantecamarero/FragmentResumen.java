@@ -2,7 +2,6 @@ package prg.pi.restaurantecamarero;
 
 import prg.pi.restaurantecamarero.FragmentSeccionMesas;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -316,18 +315,27 @@ public class FragmentResumen extends Fragment {
 											.getDOM());
 							Cliente c = new Cliente(mensaje);
 							try {
-								c.iniciar();
+								c.init();
 								PedidosPendientesCamarero pedidosPendientes[] = c
 										.getPedidosPendientes()
 										.getPedidosPendientes();
 								resumenListener.onPedidosPendientes(pedidosPendientes);
 								borrarPedidos();
 							} catch (NullPointerException e){
-								
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} 
+								dialog = new AlertDialog.Builder(getView().getContext());
+								dialog.setMessage("No se pudo conectar con el servidor¿Reintentar?.");
+								dialog.setCancelable(false);
+								dialog.setNeutralButton("OK",
+										new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialog,
+													int which) {
+												enviarPedido();
+												dialog.cancel();
+											}
+										});
+								dialog.show();
+							}
 							
 						}
 					});

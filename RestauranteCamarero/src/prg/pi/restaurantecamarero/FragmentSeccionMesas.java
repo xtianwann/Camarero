@@ -69,30 +69,43 @@ public class FragmentSeccionMesas extends Fragment {
 
 		final android.net.NetworkInfo mobile = connMgr
 				.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-		// if (wifi.isAvailable()
-		// && wifi.getDetailedState() == DetailedState.CONNECTED) {
-		iniciarHilo();
-		// } else {
-		// dialog = new AlertDialog.Builder(getView().getContext());
-		// dialog.setMessage("El wifi no esta activado");
-		// dialog.setCancelable(false);
-		// dialog.setNeutralButton("Activar",
-		// new DialogInterface.OnClickListener() {
-		// @Override
-		// public void onClick(DialogInterface dialog, int which) {
-		// activarWifi();
-		// try {
-		// Thread.sleep(15000);
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// seccionesMesasListener.onIniciarHilos();
-		// dialog.cancel();
-		// }
-		// });
-		// dialog.show();
-		// }
+		if (wifi.isAvailable()) {
+			if (wifi.getDetailedState() == DetailedState.CONNECTED) {
+				iniciarHilo();
+			} else {
+				dialog = new AlertDialog.Builder(getView().getContext());
+				dialog.setMessage("No se detecta señal wifi");
+				dialog.setCancelable(false);
+				dialog.setNeutralButton("OK",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								dialog.cancel();
+							}
+						});
+				dialog.show();
+			}
+		} else {
+			dialog = new AlertDialog.Builder(getView().getContext());
+			dialog.setMessage("El wifi no esta activado");
+			dialog.setCancelable(false);
+			dialog.setNeutralButton("Activar",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							activarWifi();
+							try {
+								Thread.sleep(15000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							iniciarHilo();
+							dialog.cancel();
+						}
+					});
+			dialog.show();
+		}
 	}
 
 	public void iniciarHilo() {
@@ -132,7 +145,7 @@ public class FragmentSeccionMesas extends Fragment {
 					Cliente c = new Cliente(mensaje);
 
 					try {
-						c.iniciar();
+						c.init();
 						seccionesMesasListener.onIniciarHilos();
 						Log.e("SeccionesThread", "he terminado MESAS");
 						decoTodo = c.getTodo();
@@ -224,10 +237,7 @@ public class FragmentSeccionMesas extends Fragment {
 										dialog.cancel();
 									}
 								});
-
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						dialog.show();
 					}
 				}
 

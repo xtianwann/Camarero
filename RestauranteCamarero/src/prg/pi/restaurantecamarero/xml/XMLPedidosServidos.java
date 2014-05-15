@@ -1,6 +1,5 @@
 package prg.pi.restaurantecamarero.xml;
 
-import prg.pi.restaurantecamarero.restaurante.PedidoListo;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import XML.XML;
 

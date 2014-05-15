@@ -30,10 +30,15 @@ public class Cliente {
 		this.mensaje = mensaje;
 	}
 
-	public void iniciar() throws IOException,
-	NullPointerException{
+	public void init() {
+		try {
 			enviarMensaje(mensaje);
 			respuesta = recibirMensaje();
+		} catch (NullPointerException e){
+			throw new NullPointerException();
+		} catch (IOException e) {
+			throw new NullPointerException();
+		}
 		if (respuesta != null && respuesta.length() > 0) {
 			Document dom = XML.stringToXml(respuesta);
 			NodeList nodeListTipo = dom.getElementsByTagName("tipo");
@@ -66,9 +71,7 @@ public class Cliente {
 			try {
 				conn.cerrarConexion();
 			} catch (NullPointerException e){
-				
 			} catch (IOException e) {
-				
 			}
 
 		} else {
@@ -77,7 +80,6 @@ public class Cliente {
 			} catch (NullPointerException e){
 				
 			} catch (IOException e) {
-				
 			}
 			System.out.println("Agotado tiempo de espera...");
 		}
@@ -120,7 +122,7 @@ public class Cliente {
 	 *             ,ConnectException
 	 */
 	private void conexion() throws IOException, NullPointerException {
-		conn = new Conexion("192.168.20.3", 27000);
+		conn = new Conexion("192.168.1.9", 27000);
 	}
 
 	public DecodificadorDameloTodo getTodo() {
