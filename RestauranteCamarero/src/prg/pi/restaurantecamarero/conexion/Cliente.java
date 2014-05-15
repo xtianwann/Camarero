@@ -122,7 +122,8 @@ public class Cliente {
 	 *             ,ConnectException
 	 */
 	private void conexion() throws IOException, NullPointerException {
-		conn = new Conexion("192.168.1.9", 27000);
+		//conn = new Conexion("192.168.1.9", 27000);
+		conn = new Conexion("192.168.20.3", 27000);
 	}
 
 	public DecodificadorDameloTodo getTodo() {
