@@ -9,14 +9,15 @@ import org.w3c.dom.NodeList;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorAcuseRecibo;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorDameloTodo;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorPedidosPendientesCamarero;
+import prg.pi.restaurantecamarero.decodificador.DecodificadorResultadoLogin;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorResumenMesa;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
 import Conexion.Conexion;
 import XML.XML;
 
 /**
- * @author Juan Gabriel PÃ©rez Leo
- * @author Cristian MarÃ­n Honor
+ * @author Juan Gabriel Pérez Leo
+ * @author Cristian Marín Honor
  */
 public class Cliente {
 	private Conexion conn;
@@ -24,6 +25,7 @@ public class Cliente {
 	private String respuesta;
 	private DecodificadorDameloTodo todo;
 	private DecodificadorPedidosPendientesCamarero pedidosPendientes;
+	private DecodificadorResultadoLogin resultadoLogin;
 
 	public Cliente(String mensaje) {
 		respuesta = "";
@@ -67,6 +69,12 @@ public class Cliente {
 			if (tipo.equals("PedidosPendientesCamarero")) {
 				pedidosPendientes = new DecodificadorPedidosPendientesCamarero(
 						dom);
+			}
+			if(tipo.equals("ResultadoLoginCamarero")) {
+				resultadoLogin = new DecodificadorResultadoLogin(dom);
+			}
+			if(tipo.equals("ResultadoLogoutCamarero")) {
+				resultadoLogin = new DecodificadorResultadoLogin(dom);
 			}
 			try {
 				conn.cerrarConexion();
@@ -122,8 +130,8 @@ public class Cliente {
 	 *             ,ConnectException
 	 */
 	private void conexion() throws IOException, NullPointerException {
-		//conn = new Conexion("192.168.1.9", 27000);
-		conn = new Conexion("192.168.20.3", 27000);
+		conn = new Conexion("192.168.1.9", 27000);
+		//conn = new Conexion("192.168.20.3", 27000);
 	}
 
 	public DecodificadorDameloTodo getTodo() {
@@ -136,5 +144,9 @@ public class Cliente {
 
 	public DecodificadorPedidosPendientesCamarero getPedidosPendientes() {
 		return pedidosPendientes;
+	}
+	
+	public DecodificadorResultadoLogin getResultadoLogin(){
+		return resultadoLogin;
 	}
 }

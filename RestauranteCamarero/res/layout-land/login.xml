@@ -8,17 +8,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="3"
-        android:orientation="horizontal" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
-        <Spinner
-            android:id="@+id/spinnerLogin"
-            android:layout_width="0px"
-            android:layout_margin="30dp"
-            android:background="@drawable/secciones_color"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Usuario:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/editText_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" >
+
+            <requestFocus />
+        </EditText>
+
     </LinearLayout>
 
     <LinearLayout
@@ -37,6 +46,16 @@
             android:layout_weight="1"
             android:background="@drawable/acciones_color"
             android:text="Login" />
+        
+        <Button
+            android:id="@+id/botonLogout"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/acciones_color"
+            android:text="Logout" />
 
     </LinearLayout>
 
