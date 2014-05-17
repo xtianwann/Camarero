@@ -7,8 +7,14 @@ import prg.pi.restaurantecamarero.preferencias.PreferenciasSet;
 import prg.pi.restaurantecamarero.xml.XMLLogin;
 import prg.pi.restaurantecamarero.xml.XMLLogout;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo.DetailedState;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -31,6 +37,7 @@ public class MainActivity extends Activity {
 	private String usuario;
 	private ProgressDialog pDialog;
 	private DecodificadorResultadoLogin decoResultadoLogin, decoResultadoLogout;
+	private AlertDialog.Builder dialog;
 	
 	private static String usuarioActual;
 
@@ -49,23 +56,57 @@ public class MainActivity extends Activity {
 		usuarioActual = "";
 		editTextLogin = (EditText) findViewById(R.id.editText_login);
 		botonLogin = (Button) findViewById(R.id.botonLogin);
+		
+		final ConnectivityManager connMgr = (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+		final android.net.NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		final android.net.NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		if(!wifi.isAvailable()){
+			new WifiAsincrono().execute();
+		}
+		
 		botonLogin.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
 				usuario = editTextLogin.getText().toString().toLowerCase();
-				if(!usuario.equals(""))
-					new LoginAsincrono().execute(usuario);
-				else
-					Toast.makeText(MainActivity.this, "Debes rellenar el campo usuario", Toast.LENGTH_SHORT).show();
+				if(comprobarSenalWifi(wifi)){
+					if(!usuario.equals(""))
+						new LoginAsincrono().execute(usuario);
+					else
+						Toast.makeText(MainActivity.this, "Debes rellenar el campo usuario", Toast.LENGTH_SHORT).show();
+				} else{
+					dialog.setMessage("No se detecta señal wifi");
+					dialog.setCancelable(false);
+					dialog.setNeutralButton("OK",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.cancel();
+								}
+							});
+					dialog.show();
+				}
 			}
 
 		});
 		botonLogout = (Button) findViewById(R.id.botonLogout);
 		botonLogout.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
-				if(!usuarioActual.equals("")){
-					new LogoutAsincrono().execute(usuarioActual);
+				if(comprobarSenalWifi(wifi)){
+					if(!usuarioActual.equals("")){
+						new LogoutAsincrono().execute(usuarioActual);
+					} else {
+						finish();
+					}
 				} else {
-					finish();
+					dialog.setMessage("No se detecta señal wifi, si continua su usuario no se deslogueará del sistema");
+					dialog.setCancelable(true);
+					dialog.setNeutralButton("Continuar",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.cancel();
+								}
+							});
+					dialog.show();
 				}
 			}
 		});
@@ -92,6 +133,13 @@ public class MainActivity extends Activity {
 
 		return true;
 		/** true -> consumimos el item, no se propaga */
+	}
+	
+	public boolean comprobarSenalWifi(android.net.NetworkInfo wifi){
+		boolean resultado = false;
+		if (wifi.getDetailedState() == DetailedState.CONNECTED)
+			resultado = true;
+		return resultado;
 	}
 	
 	public class LoginAsincrono extends AsyncTask<String, String, Boolean> {
@@ -140,7 +188,7 @@ public class MainActivity extends Activity {
 		
 		protected void onPreExecute(){
 			pDialog = new ProgressDialog(MainActivity.this);
-			pDialog.setMessage("Deslogueando...");
+			pDialog.setMessage("Saliendo...");
 			pDialog.setIndeterminate(false);
 			pDialog.setCancelable(false);
 			pDialog.show();
@@ -174,5 +222,43 @@ public class MainActivity extends Activity {
 				Toast.makeText(MainActivity.this, "Se ha producido algún error, inténtalo de nuevo", Toast.LENGTH_SHORT).show();
 			}
 		}
+	}
+	
+	public class WifiAsincrono extends AsyncTask<Void, Void, Boolean>{
+		
+		protected void onPreExecute(){
+			pDialog = new ProgressDialog(MainActivity.this);
+			pDialog.setMessage("Activando wifi del dispositivo...");
+			pDialog.setIndeterminate(false);
+			pDialog.setCancelable(false);
+			pDialog.show();
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			boolean resultado = false;
+			
+			WifiManager wifiManager = (WifiManager) MainActivity.this
+					.getSystemService(Context.WIFI_SERVICE);
+			wifiManager.setWifiEnabled(true);
+			while(!wifiManager.isWifiEnabled()){
+				resultado = false;
+			}
+			usuarioActual = "";
+			resultado = true;
+			
+			return resultado;
+		}
+		
+		protected void onPostExecute(Boolean resultado){
+			pDialog.dismiss();
+			
+			if(resultado){
+				Toast.makeText(MainActivity.this, "Wifi activado", Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(MainActivity.this, "Se ha producido algún error...", Toast.LENGTH_SHORT).show();
+			}
+		}
+		
 	}
 }

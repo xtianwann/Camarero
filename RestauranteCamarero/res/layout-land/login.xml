@@ -55,7 +55,7 @@
             android:layout_marginLeft="30dp"
             android:layout_weight="1"
             android:background="@drawable/acciones_color"
-            android:text="Logout" />
+            android:text="Salir" />
 
     </LinearLayout>
 
