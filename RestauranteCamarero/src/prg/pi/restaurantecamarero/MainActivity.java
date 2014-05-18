@@ -19,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,6 +39,8 @@ public class MainActivity extends Activity {
 	private ProgressDialog pDialog;
 	private DecodificadorResultadoLogin decoResultadoLogin, decoResultadoLogout;
 	private AlertDialog.Builder dialog;
+	private ConnectivityManager connMgr;
+	private android.net.NetworkInfo wifi;
 	
 	private static String usuarioActual;
 
@@ -56,10 +59,8 @@ public class MainActivity extends Activity {
 		usuarioActual = "";
 		editTextLogin = (EditText) findViewById(R.id.editText_login);
 		botonLogin = (Button) findViewById(R.id.botonLogin);
-		
-		final ConnectivityManager connMgr = (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
-		final android.net.NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-		final android.net.NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		connMgr = (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+		wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 		if(!wifi.isAvailable()){
 			new WifiAsincrono().execute();
 		}
@@ -67,12 +68,14 @@ public class MainActivity extends Activity {
 		botonLogin.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
 				usuario = editTextLogin.getText().toString().toLowerCase();
+				wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 				if(comprobarSenalWifi(wifi)){
 					if(!usuario.equals(""))
 						new LoginAsincrono().execute(usuario);
 					else
 						Toast.makeText(MainActivity.this, "Debes rellenar el campo usuario", Toast.LENGTH_SHORT).show();
 				} else{
+					dialog = new AlertDialog.Builder(MainActivity.this);
 					dialog.setMessage("No se detecta señal wifi");
 					dialog.setCancelable(false);
 					dialog.setNeutralButton("OK",
@@ -90,6 +93,7 @@ public class MainActivity extends Activity {
 		botonLogout = (Button) findViewById(R.id.botonLogout);
 		botonLogout.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
+				wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 				if(comprobarSenalWifi(wifi)){
 					if(!usuarioActual.equals("")){
 						new LogoutAsincrono().execute(usuarioActual);
@@ -97,6 +101,7 @@ public class MainActivity extends Activity {
 						finish();
 					}
 				} else {
+					dialog = new AlertDialog.Builder(MainActivity.this);
 					dialog.setMessage("No se detecta señal wifi, si continua su usuario no se deslogueará del sistema");
 					dialog.setCancelable(true);
 					dialog.setNeutralButton("Continuar",
@@ -159,7 +164,11 @@ public class MainActivity extends Activity {
 			XMLLogin xmlLogin = new XMLLogin(args[0]);
 			String mensaje = xmlLogin.xmlToString(xmlLogin.getDOM());
 			Cliente cliente = new Cliente(mensaje);
+			try{
 			cliente.init();
+			} catch (NullPointerException e){
+				return null;
+			}
 			SystemClock.sleep(1000);
 			decoResultadoLogin = cliente.getResultadoLogin();
 			String resultadoLogin = decoResultadoLogin.getResultado();
@@ -172,13 +181,28 @@ public class MainActivity extends Activity {
 		}
 		
 		protected void onPostExecute(Boolean resultado){
-			pDialog.dismiss();
-			
-			if(resultado){
-				Intent intencion = new Intent(MainActivity.this, MainFragments.class);
-				startActivity(intencion);
+			if(pDialog != null)
+				pDialog.dismiss();
+			if(resultado != null){
+				if(resultado){
+					Intent intencion = new Intent(MainActivity.this, MainFragments.class);
+					startActivity(intencion);
+				} else {
+					Toast.makeText(MainActivity.this, "Usuario incorrecto...", Toast.LENGTH_SHORT).show();
+				}
 			} else {
-				Toast.makeText(MainActivity.this, "Usuario incorrecto...", Toast.LENGTH_SHORT).show();
+				dialog = new AlertDialog.Builder(MainActivity.this);
+				dialog.setMessage("No se pudo conectar con el servidor");
+				dialog.setCancelable(false);
+				dialog.setNeutralButton("OK",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.cancel();
+							}
+						});
+				dialog.show();
 			}
 		}
 		
@@ -201,7 +225,11 @@ public class MainActivity extends Activity {
 			XMLLogout xmlLogout = new XMLLogout(args[0]);
 			String mensaje = xmlLogout.xmlToString(xmlLogout.getDOM());
 			Cliente cliente = new Cliente(mensaje);
+			try {
 			cliente.init();
+			} catch (NullPointerException e){
+				return resultado;
+			}
 			SystemClock.sleep(1000);
 			decoResultadoLogout = cliente.getResultadoLogin();
 			String resultadoLogout = decoResultadoLogout.getResultado();
@@ -209,7 +237,6 @@ public class MainActivity extends Activity {
 				usuarioActual = "";
 				resultado = true;
 			}
-			
 			return resultado;
 		}
 		
