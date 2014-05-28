@@ -6,9 +6,11 @@ import java.net.ConnectException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import android.util.Log;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorAcuseRecibo;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorDameloTodo;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorPedidosPendientesCamarero;
+import prg.pi.restaurantecamarero.decodificador.DecodificadorPendientesAlEncender;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorResultadoLogin;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorResumenMesa;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
@@ -26,8 +28,10 @@ public class Cliente {
 	private DecodificadorDameloTodo todo;
 	private DecodificadorPedidosPendientesCamarero pedidosPendientes;
 	private DecodificadorResultadoLogin resultadoLogin;
-
-	public Cliente(String mensaje) {
+	private DecodificadorPendientesAlEncender pendientesAlEncender;
+	private String ipServidor;
+	public Cliente(String mensaje,String ipServidor) {
+		this.ipServidor = ipServidor;
 		respuesta = "";
 		this.mensaje = mensaje;
 	}
@@ -75,6 +79,9 @@ public class Cliente {
 			}
 			if(tipo.equals("ResultadoLogoutCamarero")) {
 				resultadoLogin = new DecodificadorResultadoLogin(dom);
+			}
+			if(tipo.equals("PendientesAlEncender")){
+				pendientesAlEncender = new DecodificadorPendientesAlEncender(dom);
 			}
 			try {
 				conn.cerrarConexion();
@@ -130,8 +137,9 @@ public class Cliente {
 	 *             ,ConnectException
 	 */
 	private void conexion() throws IOException, NullPointerException {
-		//conn = new Conexion("192.168.1.9", 27000);
-		conn = new Conexion("192.168.20.3", 27000);
+		//conn = new Conexion("192.168.1.9", 27000); // juan
+		//conn = new Conexion("192.168.20.3", 27000); // cristian
+		conn = new Conexion(ipServidor, 27000); // portatil
 	}
 
 	public DecodificadorDameloTodo getTodo() {
@@ -148,5 +156,9 @@ public class Cliente {
 	
 	public DecodificadorResultadoLogin getResultadoLogin(){
 		return resultadoLogin;
+	}
+	
+	public DecodificadorPendientesAlEncender getDecoPendientes(){
+		return pendientesAlEncender;
 	}
 }

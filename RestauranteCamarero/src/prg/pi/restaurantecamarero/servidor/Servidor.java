@@ -18,8 +18,8 @@ import android.util.Log;
 /**
  * Arranca el servidor
  * 
- * @author Juan G. PÃ©rez Leo
- * @author Cristian MarÃ­n Honor
+ * @author Juan G. Pérez Leo
+ * @author Cristian Marín Honor
  */
 public class Servidor extends Service{
     
@@ -29,8 +29,7 @@ public class Servidor extends Service{
     public Servidor(MainFragments principal){
     	this.principal = principal;
         try {
-        	//hiloPrincipal = new HiloPrincipal(27000);
-            hiloPrincipal = new HiloPrincipal(27001);
+            hiloPrincipal = new HiloPrincipal(27000);
             hiloPrincipal.start();
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,7 +71,7 @@ public class Servidor extends Service{
             }
         }
         
-        /* Para la ejecuciÃ³n del hilo */
+        /* Para la ejecución del hilo */
         public void parar(){
             parado = true;
             dispatcher.setParado(true);

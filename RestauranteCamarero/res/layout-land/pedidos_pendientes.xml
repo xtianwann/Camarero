@@ -304,7 +304,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_margin="3dip"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="0" />
 
@@ -314,9 +314,18 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_margin="3dip"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:text="CE" />
+             <Button
+                android:id="@+id/rectificar"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_margin="3dip"
+                android:layout_weight="2"
+                android:background="#FFFFFF"
+                android:text="Rect." />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

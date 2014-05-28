@@ -12,6 +12,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.DetailedState;
 import android.net.wifi.WifiManager;
@@ -19,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +43,7 @@ public class MainActivity extends Activity {
 	private AlertDialog.Builder dialog;
 	private ConnectivityManager connMgr;
 	private android.net.NetworkInfo wifi;
-	
+	private static SharedPreferences preferencias;
 	private static String usuarioActual;
 
 	@Override
@@ -54,6 +56,7 @@ public class MainActivity extends Activity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.login);
+		preferencias = PreferenceManager.getDefaultSharedPreferences(this);
 		decoResultadoLogin = null;
 		decoResultadoLogout = null;
 		usuarioActual = "";
@@ -116,6 +119,10 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
+	
+	public static String getUsuarioActual(){
+		return usuarioActual;
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -163,15 +170,16 @@ public class MainActivity extends Activity {
 			
 			XMLLogin xmlLogin = new XMLLogin(args[0]);
 			String mensaje = xmlLogin.xmlToString(xmlLogin.getDOM());
-			Cliente cliente = new Cliente(mensaje);
+			Cliente cliente = new Cliente(mensaje,getIpServidor());
 			try{
 			cliente.init();
 			} catch (NullPointerException e){
 				return null;
 			}
-			SystemClock.sleep(1000);
+			SystemClock.sleep(3000);
 			decoResultadoLogin = cliente.getResultadoLogin();
 			String resultadoLogin = decoResultadoLogin.getResultado();
+			Log.e("resultadoLogin", resultadoLogin);
 			if(resultadoLogin.equals("OK")){
 				usuarioActual = args[0];
 				resultado = true;
@@ -224,7 +232,7 @@ public class MainActivity extends Activity {
 			
 			XMLLogout xmlLogout = new XMLLogout(args[0]);
 			String mensaje = xmlLogout.xmlToString(xmlLogout.getDOM());
-			Cliente cliente = new Cliente(mensaje);
+			Cliente cliente = new Cliente(mensaje,getIpServidor());
 			try {
 			cliente.init();
 			} catch (NullPointerException e){
@@ -287,5 +295,8 @@ public class MainActivity extends Activity {
 			}
 		}
 		
+	}
+	public static String getIpServidor(){
+		return preferencias.getString("ipServidor", null)+"";
 	}
 }

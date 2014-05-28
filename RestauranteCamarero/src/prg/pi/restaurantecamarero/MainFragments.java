@@ -1,5 +1,7 @@
 package prg.pi.restaurantecamarero;
 
+import java.util.ArrayList;
+
 import prg.pi.restaurantecamarero.MainFragments;
 import prg.pi.restaurantecamarero.servidor.Servidor;
 import prg.pi.restaurantecamarero.FragmentProductos.ProductoListener;
@@ -26,6 +28,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -80,6 +83,8 @@ public class MainFragments extends FragmentActivity implements CantidadListener,
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		servidor = new Servidor(MainFragments.this);
+		
+		Toast.makeText(MainFragments.this, "Bienvenido " + MainActivity.getUsuarioActual(), Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -130,5 +135,9 @@ public class MainFragments extends FragmentActivity implements CantidadListener,
 	public Cantidad[] onHiloTerminado() {
 		return fragmentSeccionMesas.getDecoTodo().getCantidades()
 				.toArray(new Cantidad[0]);
+	}
+	
+	public void addPedidosPendientes(ArrayList<PedidosPendientesCamarero> pendientes){
+		fragmentPedidosPendientes.addPedidosPendientesEncendido(pendientes);
 	}
 }

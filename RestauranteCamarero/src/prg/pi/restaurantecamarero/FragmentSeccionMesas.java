@@ -142,7 +142,7 @@ public class FragmentSeccionMesas extends Fragment {
 					XMLDameloTodo xml = new XMLDameloTodo();
 					String mensaje = xml.xmlToString(xml.getDOM());
 					Log.e("SeccionesThread", "he llegado MESAS");
-					Cliente c = new Cliente(mensaje);
+					Cliente c = new Cliente(mensaje,MainActivity.getIpServidor());
 
 					try {
 						c.init();

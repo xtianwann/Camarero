@@ -6,13 +6,16 @@ import java.util.Iterator;
 
 import prg.pi.restaurantecamarero.FragmentResumen.Calculadora;
 import prg.pi.restaurantecamarero.conexion.Cliente;
+import prg.pi.restaurantecamarero.decodificador.DecodificadorPendientesAlEncender;
 import prg.pi.restaurantecamarero.restaurante.Mesa;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
 import prg.pi.restaurantecamarero.restaurante.PedidoListo;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
 import prg.pi.restaurantecamarero.xml.XMLCancelarPedido;
+import prg.pi.restaurantecamarero.xml.XMLDamePendientes;
 import prg.pi.restaurantecamarero.xml.XMLModificacionCamarero;
+import prg.pi.restaurantecamarero.xml.XMLPedidosComanda;
 import prg.pi.restaurantecamarero.xml.XMLPedidosServidos;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -50,6 +53,7 @@ public class ActivityPedidosPendientes extends Fragment {
 	int unidadesAnterior;
 	int servidoAnterior;
 	private AlertDialog.Builder dialog;
+	private DecodificadorPendientesAlEncender decoPendientes;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +65,34 @@ public class ActivityPedidosPendientes extends Fragment {
 	public void onActivityCreated(Bundle state) {
 		super.onActivityCreated(state);
 		prepararListeners();
+
+		decoPendientes = null;
+		pedidosPendientes = new ArrayList<PedidosPendientesCamarero>();
+
+		new Thread(new Runnable() {
+			public void run() {
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						XMLDamePendientes xmlPendientes = new XMLDamePendientes();
+						String mensaje = xmlPendientes
+								.xmlToString(xmlPendientes.getDOM());
+						Cliente c = new Cliente(mensaje, MainActivity
+								.getIpServidor());
+						try {
+							c.init();
+							decoPendientes = c.getDecoPendientes();
+							pedidosPendientes = decoPendientes
+									.getPedidosPendientes();
+							adaptador.notifyDataSetChanged();
+						} catch (NullPointerException e) {
+							Log.e("entro aqui", "hola");
+						}
+					}
+				});
+			}
+		}).start();
+
 	}
 
 	private class AdaptadorResumen extends BaseAdapter {
@@ -324,21 +356,20 @@ public class ActivityPedidosPendientes extends Fragment {
 								getActivity().runOnUiThread(new Runnable() {
 									@Override
 									public void run() {
-										 XMLPedidosServidos xmlPedidosServidos
-										 = new XMLPedidosServidos(
-										 pedidosServidos
-										 .toArray(new
-										 PedidosPendientesCamarero[0]));
-										 String mensaje = xmlPedidosServidos
-										 .xmlToString(xmlPedidosServidos
-										 .getDOM());
-										 Cliente c = new Cliente(mensaje);
-										 c.init();
-										 for(PedidosPendientesCamarero pedido
-										 : pedidosServidos){
-										 if(pedido.isServido())
-										 pedidosPendientes.remove(pedido);
-										 }
+										XMLPedidosServidos xmlPedidosServidos = new XMLPedidosServidos(
+												pedidosServidos
+														.toArray(new PedidosPendientesCamarero[0]));
+										String mensaje = xmlPedidosServidos
+												.xmlToString(xmlPedidosServidos
+														.getDOM());
+										Cliente c = new Cliente(mensaje,
+												MainActivity.getIpServidor());
+										c.init();
+										for (PedidosPendientesCamarero pedido : pedidosServidos) {
+											if (pedido.isServido())
+												pedidosPendientes
+														.remove(pedido);
+										}
 										pedidosServidos.clear();
 										pedidos.invalidateViews();
 										seleccionado = -1;
@@ -357,33 +388,49 @@ public class ActivityPedidosPendientes extends Fragment {
 									public void run() {
 										PedidosPendientesCamarero modificado = pedidosPendientes
 												.get(corregido);
-										 XMLModificacionCamarero
-										 xmlModificacionCamarero = new
-										 XMLModificacionCamarero(new
-										 PedidosPendientesCamarero[]{modificado});
-										 String mensaje =
-										 xmlModificacionCamarero
-										 .xmlToString(xmlModificacionCamarero
-										 .getDOM());
-										 Cliente c = new Cliente(mensaje);
-										 c.init();
-										if (modificado.getUnidades() < modificado
-												.getListos()) {
-											modificado.setListos(modificado
-													.getUnidades());
+										XMLModificacionCamarero xmlModificacionCamarero = new XMLModificacionCamarero(
+												new PedidosPendientesCamarero[] { modificado });
+										String mensaje = xmlModificacionCamarero
+												.xmlToString(xmlModificacionCamarero
+														.getDOM());
+										Cliente c = new Cliente(mensaje,
+												MainActivity.getIpServidor());
+										try {
+											c.init();
 											if (modificado.getUnidades() < modificado
-													.getServidos()) {
-												modificado
-														.setServidos(modificado
-																.getUnidades());
+													.getListos()) {
+												modificado.setListos(modificado
+														.getUnidades());
+												if (modificado.getUnidades() < modificado
+														.getServidos()) {
+													modificado
+															.setServidos(modificado
+																	.getUnidades());
+												}
 											}
+											if (modificado.isServido())
+												pedidosPendientes
+														.remove(modificado);
+											corregido = -1;
+											pedidos.invalidateViews();
+											adaptador.notifyDataSetChanged();
+										} catch (NullPointerException e) {
+											dialog = new AlertDialog.Builder(
+													getView().getContext());
+											dialog.setMessage("No se puede conectar con el servidor.");
+											dialog.setCancelable(false);
+											dialog.setNeutralButton(
+													"OK",
+													new DialogInterface.OnClickListener() {
+														@Override
+														public void onClick(
+																DialogInterface dialog,
+																int which) {
+															dialog.cancel();
+														}
+													});
+											dialog.show();
 										}
-										if (modificado.isServido())
-											pedidosPendientes
-													.remove(modificado);
-										corregido = -1;
-										pedidos.invalidateViews();
-										adaptador.notifyDataSetChanged();
 									}
 								});
 							}
@@ -406,21 +453,28 @@ public class ActivityPedidosPendientes extends Fragment {
 									public void run() {
 										PedidosPendientesCamarero modificado = pedidosPendientes
 												.get(corregido);
-										 XMLCancelarPedido
-										 xmlCancelarPedido = new
-										 XMLCancelarPedido(new
-										 PedidoListo(modificado.getIdComanda(),modificado.getProducto().getIdMenu(),modificado.getUnidades()));
-										 String mensaje =
-												 xmlCancelarPedido
-										 .xmlToString(xmlCancelarPedido
-										 .getDOM());
-										 Cliente c = new Cliente(mensaje);
-										 c.init();
-										modificado.setListos(modificado.getListos() - modificado
-												.getUnidades());
-										modificado.setServidos(modificado.getServidos()-modificado
-												.getUnidades());
-										modificado.setUnidades(unidadesAnterior-modificado.getUnidades());
+										XMLCancelarPedido xmlCancelarPedido = new XMLCancelarPedido(
+												new PedidoListo(modificado
+														.getIdComanda(),
+														modificado
+																.getProducto()
+																.getIdMenu(),
+														modificado
+																.getUnidades()));
+										String mensaje = xmlCancelarPedido
+												.xmlToString(xmlCancelarPedido
+														.getDOM());
+										Cliente c = new Cliente(mensaje,
+												MainActivity.getIpServidor());
+										c.init();
+										modificado.setListos(modificado
+												.getListos()
+												- modificado.getUnidades());
+										modificado.setServidos(modificado
+												.getServidos()
+												- modificado.getUnidades());
+										modificado.setUnidades(unidadesAnterior
+												- modificado.getUnidades());
 										if (modificado.isServido())
 											pedidosPendientes
 													.remove(modificado);
@@ -451,10 +505,12 @@ public class ActivityPedidosPendientes extends Fragment {
 
 		});
 		// Trabajo
-//		pedidosPendientes.add(new PedidosPendientesCamarero("Abajo", "Rincon",
-//				1, new Producto(1, "Chocos", "Racion"), 3, 2, 2));
-//		pedidosPendientes.add(new PedidosPendientesCamarero("Arriba", "Centro",
-//				2, new Producto(2, "Huevas", "Tapa"), 4, 2, 2));
+		// pedidosPendientes.add(new PedidosPendientesCamarero("Abajo",
+		// "Rincon",
+		// 1, new Producto(1, "Chocos", "Racion"), 3, 2, 2));
+		// pedidosPendientes.add(new PedidosPendientesCamarero("Arriba",
+		// "Centro",
+		// 2, new Producto(2, "Huevas", "Tapa"), 4, 2, 2));
 		// ////////////////////////////////////////////////
 
 	}
@@ -554,7 +610,8 @@ public class ActivityPedidosPendientes extends Fragment {
 				if (pedido.getIdComanda() == pedidoP.getIdComanda()
 						&& pedido.getProducto().getIdMenu() == pedidoP
 								.getProducto().getIdMenu()) {
-					pedidoP.setUnidades(pedido.getUnidades() + pedidoP.getUnidades());
+					pedidoP.setUnidades(pedido.getUnidades()
+							+ pedidoP.getUnidades());
 					encontrado = true;
 					break;
 				}
@@ -562,6 +619,14 @@ public class ActivityPedidosPendientes extends Fragment {
 			if (!encontrado)
 				pedidosPendientes.add(pedido);
 		}
+		pedidos.invalidateViews();
+		adaptador.notifyDataSetChanged();
+	}
+
+	public void addPedidosPendientesEncendido(
+			ArrayList<PedidosPendientesCamarero> pedidosAdd) {
+		pedidosPendientes = pedidosAdd;
+
 		pedidos.invalidateViews();
 		adaptador.notifyDataSetChanged();
 	}

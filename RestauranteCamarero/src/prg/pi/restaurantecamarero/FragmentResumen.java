@@ -313,12 +313,13 @@ public class FragmentResumen extends Fragment {
 							String mensaje = xmlEnviarComanda
 									.xmlToString(xmlEnviarComanda
 											.getDOM());
-							Cliente c = new Cliente(mensaje);
+							Cliente c = new Cliente(mensaje,MainActivity.getIpServidor());
 							try {
 								c.init();
 								PedidosPendientesCamarero pedidosPendientes[] = c
 										.getPedidosPendientes()
 										.getPedidosPendientes();
+								Log.e("PedidosPendientes",pedidosPendientes+"");
 								resumenListener.onPedidosPendientes(pedidosPendientes);
 								borrarPedidos();
 							} catch (NullPointerException e){
