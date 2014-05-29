@@ -274,14 +274,14 @@
                 android:text="Enviar" />
 
             <Button
-                android:id="@+id/pedidosPendientes"
+                android:id="@+id/cobrar"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_margin="2dip"
                 android:layout_weight="2"
                 android:background="#FFFFFF"
-                android:text="Pedidos" />
+                android:text="Cobrar" />
         </LinearLayout>
     </LinearLayout>
 

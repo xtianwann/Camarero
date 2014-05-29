@@ -29,6 +29,7 @@ public class Cliente {
 	private DecodificadorPedidosPendientesCamarero pedidosPendientes;
 	private DecodificadorResultadoLogin resultadoLogin;
 	private DecodificadorPendientesAlEncender pendientesAlEncender;
+	private DecodificadorAcuseRecibo decoAcuse;
 	private String ipServidor;
 	public Cliente(String mensaje,String ipServidor) {
 		this.ipServidor = ipServidor;
@@ -52,11 +53,8 @@ public class Cliente {
 					.getNodeValue();
 
 			if (tipo.equals("AcuseRecibo")) {
-				DecodificadorAcuseRecibo acuseRecibo = new DecodificadorAcuseRecibo(
+				decoAcuse = new DecodificadorAcuseRecibo(
 						dom);
-				System.out.println("Respuesta: "
-						+ acuseRecibo.getRespuesta()[0] + ", "
-						+ acuseRecibo.getRespuesta()[1]);
 			}
 			if (tipo.equals("DameloTodo")) {
 				todo = new DecodificadorDameloTodo(dom);
@@ -160,5 +158,8 @@ public class Cliente {
 	
 	public DecodificadorPendientesAlEncender getDecoPendientes(){
 		return pendientesAlEncender;
+	}
+	public DecodificadorAcuseRecibo getDecoAcuse(){
+		return decoAcuse;
 	}
 }

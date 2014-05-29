@@ -19,6 +19,7 @@ import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
 import prg.pi.restaurantecamarero.xml.XMLDameloTodo;
+import prg.pi.restaurantecamarero.xml.XMLImprimir;
 import prg.pi.restaurantecamarero.xml.XMLPedidosComanda;
 import XML.XML;
 import android.app.AlertDialog;
@@ -43,7 +44,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class FragmentResumen extends Fragment {
 	private ListView resumen;
-	private Button cambiar, mas, menos, x, enviar;
+	private Button cambiar, mas, menos, x, enviar, cobrar;
 	private Calculadora calculadora;
 	public HashMap<Producto, Integer> pedidos = new HashMap<Producto, Integer>();
 	private int seleccionado = -1;
@@ -274,6 +275,12 @@ public class FragmentResumen extends Fragment {
 				enviarPedido();
 			}
 		});
+		enviar = (Button) getView().findViewById(R.id.cobrar);
+		enviar.setOnClickListener(new AdapterView.OnClickListener() {
+			public void onClick(View view) {
+				cobrarPedido();
+			}
+		});
 	}
 
 	public interface ResumenListener {
@@ -356,5 +363,88 @@ public class FragmentResumen extends Fragment {
 					});
 			dialog.show();
 		}
+	}
+	public void cobrarPedido(){
+		final int idMesa = resumenListener.onEnviar().getId();
+		dialog = new AlertDialog.Builder(getActivity());
+		dialog.setTitle("Acciones");
+	    dialog.setItems(new CharSequence[]
+	            {"Imprimir", "Cobrar", "Cerrar", "Cancelar"},
+	            new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int posicion) {
+	                    // The 'which' argument contains the index position
+	                    // of the selected item
+	                	String mensaje = "";
+	                    switch (posicion) {
+	                        case 0:
+	                            //Enviar xml imprimir
+	                        	XMLImprimir imprimir = new XMLImprimir(idMesa);
+	                        	mensaje = imprimir.xmlToString(imprimir.getDOM());
+	                            break;
+	                        case 1:
+	                            break;
+	                        case 2:
+	                      
+	                            break;
+	                        case 3:
+	                        	dialog.cancel();
+	                            break;
+	                    }
+	                    
+	                    final String mensajeEnviar = mensaje;
+	                    new Thread(new Runnable() {
+	        				public void run() {
+	        					getActivity().runOnUiThread(new Runnable() {
+	        						@Override
+	        						public void run() {
+	        							Cliente c = new Cliente(mensajeEnviar,MainActivity.getIpServidor());
+	        							try {
+	        								c.init();
+	        								try {
+												Thread.sleep(2000);
+											} catch (InterruptedException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+	        								String respuesta[] = c.getDecoAcuse().getRespuesta();
+	        								if(respuesta[0].equals("NO")){
+	        									AlertDialog.Builder dialogo;
+		        								dialogo = new AlertDialog.Builder(getView().getContext());
+		        								dialogo.setMessage(respuesta[1]);
+		        								dialogo.setCancelable(false);
+		        								dialogo.setNeutralButton("OK",
+		        										new DialogInterface.OnClickListener() {
+		        											@Override
+		        											public void onClick(DialogInterface dialog,
+		        													int which) {
+		        												dialog.cancel();
+		        											}
+		        										});
+		        								dialogo.show();
+	        								}
+	        							} catch (NullPointerException e){
+	        								AlertDialog.Builder dialogo;
+	        								dialogo = new AlertDialog.Builder(getView().getContext());
+	        								dialogo.setMessage("No se pudo conectar con el servidor");
+	        								dialogo.setCancelable(false);
+	        								dialogo.setNeutralButton("OK",
+	        										new DialogInterface.OnClickListener() {
+	        											@Override
+	        											public void onClick(DialogInterface dialog,
+	        													int which) {
+	        												dialog.cancel();
+	        											}
+	        										});
+	        								dialogo.show();
+	        							}
+	        							
+	        						}
+	        					});
+	        				}
+	        			}).start();
+	                    dialog.cancel();
+	                }
+	            });
+	    dialog.create().show();
 	}
 }
