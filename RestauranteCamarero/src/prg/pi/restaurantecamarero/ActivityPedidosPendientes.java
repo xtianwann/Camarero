@@ -40,7 +40,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-
+/**
+ * 
+ * 
+ * Fragment encargado de controlar las unidades servidas,modificadas y devueltas de las comandas pedidas por el camarero.
+ * 
+ * @author Juan G. Pérez Leo
+ * @author Cristian Marín Honor
+ */
 public class ActivityPedidosPendientes extends Fragment {
 	private ListView pedidos;
 	private Button limpiar, cambiar, mas, menos, devolver, enviar;
@@ -103,26 +110,38 @@ public class ActivityPedidosPendientes extends Fragment {
 		}).start();
 
 	}
+	/**
+	 * 
+	 * Clase encargada de mostrar las modificaciones de los datos y los colores de la lista de comandas pendientes.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
 
-	private class AdaptadorResumen extends BaseAdapter {
+	public class AdaptadorResumen extends BaseAdapter {
 		private LayoutInflater mInflater;
+		/**
+	     * Constructor:
+	     * 
+	     * @param context [Context] Contexto en el que se encuentra el adaptador.
+	     */
 
 		public AdaptadorResumen(Context context) {
 			mInflater = LayoutInflater.from(context);
 		}
-
+		@Override
 		public int getCount() {
 			return pedidosPendientes.size();
 		}
-
+		@Override
 		public Object getItem(int position) {
 			return position;
 		}
-
+		@Override
 		public long getItemId(int position) {
 			return position;
 		}
-
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			PedidoPendienteText pedidoText;
 			if (convertView == null) {
@@ -169,6 +188,14 @@ public class ActivityPedidosPendientes extends Fragment {
 			return convertView;
 		}
 	}
+	/**
+	 * 
+	 * 
+	 * Clase en la que se recogen los botones de la calculadora.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
 
 	public class Calculadora {
 		Button cero, uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve,
@@ -176,7 +203,13 @@ public class ActivityPedidosPendientes extends Fragment {
 		public Button botones[] = { cero, uno, dos, tres, cuatro, cinco, seis,
 				siete, ocho, nueve };
 		public TextView total;
-
+		/**
+	     * Constructor:
+	     * 
+	     * @param botonesR [int[]] Referencia a los botones de los números de la calculadora.
+	     * @param ceR [int] Referencia al botón CE de la calculadora.
+	     * @param totalR [int] Referencia a la pantalla de la calculadora.
+	     */
 		public Calculadora(int botonesR[], int ceR, int totalR) {
 			for (int contador = 0; contador < botones.length; contador++) {
 				botones[contador] = (Button) getView().findViewById(
@@ -201,6 +234,11 @@ public class ActivityPedidosPendientes extends Fragment {
 			});
 			total = (TextView) getView().findViewById(totalR);
 		}
+		/**
+	     * Muestra los números pulsados de la calculadora
+	     * 
+	     * @param sumando [int] Numero pulsado.
+	     */
 
 		public void sumar(int sumando) {
 			String totalSuma = total.getText() + "";
@@ -213,12 +251,11 @@ public class ActivityPedidosPendientes extends Fragment {
 			total.setText(totalSuma);
 		}
 	}
-
-	public void limpiarPedidos() {
-		pedidosPendientes.clear();
-		pedidos.invalidateViews();
-	}
-
+	/**
+	 * 
+	 * 
+	 * Encargado de iniciar el listener de la lista de comandas pendientes,su adaptador y todos los listener de los botones de la interfaz.
+	 */
 	private void prepararListeners() {
 		pedidos = (ListView) getView().findViewById(R.id.pedidosPendientes);
 		adaptador = new AdaptadorResumen(getView().getContext());
@@ -533,16 +570,15 @@ public class ActivityPedidosPendientes extends Fragment {
 			}
 
 		});
-		// Trabajo
-		// pedidosPendientes.add(new PedidosPendientesCamarero("Abajo",
-		// "Rincon",
-		// 1, new Producto(1, "Chocos", "Racion"), 3, 2, 2));
-		// pedidosPendientes.add(new PedidosPendientesCamarero("Arriba",
-		// "Centro",
-		// 2, new Producto(2, "Huevas", "Tapa"), 4, 2, 2));
-		// ////////////////////////////////////////////////
-
 	}
+	/**
+	 * 
+	 * 
+	 * Clase encargada de manejar los datos y colores de la lista de comandas pendientes.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
 
 	public class PedidoPendienteText {
 		private TextView seccionTexto;
@@ -551,7 +587,11 @@ public class ActivityPedidosPendientes extends Fragment {
 		private TextView productoTexto;
 		private TextView listoTexto;
 		private TextView servidoTexto;
-
+		/**
+	     * Constructor:
+	     * 
+	     * @param view [View] Vista a modificar.
+	     */
 		public PedidoPendienteText(View view) {
 			cantidadTexto = (TextView) view
 					.findViewById(R.id.cantidadPendiente);
@@ -562,7 +602,11 @@ public class ActivityPedidosPendientes extends Fragment {
 			listoTexto = (TextView) view.findViewById(R.id.listoPendiente);
 			servidoTexto = (TextView) view.findViewById(R.id.servidoPendiente);
 		}
-
+		/**
+	     * Modifica el color de todos los textos de la lista de comandas pendientes
+	     * 
+	     * @param color [int] Color a modificar.
+	     */
 		public void cambiaColor(int color) {
 			cantidadTexto.setBackgroundColor(color);
 			productoTexto.setBackgroundColor(color);
@@ -571,7 +615,16 @@ public class ActivityPedidosPendientes extends Fragment {
 			listoTexto.setBackgroundColor(color);
 			servidoTexto.setBackgroundColor(color);
 		}
-
+		/**
+	     * Añade el contenido de los textos de la lista de comandas pendientes.
+	     * 
+	     * @param seccion [String] Nombre de la seccion.
+	     * @param mesa [String] Nombre de la mesa.
+	     * @param cantidad [int] Cantidad de productos.
+	     * @param producto [String] Nombre del producto.
+	     * @param listo [String] Cantidad de productos listos.
+	     * @param servido [String] Cantidad de productos servidos.
+	     */
 		public void addTexto(String seccion, String mesa, int cantidad,
 				String producto, int listo, int servido) {
 			cantidadTexto.setText(cantidad + "");
@@ -581,56 +634,12 @@ public class ActivityPedidosPendientes extends Fragment {
 			listoTexto.setText(listo + "");
 			servidoTexto.setText(servido + "");
 		}
-
-		public TextView getSeccionTexto() {
-			return seccionTexto;
-		}
-
-		public void setSeccionTexto(TextView seccionTexto) {
-			this.seccionTexto = seccionTexto;
-		}
-
-		public TextView getMesaTexto() {
-			return mesaTexto;
-		}
-
-		public void setMesaTexto(TextView mesaTexto) {
-			this.mesaTexto = mesaTexto;
-		}
-
-		public TextView getCantidadTexto() {
-			return cantidadTexto;
-		}
-
-		public void setCantidadTexto(TextView cantidadTexto) {
-			this.cantidadTexto = cantidadTexto;
-		}
-
-		public TextView getProductoTexto() {
-			return productoTexto;
-		}
-
-		public void setProductoTexto(TextView productoTexto) {
-			this.productoTexto = productoTexto;
-		}
-
-		public TextView getListoTexto() {
-			return listoTexto;
-		}
-
-		public void setListoTexto(TextView listoTexto) {
-			this.listoTexto = listoTexto;
-		}
-
-		public TextView getServidoTexto() {
-			return servidoTexto;
-		}
-
-		public void setServidoTexto(TextView servidoTexto) {
-			this.servidoTexto = servidoTexto;
-		}
 	}
-
+	/**
+     * Añade los pedidos de la comanda tomada por el camarero a la lista de pedidos pendientes.
+     * 
+     * @param pedidosAdd [PedidosPendientesCamarero[]] Pedidos tomados por el camarero .
+     */
 	public void addPedidosPendientes(PedidosPendientesCamarero[] pedidosAdd) {
 		boolean encontrado;
 		for (PedidosPendientesCamarero pedido : pedidosAdd) {
@@ -662,7 +671,11 @@ public class ActivityPedidosPendientes extends Fragment {
 		pedidos.invalidateViews();
 		adaptador.notifyDataSetChanged();
 	}
-
+	/**
+     * Añade los pedidos de todas las comanda pendientes del camarero en el momento que enciende el dispositivo.
+     * 
+     * @param pedidosAdd [PedidosPendientesCamarero[]] Todos los pedidos pendientes del camarero .
+     */
 	public void addPedidosPendientesEncendido(
 			ArrayList<PedidosPendientesCamarero> pedidosAdd) {
 		for (PedidosPendientesCamarero pedido : pedidosAdd) {
@@ -673,7 +686,11 @@ public class ActivityPedidosPendientes extends Fragment {
 		}
 		adaptador.notifyDataSetChanged();
 	}
-
+	/**
+     * Añade la cantidad de pedidos que están listos en cocina.
+     * 
+     * @param pedidosListos [PedidoListo[]] Pedidos listos en cocina.
+     */
 	public void addPedidosListos(PedidoListo[] pedidosListos) {
 		for (PedidoListo pedidoListo : pedidosListos) {
 			for (PedidosPendientesCamarero pedido : pedidosPendientes) {
@@ -687,17 +704,12 @@ public class ActivityPedidosPendientes extends Fragment {
 		pedidos.invalidateViews();
 		adaptador.notifyDataSetChanged();
 	}
-
-	public void addServido() {
-		if (!isServido(seleccionado)) {
-			pedidosServidos.add(pedidosPendientes.get(seleccionado));
-		} else {
-			if (pedidosPendientes.get(seleccionado).getServidos() < 1) {
-				pedidosServidos.remove(pedidosPendientes.get(seleccionado));
-			}
-		}
-	}
-
+	/**
+     * Comprueba si el pedido se encuentra en la lista de pedidos servidos a enviar.
+     * 
+     * @param pedido [int] Posicion del pedido en la lista.
+     * @return [boolean] Pedido encontrado.
+     */
 	public boolean isServido(int pedido) {
 		boolean listo = false;
 		for (PedidosPendientesCamarero pedidoServido : pedidosServidos) {
@@ -708,7 +720,23 @@ public class ActivityPedidosPendientes extends Fragment {
 		}
 		return listo;
 	}
-
+	/**
+     * Añade y borra pedidos servidos de la lista de pedidos servidos a enviar.
+     * 
+     */
+	public void addServido() {
+		if (!isServido(seleccionado)) {
+			pedidosServidos.add(pedidosPendientes.get(seleccionado));
+		} else {
+			if (pedidosPendientes.get(seleccionado).getServidos() < 1) {
+				pedidosServidos.remove(pedidosPendientes.get(seleccionado));
+			}
+		}
+	}
+	/**
+     * Lanza una notificación cuando no se realiza la acción de modificar los pedidos pendientes correctamente.
+     * 
+     */
 	private void notificacionDeshacer() {
 		dialog = new AlertDialog.Builder(getView().getContext());
 		dialog.setMessage("No se ha terminado la acción de deshacer.");
@@ -721,7 +749,11 @@ public class ActivityPedidosPendientes extends Fragment {
 		});
 		dialog.show();
 	}
-
+	/**
+     * Borra los pedidos servidos de una comanda pagada o cerrada.
+     * 
+     * @param idComanda [int] Id de la comanda a borrar.
+     */
 	public void terminarComanda(int idComanda) {
 		ArrayList<PedidosPendientesCamarero> pedidosBorrar = new ArrayList<PedidosPendientesCamarero>();
 		for(PedidosPendientesCamarero pedido : pedidosPendientesServidos){

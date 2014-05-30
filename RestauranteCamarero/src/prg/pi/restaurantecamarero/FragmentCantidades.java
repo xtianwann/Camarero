@@ -1,16 +1,7 @@
 package prg.pi.restaurantecamarero;
 
-import java.util.ArrayList;
-
-import prg.pi.restaurantecamarero.FragmentSeccionMesas.SeccionesThread;
-import prg.pi.restaurantecamarero.conexion.Cliente;
 import prg.pi.restaurantecamarero.restaurante.Cantidad;
-import prg.pi.restaurantecamarero.restaurante.Producto;
-import prg.pi.restaurantecamarero.restaurante.Seccion;
-import prg.pi.restaurantecamarero.xml.XMLDameloTodo;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,21 +13,22 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
-
+/**
+ * 
+ * Fragment encargado de controlar las cantidades de los productos con las que interactua el camarero.
+ * 
+ * @author Juan G. Pérez Leo
+ * @author Cristian Marín Honor
+ */
 public class FragmentCantidades extends Fragment {
 
-	private ArrayList<Producto> productos1 = new ArrayList<Producto>();
-	private ArrayList<Producto> productos2 = new ArrayList<Producto>();
 	private Cantidad cantidades[];
 	private ListView listaCantidades;
 	private CantidadListener cantidadListener;
 	private AdaptadorCantidades adaptador;
 	private int seleccionado = -1;
 	private CantidadesThread hilo;
-	private AlertDialog.Builder dialog;
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -47,32 +39,72 @@ public class FragmentCantidades extends Fragment {
 	public void onActivityCreated(Bundle state) {
 		super.onActivityCreated(state);
 	}
+	/**
+     * Inicia el hilo para pedir las cantidades de los productos al servidor.
+     * 
+     */
 
 	public void iniciarHilo() {
 		hilo = new CantidadesThread(this);
 		hilo.start();
 	}
+	/**
+	 * 
+	 * 
+	 * Interface para la comunicación con la clase principal.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
 
 	public interface CantidadListener {
-		void onCantidadSeleccionada(Cantidad cantidad);
-
-		Cantidad[] onHiloTerminado();
+		/**
+	     * Comunica la cantidad seleccionada a la clase principal.
+	     * 
+	     * @param cantidad [Cantidad] Cantidad seleccionada.
+	     */
+		public void onCantidadSeleccionada(Cantidad cantidad);
+		/**
+	     * Recibe las cantidades a añadir a la lista de cantidades disponibles.
+	     * 
+	     * @return [Cantidad[]] Lista de cantidades a añadir.
+	     */
+		public Cantidad[] onHiloTerminado();
 	}
+	
+	/**
+     * Permite modificar el listener. 
+     * 
+     * @param cantidadListener [CantidadListener] Listener asignado.
+     */
 
 	public void setCantidadListener(CantidadListener cantidadListener) {
 		this.cantidadListener = cantidadListener;
 	}
+	/**
+	 * 
+	 * Clase encargada de mostrar las cantidades de lista de cantidades.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
 
-	class AdaptadorCantidades extends ArrayAdapter<Cantidad> {
+	public class AdaptadorCantidades extends ArrayAdapter<Cantidad> {
 
 		Activity context;
+		
+		/**
+	     * Constructor:
+	     * 
+	     * @param fragment [Fragment] Fragment en el que se encuentra el adaptador.
+	     */
 
-		AdaptadorCantidades(Fragment context) {
-			super(context.getActivity(), R.layout.fragment_cantidades,
+		AdaptadorCantidades(Fragment fragment) {
+			super(fragment.getActivity(), R.layout.fragment_cantidades,
 					cantidades);
-			this.context = context.getActivity();
+			this.context = fragment.getActivity();
 		}
-
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = context.getLayoutInflater();
 			View item = inflater.inflate(R.layout.cantidadeslist, null);
@@ -88,22 +120,30 @@ public class FragmentCantidades extends Fragment {
 			return (item);
 		}
 	}
+	/**
+	 * 
+	 * Clase encargada de pedir al servidor las cantidades almacenadas en la base de datos.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
 
-	class CantidadesThread extends Thread {
-		private Cantidad cantidadesT[];
+	private class CantidadesThread extends Thread {
 		private Fragment fragment;
-
+		/**
+	     * Constructor:
+	     * 
+	     * @param fragment [Fragment] Fragment en el que se encuentra el hilo.
+	     */
 		public CantidadesThread(Fragment fragment) {
 			this.fragment = fragment;
 		}
-
+		@Override
 		public void run() {
 			getActivity().runOnUiThread(new Runnable() {
 
 				@Override
 				public void run() {
-					XMLDameloTodo xml = new XMLDameloTodo();
-					String mensaje = xml.xmlToString(xml.getDOM());
 					Log.e("CantidadesThread", "he llegado CANTIDADES");
 					cantidades = cantidadListener.onHiloTerminado();
 					listaCantidades = (ListView) getView().findViewById(
@@ -134,6 +174,12 @@ public class FragmentCantidades extends Fragment {
 			});
 		}
 	}
+	
+	/**
+     * Devuelve el hilo que recoge las cantidades a mostrar en la lista de cantidades.
+     * 
+     * @return CantidadThread Hilo de cantidades.
+     */
 
 	public CantidadesThread getHilo() {
 		return hilo;

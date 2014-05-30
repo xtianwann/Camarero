@@ -277,8 +277,8 @@ public class FragmentResumen extends Fragment {
 				enviarPedido();
 			}
 		});
-		enviar = (Button) getView().findViewById(R.id.cobrar);
-		enviar.setOnClickListener(new AdapterView.OnClickListener() {
+		cobrar = (Button) getView().findViewById(R.id.cobrar);
+		cobrar.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
 				cobrarPedido();
 			}
