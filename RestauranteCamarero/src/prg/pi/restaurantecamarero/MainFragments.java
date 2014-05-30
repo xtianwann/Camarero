@@ -140,4 +140,9 @@ public class MainFragments extends FragmentActivity implements CantidadListener,
 	public void addPedidosPendientes(ArrayList<PedidosPendientesCamarero> pendientes){
 		fragmentPedidosPendientes.addPedidosPendientesEncendido(pendientes);
 	}
+
+	@Override
+	public void onTerminarComanda(int idComanda) {
+		fragmentPedidosPendientes.terminarComanda(idComanda);
+	}
 }

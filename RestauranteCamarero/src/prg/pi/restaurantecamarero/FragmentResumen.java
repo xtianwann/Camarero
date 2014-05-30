@@ -18,6 +18,8 @@ import prg.pi.restaurantecamarero.restaurante.Mesa;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
+import prg.pi.restaurantecamarero.xml.XMLCerrarMesa;
+import prg.pi.restaurantecamarero.xml.XMLCobrarMesa;
 import prg.pi.restaurantecamarero.xml.XMLDameloTodo;
 import prg.pi.restaurantecamarero.xml.XMLImprimir;
 import prg.pi.restaurantecamarero.xml.XMLPedidosComanda;
@@ -285,7 +287,7 @@ public class FragmentResumen extends Fragment {
 
 	public interface ResumenListener {
 		public Mesa onEnviar();
-
+		public void onTerminarComanda(int idComanda);
 		public void onPedidosPendientes(
 				PedidosPendientesCamarero pedidosPendientes[]);
 	}
@@ -382,9 +384,12 @@ public class FragmentResumen extends Fragment {
 	                        	mensaje = imprimir.xmlToString(imprimir.getDOM());
 	                            break;
 	                        case 1:
+	                        	XMLCobrarMesa cobrar = new XMLCobrarMesa(idMesa);
+	                        	mensaje = cobrar.xmlToString(cobrar.getDOM());
 	                            break;
 	                        case 2:
-	                      
+	                        	XMLCerrarMesa cerrar = new XMLCerrarMesa(idMesa);
+	                        	mensaje = cerrar.xmlToString(cerrar.getDOM());
 	                            break;
 	                        case 3:
 	                        	dialog.cancel();
@@ -421,6 +426,9 @@ public class FragmentResumen extends Fragment {
 		        											}
 		        										});
 		        								dialogo.show();
+	        								} else if(!respuesta[1].equals("")){
+	        									int idComanda = Integer.parseInt(respuesta[1]);
+	        									resumenListener.onTerminarComanda(idComanda);
 	        								}
 	        							} catch (NullPointerException e){
 	        								AlertDialog.Builder dialogo;

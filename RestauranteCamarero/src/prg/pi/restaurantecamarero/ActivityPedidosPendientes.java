@@ -721,4 +721,15 @@ public class ActivityPedidosPendientes extends Fragment {
 		});
 		dialog.show();
 	}
+
+	public void terminarComanda(int idComanda) {
+		ArrayList<PedidosPendientesCamarero> pedidosBorrar = new ArrayList<PedidosPendientesCamarero>();
+		for(PedidosPendientesCamarero pedido : pedidosPendientesServidos){
+			if(pedido.getIdComanda() == idComanda)
+				pedidosBorrar.add(pedido);
+		}
+		for(PedidosPendientesCamarero pedido : pedidosBorrar)
+			pedidosPendientesServidos.remove(pedido);
+		pedidosBorrar = null;
+	}
 }
