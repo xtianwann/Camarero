@@ -75,8 +75,6 @@ public class ActivityPedidosPendientes extends Fragment {
 		prepararListeners();
 
 		decoPendientes = null;
-		pedidosPendientes = new ArrayList<PedidosPendientesCamarero>();
-
 		new Thread(new Runnable() {
 			public void run() {
 				getActivity().runOnUiThread(new Runnable() {
@@ -565,6 +563,7 @@ public class ActivityPedidosPendientes extends Fragment {
 								});
 						dialog.show();
 						corregido = -1;
+						adaptador.notifyDataSetChanged();
 					}
 				}
 			}
@@ -756,6 +755,14 @@ public class ActivityPedidosPendientes extends Fragment {
      */
 	public void terminarComanda(int idComanda) {
 		ArrayList<PedidosPendientesCamarero> pedidosBorrar = new ArrayList<PedidosPendientesCamarero>();
+		ArrayList<PedidosPendientesCamarero> pedidosBorrarPendientes = new ArrayList<PedidosPendientesCamarero>();
+		for(PedidosPendientesCamarero pedido : pedidosPendientes){
+			if(pedido.getIdComanda() == idComanda)
+				pedidosBorrarPendientes.add(pedido);
+		}
+		for(PedidosPendientesCamarero pedido : pedidosBorrarPendientes){
+			pedidosPendientes.remove(pedido);
+		}
 		for(PedidosPendientesCamarero pedido : pedidosPendientesServidos){
 			if(pedido.getIdComanda() == idComanda)
 				pedidosBorrar.add(pedido);
@@ -763,5 +770,8 @@ public class ActivityPedidosPendientes extends Fragment {
 		for(PedidosPendientesCamarero pedido : pedidosBorrar)
 			pedidosPendientesServidos.remove(pedido);
 		pedidosBorrar = null;
+		pedidosBorrarPendientes = null;
+		pedidos.invalidateViews();
+		adaptador.notifyDataSetChanged();
 	}
 }

@@ -53,6 +53,7 @@ public class FragmentResumen extends Fragment {
 	private AdaptadorResumen adaptador;
 	private AlertDialog.Builder dialog;
 	private ResumenListener resumenListener;
+
 	public HashMap<Producto, Integer> getPedido() {
 		return pedidos;
 	}
@@ -287,7 +288,9 @@ public class FragmentResumen extends Fragment {
 
 	public interface ResumenListener {
 		public Mesa onEnviar();
+
 		public void onTerminarComanda(int idComanda);
+
 		public void onPedidosPendientes(
 				PedidosPendientesCamarero pedidosPendientes[]);
 	}
@@ -301,7 +304,8 @@ public class FragmentResumen extends Fragment {
 		seleccionado = -1;
 		adaptador.notifyDataSetChanged();
 	}
-	public void enviarPedido(){
+
+	public void enviarPedido() {
 		final Comanda comanda;
 		if (pedidos.size() > 0) {
 			comanda = new Comanda(resumenListener.onEnviar(),
@@ -320,25 +324,29 @@ public class FragmentResumen extends Fragment {
 							XMLPedidosComanda xmlEnviarComanda = new XMLPedidosComanda(
 									comanda);
 							String mensaje = xmlEnviarComanda
-									.xmlToString(xmlEnviarComanda
-											.getDOM());
-							Cliente c = new Cliente(mensaje,MainActivity.getIpServidor());
+									.xmlToString(xmlEnviarComanda.getDOM());
+							Cliente c = new Cliente(mensaje, MainActivity
+									.getIpServidor());
 							try {
 								c.init();
 								PedidosPendientesCamarero pedidosPendientes[] = c
 										.getPedidosPendientes()
 										.getPedidosPendientes();
-								Log.e("PedidosPendientes",pedidosPendientes+"");
-								resumenListener.onPedidosPendientes(pedidosPendientes);
+								Log.e("PedidosPendientes", pedidosPendientes
+										+ "");
+								resumenListener
+										.onPedidosPendientes(pedidosPendientes);
 								borrarPedidos();
-							} catch (NullPointerException e){
-								dialog = new AlertDialog.Builder(getView().getContext());
+							} catch (NullPointerException e) {
+								dialog = new AlertDialog.Builder(getView()
+										.getContext());
 								dialog.setMessage("No se pudo conectar con el servidor¿Reintentar?.");
 								dialog.setCancelable(false);
 								dialog.setNeutralButton("OK",
 										new DialogInterface.OnClickListener() {
 											@Override
-											public void onClick(DialogInterface dialog,
+											public void onClick(
+													DialogInterface dialog,
 													int which) {
 												enviarPedido();
 												dialog.cancel();
@@ -346,13 +354,12 @@ public class FragmentResumen extends Fragment {
 										});
 								dialog.show();
 							}
-							
+
 						}
 					});
 				}
 			}).start();
-		}
-		else{
+		} else {
 			dialog = new AlertDialog.Builder(getActivity());
 			dialog.setMessage("No hay pedidos a enviar");
 			dialog.setCancelable(false);
@@ -366,93 +373,104 @@ public class FragmentResumen extends Fragment {
 			dialog.show();
 		}
 	}
-	public void cobrarPedido(){
+
+	public void cobrarPedido() {
 		final int idMesa = resumenListener.onEnviar().getId();
 		dialog = new AlertDialog.Builder(getActivity());
 		dialog.setTitle("Acciones");
-	    dialog.setItems(new CharSequence[]
-	            {"Imprimir", "Cobrar", "Cerrar", "Cancelar"},
-	            new DialogInterface.OnClickListener() {
-	                public void onClick(DialogInterface dialog, int posicion) {
-	                    // The 'which' argument contains the index position
-	                    // of the selected item
-	                	String mensaje = "";
-	                    switch (posicion) {
-	                        case 0:
-	                            //Enviar xml imprimir
-	                        	XMLImprimir imprimir = new XMLImprimir(idMesa);
-	                        	mensaje = imprimir.xmlToString(imprimir.getDOM());
-	                            break;
-	                        case 1:
-	                        	XMLCobrarMesa cobrar = new XMLCobrarMesa(idMesa);
-	                        	mensaje = cobrar.xmlToString(cobrar.getDOM());
-	                            break;
-	                        case 2:
-	                        	XMLCerrarMesa cerrar = new XMLCerrarMesa(idMesa);
-	                        	mensaje = cerrar.xmlToString(cerrar.getDOM());
-	                            break;
-	                        case 3:
-	                        	dialog.cancel();
-	                            break;
-	                    }
-	                    
-	                    final String mensajeEnviar = mensaje;
-	                    new Thread(new Runnable() {
-	        				public void run() {
-	        					getActivity().runOnUiThread(new Runnable() {
-	        						@Override
-	        						public void run() {
-	        							Cliente c = new Cliente(mensajeEnviar,MainActivity.getIpServidor());
-	        							try {
-	        								c.init();
-	        								try {
-												Thread.sleep(2000);
-											} catch (InterruptedException e) {
-												// TODO Auto-generated catch block
-												e.printStackTrace();
-											}
-	        								String respuesta[] = c.getDecoAcuse().getRespuesta();
-	        								if(respuesta[0].equals("NO")){
-	        									AlertDialog.Builder dialogo;
-		        								dialogo = new AlertDialog.Builder(getView().getContext());
-		        								dialogo.setMessage(respuesta[1]);
-		        								dialogo.setCancelable(false);
-		        								dialogo.setNeutralButton("OK",
-		        										new DialogInterface.OnClickListener() {
-		        											@Override
-		        											public void onClick(DialogInterface dialog,
-		        													int which) {
-		        												dialog.cancel();
-		        											}
-		        										});
-		        								dialogo.show();
-	        								} else if(!respuesta[1].equals("")){
-	        									int idComanda = Integer.parseInt(respuesta[1]);
-	        									resumenListener.onTerminarComanda(idComanda);
-	        								}
-	        							} catch (NullPointerException e){
-	        								AlertDialog.Builder dialogo;
-	        								dialogo = new AlertDialog.Builder(getView().getContext());
-	        								dialogo.setMessage("No se pudo conectar con el servidor");
-	        								dialogo.setCancelable(false);
-	        								dialogo.setNeutralButton("OK",
-	        										new DialogInterface.OnClickListener() {
-	        											@Override
-	        											public void onClick(DialogInterface dialog,
-	        													int which) {
-	        												dialog.cancel();
-	        											}
-	        										});
-	        								dialogo.show();
-	        							}
-	        							
-	        						}
-	        					});
-	        				}
-	        			}).start();
-	                    dialog.cancel();
-	                }
-	            });
-	    dialog.create().show();
+		dialog.setItems(new CharSequence[] { "Imprimir", "Cobrar", "Cerrar",
+				"Cancelar" }, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int posicion) {
+				boolean enviar = true;
+				// The 'which' argument contains the index position
+				// of the selected item
+				String mensaje = "";
+				switch (posicion) {
+				case 0:
+					// Enviar xml imprimir
+					XMLImprimir imprimir = new XMLImprimir(idMesa);
+					mensaje = imprimir.xmlToString(imprimir.getDOM());
+					break;
+				case 1:
+					XMLCobrarMesa cobrar = new XMLCobrarMesa(idMesa);
+					mensaje = cobrar.xmlToString(cobrar.getDOM());
+					break;
+				case 2:
+					XMLCerrarMesa cerrar = new XMLCerrarMesa(idMesa);
+					mensaje = cerrar.xmlToString(cerrar.getDOM());
+					break;
+				case 3:
+					enviar = false;
+					dialog.cancel();
+					break;
+				}
+				if (enviar) {
+					final String mensajeEnviar = mensaje;
+					new Thread(new Runnable() {
+						public void run() {
+							getActivity().runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Cliente c = new Cliente(mensajeEnviar,
+											MainActivity.getIpServidor());
+									try {
+										c.init();
+										try {
+											Thread.sleep(2000);
+										} catch (InterruptedException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+										String respuesta[] = c.getDecoAcuse()
+												.getRespuesta();
+										if (respuesta[0].equals("NO")) {
+											AlertDialog.Builder dialogo;
+											dialogo = new AlertDialog.Builder(
+													getView().getContext());
+											dialogo.setMessage(respuesta[1]);
+											dialogo.setCancelable(false);
+											dialogo.setNeutralButton(
+													"OK",
+													new DialogInterface.OnClickListener() {
+														@Override
+														public void onClick(
+																DialogInterface dialog,
+																int which) {
+															dialog.cancel();
+														}
+													});
+											dialogo.show();
+										} else {
+											int idCom = Integer.parseInt(respuesta[1]);
+											resumenListener.onTerminarComanda(idCom);
+										}
+									} catch (NullPointerException e) {
+										AlertDialog.Builder dialogo;
+										dialogo = new AlertDialog.Builder(
+												getView().getContext());
+										dialogo.setMessage("No se pudo conectar con el servidor");
+										dialogo.setCancelable(false);
+										dialogo.setNeutralButton(
+												"OK",
+												new DialogInterface.OnClickListener() {
+													@Override
+													public void onClick(
+															DialogInterface dialog,
+															int which) {
+														dialog.cancel();
+													}
+												});
+										dialogo.show();
+									}
+
+								}
+							});
+						}
+					}).start();
+				}
+				dialog.cancel();
+			}
+		});
+		dialog.create().show();
 	}
 }

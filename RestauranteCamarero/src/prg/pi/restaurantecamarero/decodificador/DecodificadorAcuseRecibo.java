@@ -9,25 +9,31 @@ import org.w3c.dom.NodeList;
  */
 public class DecodificadorAcuseRecibo {
 
-    private Document DOMRespuesta;
-    String aceptado = "";
-    String explicacion = "";
+	private Document DOMRespuesta;
+	String aceptado = "";
+	String explicacion = "";
 
-    public DecodificadorAcuseRecibo(Document dom) {
-        this.DOMRespuesta = dom;
-        interpretarRespuesta();
-    }
+	public DecodificadorAcuseRecibo(Document dom) {
+		this.DOMRespuesta = dom;
+		interpretarRespuesta();
+	}
 
-    private void interpretarRespuesta() {
-        NodeList nodeListAceptado = DOMRespuesta.getElementsByTagName("respuesta");
-        aceptado = nodeListAceptado.item(0).getChildNodes().item(0).getNodeValue();
-        if (aceptado.equals("NO")) {
-            NodeList nodeListExplicacion = DOMRespuesta.getElementsByTagName("explicacion");
-            explicacion = nodeListExplicacion.item(0).getChildNodes().item(0).getNodeValue();
-        }
-    }
+	private void interpretarRespuesta() {
+		NodeList nodeListAceptado = DOMRespuesta
+				.getElementsByTagName("respuesta");
+		aceptado = nodeListAceptado.item(0).getChildNodes().item(0)
+				.getNodeValue();
+		NodeList nodeListExplicacion = DOMRespuesta
+				.getElementsByTagName("explicacion");
+		try{
+		explicacion = nodeListExplicacion.item(0).getChildNodes().item(0)
+				.getNodeValue();
+		} catch (NullPointerException e){
+			explicacion = "";
+		}
+	}
 
-    public String[] getRespuesta() {
-        return new String[]{aceptado, explicacion};
-    }
+	public String[] getRespuesta() {
+		return new String[] { aceptado, explicacion };
+	}
 }
