@@ -7,7 +7,14 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
-
+/**
+ * 
+ * 
+ * Fragment encargado de mostrar las preferencias de la aplicación.
+ * 
+ * @author Juan G. Pérez Leo
+ * @author Cristian Marín Honor
+ */
 public class Preferencias extends PreferenceFragment{
 	
 	@Override

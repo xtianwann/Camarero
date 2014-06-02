@@ -2,9 +2,16 @@ package prg.pi.restaurantecamarero.preferencias;
 
 import android.app.Activity;
 import android.os.Bundle;
-
+/**
+ * 
+ * 
+ * Actividad encargada de lanzar el fragment de preferencias de la aplicación.
+ * 
+ * @author Juan G. Pérez Leo
+ * @author Cristian Marín Honor
+ */
 public class PreferenciasSet extends Activity {
-	
+
  @Override
  protected void onCreate(Bundle savedInstanceState) {
   // TODO Auto-generated method stub

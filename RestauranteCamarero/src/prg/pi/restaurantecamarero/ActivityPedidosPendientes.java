@@ -3,8 +3,6 @@ package prg.pi.restaurantecamarero;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-
-import prg.pi.restaurantecamarero.FragmentResumen.Calculadora;
 import prg.pi.restaurantecamarero.conexion.Cliente;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorPendientesAlEncender;
 import prg.pi.restaurantecamarero.restaurante.Mesa;
@@ -188,71 +186,8 @@ public class ActivityPedidosPendientes extends Fragment {
 	}
 	/**
 	 * 
-	 * 
-	 * Clase en la que se recogen los botones de la calculadora.
-	 * 
-	 * @author Juan G. Pérez Leo
-	 * @author Cristian Marín Honor
-	 */
-
-	public class Calculadora {
-		Button cero, uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve,
-				ce;
-		public Button botones[] = { cero, uno, dos, tres, cuatro, cinco, seis,
-				siete, ocho, nueve };
-		public TextView total;
-		/**
-	     * Constructor:
-	     * 
-	     * @param botonesR [int[]] Referencia a los botones de los números de la calculadora.
-	     * @param ceR [int] Referencia al botón CE de la calculadora.
-	     * @param totalR [int] Referencia a la pantalla de la calculadora.
-	     */
-		public Calculadora(int botonesR[], int ceR, int totalR) {
-			for (int contador = 0; contador < botones.length; contador++) {
-				botones[contador] = (Button) getView().findViewById(
-						botonesR[contador]);
-				botones[contador]
-						.setOnClickListener(new AdapterView.OnClickListener() {
-							public void onClick(View view) {
-								if (total.getText().length() < 3) {
-									Button botonPulsado = (Button) view;
-									int sumando = Integer.parseInt(botonPulsado
-											.getText() + "");
-									sumar(sumando);
-								}
-							}
-						});
-			}
-			ce = (Button) getView().findViewById(ceR);
-			ce.setOnClickListener(new AdapterView.OnClickListener() {
-				public void onClick(View view) {
-					total.setText(0 + "");
-				}
-			});
-			total = (TextView) getView().findViewById(totalR);
-		}
-		/**
-	     * Muestra los números pulsados de la calculadora
-	     * 
-	     * @param sumando [int] Numero pulsado.
-	     */
-
-		public void sumar(int sumando) {
-			String totalSuma = total.getText() + "";
-			int suma = Integer.parseInt(totalSuma);
-			if (suma == 0) {
-				totalSuma = sumando + "";
-			} else {
-				totalSuma = suma + "" + sumando + "";
-			}
-			total.setText(totalSuma);
-		}
-	}
-	/**
-	 * 
-	 * 
 	 * Encargado de iniciar el listener de la lista de comandas pendientes,su adaptador y todos los listener de los botones de la interfaz.
+	 * 
 	 */
 	private void prepararListeners() {
 		pedidos = (ListView) getView().findViewById(R.id.pedidosPendientes);
@@ -308,7 +243,7 @@ public class ActivityPedidosPendientes extends Fragment {
 		calculadora = new Calculadora(
 				new int[] { R.id.c0, R.id.c1, R.id.c2, R.id.c3, R.id.c4,
 						R.id.c5, R.id.c6, R.id.c7, R.id.c8, R.id.c9 }, R.id.ce,
-				R.id.total);
+				R.id.total,getView());
 		cambiar = (Button) getView().findViewById(R.id.cambiar);
 		cambiar.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
@@ -573,7 +508,7 @@ public class ActivityPedidosPendientes extends Fragment {
 	/**
 	 * 
 	 * 
-	 * Clase encargada de manejar los datos y colores de la lista de comandas pendientes.
+	 * Clase encargada de almacenar los datos y colores en los textos de la lista de comandas pendientes.
 	 * 
 	 * @author Juan G. Pérez Leo
 	 * @author Cristian Marín Honor

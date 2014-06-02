@@ -2,13 +2,20 @@ package prg.pi.restaurantecamarero.xml;
 
 import prg.pi.restaurantecamarero.restaurante.PedidoListo;
 import XML.XML;
-
+/**
+ * 
+ * Clase encargada de formar el xml con toda la información para cancelar un pedido.
+ * 
+ * @author Juan G. Pérez Leo
+ * @author Cristian Marín Honor
+ */
 public class XMLCancelarPedido extends XML{
-	
-	/* Borrar: me dijiste pedidoPendiente, pero creo que lo que necesito es pedidoListo
-	 * como se va a hacer de uno en uno solo se le pasa idComanda y idMenu 
+	/**
+	 * 
+	 * Constructor:
+	 * 
+	 * @param pedido [PedidoListo] Pedido a cancelar.
 	 */
-	
 	public XMLCancelarPedido(PedidoListo pedido){
 		init();
 		addNodo("tipo", "CancelarPedido", "paquete");

@@ -1,18 +1,11 @@
 package prg.pi.restaurantecamarero;
 
-import prg.pi.restaurantecamarero.FragmentSeccionMesas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-
-import prg.pi.restaurantecamarero.FragmentCantidades.AdaptadorCantidades;
-import prg.pi.restaurantecamarero.FragmentProductos.ProductoListener;
 import prg.pi.restaurantecamarero.conexion.Cliente;
-import prg.pi.restaurantecamarero.decodificador.DecodificadorPedidosPendientesCamarero;
-import prg.pi.restaurantecamarero.restaurante.Cantidad;
 import prg.pi.restaurantecamarero.restaurante.Comanda;
 import prg.pi.restaurantecamarero.restaurante.Mesa;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
@@ -20,14 +13,11 @@ import prg.pi.restaurantecamarero.restaurante.Producto;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
 import prg.pi.restaurantecamarero.xml.XMLCerrarMesa;
 import prg.pi.restaurantecamarero.xml.XMLCobrarMesa;
-import prg.pi.restaurantecamarero.xml.XMLDameloTodo;
 import prg.pi.restaurantecamarero.xml.XMLImprimir;
 import prg.pi.restaurantecamarero.xml.XMLPedidosComanda;
-import XML.XML;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,12 +28,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
-
+/**
+ * 
+ * Fragment encargado de mostrar,modificar,enviar,cobrar y cerrar la comanda actual.
+ * 
+ * @author Juan G. Pérez Leo
+ * @author Cristian Marín Honor
+ */
 public class FragmentResumen extends Fragment {
 	private ListView resumen;
 	private Button cambiar, mas, menos, x, enviar, cobrar;
@@ -53,10 +47,6 @@ public class FragmentResumen extends Fragment {
 	private AdaptadorResumen adaptador;
 	private AlertDialog.Builder dialog;
 	private ResumenListener resumenListener;
-
-	public HashMap<Producto, Integer> getPedido() {
-		return pedidos;
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,34 +58,40 @@ public class FragmentResumen extends Fragment {
 	public void onActivityCreated(Bundle state) {
 		super.onActivityCreated(state);
 		prepararListeners();
-		/*
-		 * limpiar = (Button) getView().findViewById(R.id.limpiar);
-		 * limpiar.setOnClickListener(new AdapterView.OnClickListener() { public
-		 * void onClick(View view) { limpiarPedidos(); }
-		 * 
-		 * });
-		 */
 	}
+	
+	/**
+	 * 
+	 * Clase encargada de mostrar los productos pedidos de la comanda actual.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
 
 	private class AdaptadorResumen extends BaseAdapter {
 		private LayoutInflater mInflater;
-
+		
+		/**
+	     * Constructor:
+	     * 
+	     * @param context [Context] Contexto en el que se encuentra el adaptador.
+	     */
 		public AdaptadorResumen(Context context) {
 			mInflater = LayoutInflater.from(context);
 		}
-
+		@Override
 		public int getCount() {
 			return pedidos.size();
 		}
-
+		@Override
 		public Object getItem(int position) {
 			return position;
 		}
-
+		@Override
 		public long getItemId(int position) {
 			return position;
 		}
-
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			Pedido pedido;
 			if (convertView == null) {
@@ -131,56 +127,25 @@ public class FragmentResumen extends Fragment {
 			}
 			return convertView;
 		}
-
-		class Pedido {
+		/**
+		 * 
+		 * 
+		 * Clase encargada de almacenar los datos en los textos de la lista de productos pedidos de la comanda actual.
+		 * 
+		 * @author Juan G. Pérez Leo
+		 * @author Cristian Marín Honor
+		 */
+		public class Pedido {
 			TextView cantidadTexto;
 			TextView productoTexto;
 		}
 	}
-
-	public class Calculadora {
-		Button cero, uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve,
-				ce;
-		public Button botones[] = { cero, uno, dos, tres, cuatro, cinco, seis,
-				siete, ocho, nueve };
-		public TextView total;
-
-		public Calculadora(int botonesR[], int ceR, int totalR) {
-			for (int contador = 0; contador < botones.length; contador++) {
-				botones[contador] = (Button) getView().findViewById(
-						botonesR[contador]);
-				botones[contador]
-						.setOnClickListener(new AdapterView.OnClickListener() {
-							public void onClick(View view) {
-								if (total.getText().length() < 3) {
-									Button botonPulsado = (Button) view;
-									int sumando = Integer.parseInt(botonPulsado
-											.getText() + "");
-									sumar(sumando);
-								}
-							}
-						});
-			}
-			ce = (Button) getView().findViewById(ceR);
-			ce.setOnClickListener(new AdapterView.OnClickListener() {
-				public void onClick(View view) {
-					total.setText(0 + "");
-				}
-			});
-			total = (TextView) getView().findViewById(totalR);
-		}
-
-		public void sumar(int sumando) {
-			String totalSuma = total.getText() + "";
-			int suma = Integer.parseInt(totalSuma);
-			if (suma == 0) {
-				totalSuma = sumando + "";
-			} else {
-				totalSuma = suma + "" + sumando + "";
-			}
-			total.setText(totalSuma);
-		}
-	}
+	
+	/**
+     * Añade a la lista del resumen el producto seleccionado.
+     * 
+     * @param producto [Producto] Producto seleccionado.
+     */
 
 	public void apuntarPedido(Producto producto) {
 		seleccionado = -1;
@@ -191,12 +156,23 @@ public class FragmentResumen extends Fragment {
 		}
 		resumen.invalidateViews();
 	}
+	
+	/**
+     * Limpia todos los productos pedidos en la comanda actual.
+     * 
+     */
 
 	public void limpiarPedidos() {
 		pedidos.clear();
 		seleccionado = -1;
 		resumen.invalidateViews();
 	}
+	
+	/**
+	 * 
+	 * Encargado de iniciar el listener de la lista de los productos de la comanda actual,su adaptador y todos los listener de los botones de la interfaz.
+	 * 
+	 */
 
 	private void prepararListeners() {
 		resumen = (ListView) getView().findViewById(R.id.lv_country);
@@ -213,7 +189,7 @@ public class FragmentResumen extends Fragment {
 		calculadora = new Calculadora(
 				new int[] { R.id.c0, R.id.c1, R.id.c2, R.id.c3, R.id.c4,
 						R.id.c5, R.id.c6, R.id.c7, R.id.c8, R.id.c9 }, R.id.ce,
-				R.id.total);
+				R.id.total,getView());
 		cambiar = (Button) getView().findViewById(R.id.cambiar);
 		cambiar.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
@@ -285,25 +261,63 @@ public class FragmentResumen extends Fragment {
 			}
 		});
 	}
+	
+	/**
+	 * 
+	 * 
+	 * Interface para la comunicación con la clase principal.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
 
 	public interface ResumenListener {
+		/**
+	     * Devuelve la mesa de la comanda actual. 
+	     * 
+	     * @return [Mesa] Mesa de la comanda actual.
+	     */
 		public Mesa onEnviar();
-
+		/**
+	     * Comunica el id de la comanda a cobrar o cerrar.
+	     * 
+	     * @param cantidad [Cantidad] Cantidad seleccionada.
+	     */
 		public void onTerminarComanda(int idComanda);
-
+		/**
+	     * Comunica la lista de pedidos de la comanda actual.
+	     * 
+	     * @param pedidosPendientes [pedidosPendientesCamarero[]] Mesa de la comanda actual.
+	     */
 		public void onPedidosPendientes(
 				PedidosPendientesCamarero pedidosPendientes[]);
 	}
+	
+	/**
+     * Permite modificar el listener. 
+     * 
+     * @param resumenListener [ResumenListener] Listener asignado.
+     */
 
 	public void setResumenListener(ResumenListener resumenListener) {
 		this.resumenListener = resumenListener;
 	}
+	
+	/**
+     * Borra la lista de pedidos de la comanda actual.
+     * 
+     */
 
 	public void borrarPedidos() {
 		pedidos.clear();
 		seleccionado = -1;
 		adaptador.notifyDataSetChanged();
 	}
+	
+	/**
+     * Envia la lista de pedidos de la comanda actual al servidor.
+     * 
+     */
 
 	public void enviarPedido() {
 		final Comanda comanda;
@@ -373,6 +387,11 @@ public class FragmentResumen extends Fragment {
 			dialog.show();
 		}
 	}
+	
+	/**
+     * Imprime,cobra o cierra la comanda de la mesa actual.
+     * 
+     */
 
 	public void cobrarPedido() {
 		final int idMesa = resumenListener.onEnviar().getId();
@@ -472,5 +491,13 @@ public class FragmentResumen extends Fragment {
 			}
 		});
 		dialog.create().show();
+	}
+	/**
+     * Devuelve los productos con sus unidades.
+     * 
+     * @return [HashMap<Producto, Integer>] Hashmap de Productos con sus unidades
+     */
+	public HashMap<Producto, Integer> getPedido() {
+		return pedidos;
 	}
 }

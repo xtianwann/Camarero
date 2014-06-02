@@ -4,19 +4,32 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 /**
- * @author Juan Gabriel PÃ©rez Leo
- * @author Cristian MarÃ­n Honor
+ * Clase encargada de decodificar el mensaje AcuseReciboServer del servidor.
+ * 
+ * @author Juan Gabriel Pérez Leo
+ * @author Cristian Marín Honor
  */
 public class DecodificadorAcuseRecibo {
 
 	private Document DOMRespuesta;
 	String aceptado = "";
 	String explicacion = "";
-
+	
+	/**
+	 * Constructor:
+	 * 
+	 * @param Document [dom] DOM del XMl a interpretar.
+	 */
+	
 	public DecodificadorAcuseRecibo(Document dom) {
 		this.DOMRespuesta = dom;
 		interpretarRespuesta();
 	}
+	
+	/**
+	 * Interpreta la respuesta recibida por el servidor.
+	 * 
+	 */
 
 	private void interpretarRespuesta() {
 		NodeList nodeListAceptado = DOMRespuesta
@@ -32,6 +45,12 @@ public class DecodificadorAcuseRecibo {
 			explicacion = "";
 		}
 	}
+	
+	/**
+	 * Devuelve la respuesta del servidor.
+	 * 
+	 * @return [String[]] Respuesta del servidor.
+	 */
 
 	public String[] getRespuesta() {
 		return new String[] { aceptado, explicacion };

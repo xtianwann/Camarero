@@ -33,6 +33,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+/**
+ * 
+ * Fragment encargado de controlar las secciones y mesas con las que interactua
+ * el camarero.
+ * 
+ * @author Juan G. Pérez Leo
+ * @author Cristian Marín Honor
+ */
 public class FragmentSeccionMesas extends Fragment {
 	private Spinner seccion;
 	private Spinner mesa;
@@ -47,10 +55,6 @@ public class FragmentSeccionMesas extends Fragment {
 	private SeccionesThread hilo;
 	private AlertDialog.Builder dialog;
 	private DecodificadorDameloTodo decoTodo;
-
-	public DecodificadorDameloTodo getDecoTodo() {
-		return decoTodo;
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,7 +83,8 @@ public class FragmentSeccionMesas extends Fragment {
 				dialog.setNeutralButton("OK",
 						new DialogInterface.OnClickListener() {
 							@Override
-							public void onClick(DialogInterface dialog, int which) {
+							public void onClick(DialogInterface dialog,
+									int which) {
 								dialog.cancel();
 							}
 						});
@@ -108,10 +113,21 @@ public class FragmentSeccionMesas extends Fragment {
 		}
 	}
 
+	/**
+	 * Inicia el hilo para recibir las secciones y mesas del servidor.
+	 * 
+	 */
+
 	public void iniciarHilo() {
 		hilo = new SeccionesThread();
 		hilo.start();
 	}
+
+	/**
+	 * Devuelve el nombre de las secciones.
+	 * 
+	 * @return [String[]] Nombre de las secciones.
+	 */
 
 	private String[] dameSecciones() {
 		ArrayList<String> seccionesArray = new ArrayList<String>();
@@ -124,6 +140,14 @@ public class FragmentSeccionMesas extends Fragment {
 		return seccionesArray.toArray(new String[0]);
 	}
 
+	/**
+	 * Devuelve el nombre de las mesas de la sección seleccionada
+	 * 
+	 * @param seccion
+	 *            [Seccion] Sección seleccionada
+	 * @return [String[]] Nombres de las mesas.
+	 */
+
 	private String[] dameMesas(Seccion seccion) {
 		ArrayList<String> mesasArray = new ArrayList<String>();
 		for (Mesa mesa : seccion.getMesas())
@@ -131,9 +155,19 @@ public class FragmentSeccionMesas extends Fragment {
 		return mesasArray.toArray(new String[0]);
 	}
 
-	class SeccionesThread extends Thread {
+	/**
+	 * 
+	 * Clase encargada de pedir al servidor las secciones y mesas almacenadas en
+	 * la base de datos.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
+
+	public class SeccionesThread extends Thread {
 		private Seccion seccionesT[];
 
+		@Override
 		public void run() {
 			getActivity().runOnUiThread(new Runnable() {
 
@@ -142,11 +176,12 @@ public class FragmentSeccionMesas extends Fragment {
 					XMLDameloTodo xml = new XMLDameloTodo();
 					String mensaje = xml.xmlToString(xml.getDOM());
 					Log.e("SeccionesThread", "he llegado MESAS");
-					Cliente c = new Cliente(mensaje,MainActivity.getIpServidor());
+					Cliente c = new Cliente(mensaje, MainActivity
+							.getIpServidor());
 
 					try {
 						c.init();
-						seccionesMesasListener.onIniciarHilos();
+						seccionesMesasListener.onIniciarHiloCantidad();
 						Log.e("SeccionesThread", "he terminado MESAS");
 						decoTodo = c.getTodo();
 						seccionesT = decoTodo.getSecciones().toArray(
@@ -165,6 +200,7 @@ public class FragmentSeccionMesas extends Fragment {
 						seccion.setAdapter(adaptadorSeccion);
 
 						seccion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+							@Override
 							public void onItemSelected(AdapterView<?> parent,
 									View view, int pos, long id) {
 								posicionSeccion = pos;
@@ -178,6 +214,7 @@ public class FragmentSeccionMesas extends Fragment {
 								mesa.setAdapter(adaptadorMesa);
 								mesaSeleccionada = seccion.getMesas().get(0);
 								mesa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+									@Override
 									public void onItemSelected(
 											AdapterView<?> parent, View view,
 											int pos, long id) {
@@ -186,6 +223,7 @@ public class FragmentSeccionMesas extends Fragment {
 												.getMesas().get(pos);
 									}
 
+									@Override
 									public void onNothingSelected(
 											AdapterView<?> parent) {
 										// Do nothing, just another required
@@ -194,6 +232,7 @@ public class FragmentSeccionMesas extends Fragment {
 								});
 							}
 
+							@Override
 							public void onNothingSelected(AdapterView<?> parent) {
 								// Do nothing, just another required interface
 								// callback
@@ -243,39 +282,88 @@ public class FragmentSeccionMesas extends Fragment {
 
 			});
 		}
+		/**
+	     * Devuelve la lista de secciones.
+	     * 
+	     * @return [Seccion[]] Lista de secciones.
+	     */
 
 		public Seccion[] getSeccionesT() {
 			return seccionesT;
 		}
-
+		/**
+	     * Permite modificar la lista de secciones.
+	     * 
+	     * @param seccionesT [Seccion[]] Lista de secciones.
+	     */
 		public void setSeccionesT(Seccion[] seccionesT) {
 			this.seccionesT = seccionesT;
 		}
 	}
+	
+	/**
+     * Devuelve la mesa seleccionada.
+     * 
+     * @return [Mesa] Mesa seleccionada.
+     */
 
 	public Mesa getMesaSeleccionada() {
 		return mesaSeleccionada;
 	}
+	//Mirar
+	/**
+	 * 
+     * Añade la mesa seleccionada.
+     * 
+     * @param mesa [Mesa] Mesa seleccionada.
+     */
 
 	public void addMesaActiva(Mesa mesa) {
 		if (!mesasActivas.contains(mesa))
 			mesasActivas.add(mesa);
 	}
+	/**
+	 * 
+	 * 
+	 * Interface para la comunicación con la clase principal.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
 
 	public interface SeccionesMesasListener {
+		/**
+	     * Recibe si existen pedidos en la comanda actual.
+	     * 
+	     * @return [boolean] true si existen pedidos, false si no existen.
+	     */
 		public boolean onExistenPedidos();
-
+		/**
+	     * Envia los pedidos de la comanda actual.
+	     * 
+	     */
 		public void onEnviarPedidosSinEnviar();
-
-		public void onIniciarHilos();
+		/**
+	     * Inicia el hilo del fragment responsable de las cantidades.
+	     * 
+	     */
+		public void onIniciarHiloCantidad();
 
 	}
-
+	/**
+     * Permite modificar el listener. 
+     * 
+     * @param seccionesMesasListener [SeccionesMesasListener] Listener asignado.
+     */
 	public void setSeccionesMesasListener(
 			SeccionesMesasListener seccionesMesasListener) {
 		this.seccionesMesasListener = seccionesMesasListener;
 	}
-
+	
+	/**
+     * Muestra una notificación en el caso de cambiar de mesa sin enviar los pedidos de la misma.
+     * 
+     */
 	public void mostrarNotificacion() {
 		AlertDialog.Builder dialog = new AlertDialog.Builder(getView()
 				.getContext());
@@ -300,15 +388,35 @@ public class FragmentSeccionMesas extends Fragment {
 		});
 		dialog.show();
 	}
+	
+	/**
+     * Devuelve la hilo de las secciones.
+     * 
+     * @return [SeccionesThread] Thread de secciones.
+     */
 
 	public SeccionesThread getHilo() {
 		return hilo;
 	}
+	
+	/**
+     * Activa el wifi del dispositivo.
+     * 
+     */
 
 	private void activarWifi() {
 		WifiManager wifiManager = (WifiManager) getView().getContext()
 				.getSystemService(Context.WIFI_SERVICE);
 		wifiManager.setWifiEnabled(true);
+	}
+	
+	/**
+     * Devuelve el decodificador del mensaje DameloTodo.
+     * 
+     * @return [DecodificadoDameloTodo] Decodificador de mensaje DameloTodo.
+     */
+	public DecodificadorDameloTodo getDecoTodo() {
+		return decoTodo;
 	}
 
 }

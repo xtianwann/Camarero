@@ -32,7 +32,14 @@ import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.app.ActionBarDrawerToggle;
-
+/**
+ * 
+ * 
+ * Clase intermediaria entre la comunicación de los fragments de la aplicación.
+ * 
+ * @author Juan G. Pérez Leo
+ * @author Cristian Marín Honor
+ */
 public class MainFragments extends FragmentActivity implements CantidadListener,
 		ProductoListener, ResumenListener, SeccionesMesasListener {
 	private DrawerLayout drawerLayout;
@@ -50,10 +57,7 @@ public class MainFragments extends FragmentActivity implements CantidadListener,
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 				.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
-		// Remove title bar
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-		// Remove notification bar
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_main);
@@ -116,7 +120,11 @@ public class MainFragments extends FragmentActivity implements CantidadListener,
 		fragmentPedidosPendientes.addPedidosPendientes(pedidosPendientes);
 
 	}
-
+	/**
+     * Comunica al fragment encargado de los pedidos pendientes los pedidos listos obtenidos.
+     * 
+     * @param pedidosListos [PedidoListo[]] Pedidos listos a añadir.
+     */
 	public void addPedidosListos(PedidoListo[] pedidosListos) {
 		fragmentPedidosPendientes.addPedidosListos(pedidosListos);
 	}
@@ -127,7 +135,7 @@ public class MainFragments extends FragmentActivity implements CantidadListener,
 	}
 
 	@Override
-	public void onIniciarHilos() {
+	public void onIniciarHiloCantidad() {
 		fragmentCategorias.iniciarHilo();
 	}
 
@@ -136,6 +144,12 @@ public class MainFragments extends FragmentActivity implements CantidadListener,
 		return fragmentSeccionMesas.getDecoTodo().getCantidades()
 				.toArray(new Cantidad[0]);
 	}
+	
+	/**
+     * Comunica al fragment encargado de los pedidos pendientes los pedidos pendientes obtenidos.
+     * 
+     * @param pendientes [ArrayList<PedidosPendientesCamarero>] Pedidos pendientes a añadir.
+     */
 	
 	public void addPedidosPendientes(ArrayList<PedidosPendientesCamarero> pendientes){
 		fragmentPedidosPendientes.addPedidosPendientesEncendido(pendientes);

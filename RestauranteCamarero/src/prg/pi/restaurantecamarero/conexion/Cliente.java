@@ -12,12 +12,13 @@ import prg.pi.restaurantecamarero.decodificador.DecodificadorDameloTodo;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorPedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorPendientesAlEncender;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorResultadoLogin;
-import prg.pi.restaurantecamarero.decodificador.DecodificadorResumenMesa;
 import prg.pi.restaurantecamarero.restaurante.Pedido;
 import Conexion.Conexion;
 import XML.XML;
 
 /**
+ * Clase encargada de el envío,recepción e interpretación de los mensajes que se comunican con el servidor.
+ * 
  * @author Juan Gabriel Pérez Leo
  * @author Cristian Marín Honor
  */
@@ -36,6 +37,11 @@ public class Cliente {
 		respuesta = "";
 		this.mensaje = mensaje;
 	}
+	
+	/**
+	 * Envía un mensaje al servidor,espera la respuesta y lo interpreta.
+	 * 
+	 */
 
 	public void init() {
 		try {
@@ -58,15 +64,6 @@ public class Cliente {
 			}
 			if (tipo.equals("DameloTodo")) {
 				todo = new DecodificadorDameloTodo(dom);
-			}
-			if (tipo.equals("ResumenMesa")) {
-				DecodificadorResumenMesa resumenMesa = new DecodificadorResumenMesa(
-						dom);
-				for (Pedido p : resumenMesa.getResumen()) {
-					System.out.println(p.getProducto().getNombreProducto()
-							+ " --- " + p.getUnidades() + " --- "
-							+ p.getEstado());
-				}
 			}
 			if (tipo.equals("PedidosPendientesCamarero")) {
 				pedidosPendientes = new DecodificadorPedidosPendientesCamarero(
@@ -99,8 +96,8 @@ public class Cliente {
 	}
 
 	/**
-	 * Establece conexiÃ³n con el servidor y envÃ­a el mensaje pasado por
-	 * parÃ¡metro
+	 * Establece conexión con el servidor y envía el mensaje pasado por
+	 * parámetro
 	 * 
 	 * @param msg
 	 *            mensaje a enviar
@@ -117,7 +114,7 @@ public class Cliente {
 	 * Espera un mensaje del servidor durante cinco segundos
 	 * 
 	 * @return String de respuestas del servidor
-	 * @return null si excede el lÃ­mite de tiempo
+	 * @return null si excede el límite de tiempo
 	 */
 	public String recibirMensaje() throws IOException, NullPointerException {
 		String respuesta = null;
@@ -129,36 +126,64 @@ public class Cliente {
 	}
 
 	/**
-	 * Establece conexiÃ³n con el servidor
+	 * Establece conexión con el servidor
 	 * 
 	 * @throws IOException
 	 *             ,ConnectException
 	 */
 	private void conexion() throws IOException, NullPointerException {
-		//conn = new Conexion("192.168.1.9", 27000); // juan
-		//conn = new Conexion("192.168.20.3", 27000); // cristian
-		conn = new Conexion(ipServidor, 27000); // portatil
+		conn = new Conexion(ipServidor, 27000);
 	}
+	/**
+	 * Devuelve el decodificador que interpreta el mensaje DameloTodo.
+	 * 
+	 * @return [DecodificadorDameloTodo] Decodificador de mensaje DameloTodo.
+	 */
 
 	public DecodificadorDameloTodo getTodo() {
 		return todo;
 	}
+	
+	/**
+	 * Modifica el decodificador que interpreta el mensaje DameloTodo.
+	 * 
+	 * @param todo [DecodificadorDameloTodo] Decodificador de mensaje DameloTodo.
+	 */
 
 	public void setTodo(DecodificadorDameloTodo todo) {
 		this.todo = todo;
 	}
+	
+	/**
+	 * Devuelve el decodificador que interpreta el mensaje PedidosPendientesCamarero.
+	 * 
+	 * @return [DecodificadorPedidosPendientesCamarero] Decodificador de mensaje PedidosPendientesCamarero.
+	 */
 
 	public DecodificadorPedidosPendientesCamarero getPedidosPendientes() {
 		return pedidosPendientes;
 	}
-	
+	/**
+	 * Devuelve el decodificador que interpreta el mensaje ResultadoLoginCamarero.
+	 * 
+	 * @return [DecodificadorResultadoLogin] Decodificador de mensaje ResultadoLoginCamarero.
+	 */
 	public DecodificadorResultadoLogin getResultadoLogin(){
 		return resultadoLogin;
 	}
-	
+	/**
+	 * Devuelve el decodificador que interpreta el mensaje PendientesCamareroAlEncender.
+	 * 
+	 * @return [DecodificadorPendientesAlEncender] Decodificador de mensaje PendientesCamareroAlEncender.
+	 */
 	public DecodificadorPendientesAlEncender getDecoPendientes(){
 		return pendientesAlEncender;
 	}
+	/**
+	 * Devuelve el decodificador que interpreta el mensaje AcuseReciboServer.
+	 * 
+	 * @return [DecodificadorAcuseRecibo] Decodificador de mensaje AcuseReciboServer.
+	 */
 	public DecodificadorAcuseRecibo getDecoAcuse(){
 		return decoAcuse;
 	}

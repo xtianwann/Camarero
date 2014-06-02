@@ -40,7 +40,7 @@ public class FragmentCantidades extends Fragment {
 		super.onActivityCreated(state);
 	}
 	/**
-     * Inicia el hilo para pedir las cantidades de los productos al servidor.
+     * Inicia el hilo para recibir las cantidades de los productos.
      * 
      */
 
@@ -59,7 +59,7 @@ public class FragmentCantidades extends Fragment {
 
 	public interface CantidadListener {
 		/**
-	     * Comunica la cantidad seleccionada a la clase principal.
+	     * Comunica la cantidad que se ha seleccionado.
 	     * 
 	     * @param cantidad [Cantidad] Cantidad seleccionada.
 	     */
@@ -144,7 +144,6 @@ public class FragmentCantidades extends Fragment {
 
 				@Override
 				public void run() {
-					Log.e("CantidadesThread", "he llegado CANTIDADES");
 					cantidades = cantidadListener.onHiloTerminado();
 					listaCantidades = (ListView) getView().findViewById(
 							R.id.listaCategorias);
@@ -178,7 +177,7 @@ public class FragmentCantidades extends Fragment {
 	/**
      * Devuelve el hilo que recoge las cantidades a mostrar en la lista de cantidades.
      * 
-     * @return CantidadThread Hilo de cantidades.
+     * @return [CantidadThread] Hilo de cantidades.
      */
 
 	public CantidadesThread getHilo() {

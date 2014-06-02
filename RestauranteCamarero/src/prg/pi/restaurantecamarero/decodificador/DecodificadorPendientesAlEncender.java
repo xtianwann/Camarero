@@ -9,22 +9,38 @@ import org.w3c.dom.NodeList;
 import android.util.Log;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
-
+/**
+ * Clase encargada de decodificar el mensaje PedidosPendientesCamareroAlEncenderServer del servidor.
+ * 
+ * @author Juan Gabriel Pérez Leo
+ * @author Cristian Marín Honor
+ */
 public class DecodificadorPendientesAlEncender {
 	
 	private Document dom;
 	private ArrayList<PedidosPendientesCamarero> pendientes;
-	
+	/**
+	 * Constructor:
+	 * 
+	 * @param Document [dom] DOM del XMl a interpretar.
+	 */
 	public DecodificadorPendientesAlEncender(Document dom){
 		this.dom = dom;
 		pendientes = new ArrayList<PedidosPendientesCamarero>();
 		extraerPendientes();
 	}
-	
+	/**
+	 * Devuelve los pedidos pendientes del camarero recibidos por del servidor.
+	 * 
+	 * @return [PedidosPendientesCamarero[]] Pedidos pendientes del camarero.
+	 */
 	public ArrayList<PedidosPendientesCamarero> getPedidosPendientes(){
 		return pendientes;
 	}
-	
+	/**
+	 * Interpreta la respuesta recibida por el servidor y genera los pedidos pendientes del camarero.
+	 * 
+	 */
 	private void extraerPendientes(){
 		String hayPedidos = dom.getElementsByTagName("hayPedidos").item(0).getFirstChild().getNodeValue();
 		

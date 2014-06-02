@@ -13,15 +13,21 @@ import prg.pi.restaurantecamarero.restaurante.Producto;
 import prg.pi.restaurantecamarero.restaurante.Seccion;
 
 /**
- * @author Juan Gabriel PÃ©rez Leo
- * @author Cristian MarÃ­n Honor
+ * Clase encargada de decodificar el mensaje DameloTodoServer del servidor.
+ * 
+ * @author Juan Gabriel Pérez Leo
+ * @author Cristian Marín Honor
  */
 public class DecodificadorDameloTodo {
     
     private Document DOMRespuesta;
     private ArrayList<Seccion> secciones;
     private ArrayList<Cantidad> cantidades;
-    
+    /**
+	 * Constructor:
+	 * 
+	 * @param Document [dom] DOM del XMl a interpretar.
+	 */
     public DecodificadorDameloTodo(Document dom){
         secciones = new ArrayList<Seccion>();
         cantidades = new ArrayList<Cantidad>();
@@ -29,24 +35,19 @@ public class DecodificadorDameloTodo {
         generarSecciones();
         generarCantidades();
     }
-    
-    public ArrayList<Seccion> getSecciones(){
-        return secciones;
-    }
-    
-    public ArrayList<Cantidad> getCantidades(){
-        return cantidades;
-    }
-    
+    /**
+	 * Interpreta el mensaje y genera las secciones del restaurante.
+	 * 
+	 */
     private void generarSecciones(){
         NodeList nodeListSecciones = DOMRespuesta.getElementsByTagName("secciones").item(0).getChildNodes();
         for(int contadorSecciones = 0; contadorSecciones < nodeListSecciones.getLength(); contadorSecciones++){
-            /* Obtenemos el nombre de la secciÃ³n */
+            /* Obtenemos el nombre de la sección */
             Node nodoSeccion = nodeListSecciones.item(contadorSecciones);
             Element elementoSeccion = (Element) nodoSeccion;
             String nombreSeccion = elementoSeccion.getAttribute("nomSec");
             
-            /* Obtenemos todas las mesas de la secciÃ³n */
+            /* Obtenemos todas las mesas de la sección */
             ArrayList<Mesa> listaMesas = new ArrayList<Mesa>();
             NodeList nodeListMesas = nodoSeccion.getChildNodes();
             for(int contadorMesas = 0; contadorMesas < nodeListMesas.getLength(); contadorMesas++){
@@ -57,11 +58,14 @@ public class DecodificadorDameloTodo {
                 listaMesas.add(new Mesa(idMesa, nombreMesa));
             }
             
-            /* AÃ±adimos la secciÃ³n al ArrayList correspondiente */
+            /* Añadimos la sección al ArrayList correspondiente */
             secciones.add(new Seccion(nombreSeccion, listaMesas));
         }
     }
-    
+    /**
+	 * Interpreta el mensaje y genera las cantidades del restaurante.
+	 * 
+	 */
     private void generarCantidades(){
         NodeList nodeListCantidades = DOMRespuesta.getElementsByTagName("cantidades").item(0).getChildNodes();
         for(int contadorCantidades = 0; contadorCantidades < nodeListCantidades.getLength(); contadorCantidades++){
@@ -81,9 +85,25 @@ public class DecodificadorDameloTodo {
                 listaProductos.add(new Producto(idMenu, nombreProducto));
             }
             
-            /* AÃ±adimos la cantidad al ArrayList correspondiente */
+            /* Añadimos la cantidad al ArrayList correspondiente */
             cantidades.add(new Cantidad(nombreCantidad, listaProductos));
         }
+    }
+    /**
+	 * Devuelve las secciones del restaurante.
+	 * 
+	 * @return [ArrayList<Seccion>] Secciones del restaurante.
+	 */
+    public ArrayList<Seccion> getSecciones(){
+        return secciones;
+    }
+    /**
+	 * Devuelve las cantidades del restaurante.
+	 * 
+	 * @return [ArrayList<Cantidad>] Cantidades del restaurante.
+	 */
+    public ArrayList<Cantidad> getCantidades(){
+        return cantidades;
     }
     
 }
