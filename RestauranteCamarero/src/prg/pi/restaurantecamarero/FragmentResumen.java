@@ -1,6 +1,5 @@
 package prg.pi.restaurantecamarero;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,9 +30,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+
 /**
  * 
- * Fragment encargado de mostrar,modificar,enviar,cobrar y cerrar la comanda actual.
+ * Fragment encargado de mostrar,modificar,enviar,cobrar y cerrar la comanda
+ * actual.
  * 
  * @author Juan G. Pérez Leo
  * @author Cristian Marín Honor
@@ -59,7 +60,7 @@ public class FragmentResumen extends Fragment {
 		super.onActivityCreated(state);
 		prepararListeners();
 	}
-	
+
 	/**
 	 * 
 	 * Clase encargada de mostrar los productos pedidos de la comanda actual.
@@ -70,27 +71,32 @@ public class FragmentResumen extends Fragment {
 
 	private class AdaptadorResumen extends BaseAdapter {
 		private LayoutInflater mInflater;
-		
+
 		/**
-	     * Constructor:
-	     * 
-	     * @param context [Context] Contexto en el que se encuentra el adaptador.
-	     */
+		 * Constructor:
+		 * 
+		 * @param context
+		 *            [Context] Contexto en el que se encuentra el adaptador.
+		 */
 		public AdaptadorResumen(Context context) {
 			mInflater = LayoutInflater.from(context);
 		}
+
 		@Override
 		public int getCount() {
 			return pedidos.size();
 		}
+
 		@Override
 		public Object getItem(int position) {
 			return position;
 		}
+
 		@Override
 		public long getItemId(int position) {
 			return position;
 		}
+
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			Pedido pedido;
@@ -127,10 +133,12 @@ public class FragmentResumen extends Fragment {
 			}
 			return convertView;
 		}
+
 		/**
 		 * 
 		 * 
-		 * Clase encargada de almacenar los datos en los textos de la lista de productos pedidos de la comanda actual.
+		 * Clase encargada de almacenar los datos en los textos de la lista de
+		 * productos pedidos de la comanda actual.
 		 * 
 		 * @author Juan G. Pérez Leo
 		 * @author Cristian Marín Honor
@@ -140,12 +148,13 @@ public class FragmentResumen extends Fragment {
 			TextView productoTexto;
 		}
 	}
-	
+
 	/**
-     * Añade a la lista del resumen el producto seleccionado.
-     * 
-     * @param producto [Producto] Producto seleccionado.
-     */
+	 * Añade a la lista del resumen el producto seleccionado.
+	 * 
+	 * @param producto
+	 *            [Producto] Producto seleccionado.
+	 */
 
 	public void apuntarPedido(Producto producto) {
 		seleccionado = -1;
@@ -156,21 +165,23 @@ public class FragmentResumen extends Fragment {
 		}
 		resumen.invalidateViews();
 	}
-	
+
 	/**
-     * Limpia todos los productos pedidos en la comanda actual.
-     * 
-     */
+	 * Limpia todos los productos pedidos en la comanda actual.
+	 * 
+	 */
 
 	public void limpiarPedidos() {
 		pedidos.clear();
 		seleccionado = -1;
 		resumen.invalidateViews();
 	}
-	
+
 	/**
 	 * 
-	 * Encargado de iniciar el listener de la lista de los productos de la comanda actual,su adaptador y todos los listener de los botones de la interfaz.
+	 * Encargado de iniciar el listener de la lista de los productos de la
+	 * comanda actual,su adaptador y todos los listener de los botones de la
+	 * interfaz.
 	 * 
 	 */
 
@@ -189,7 +200,7 @@ public class FragmentResumen extends Fragment {
 		calculadora = new Calculadora(
 				new int[] { R.id.c0, R.id.c1, R.id.c2, R.id.c3, R.id.c4,
 						R.id.c5, R.id.c6, R.id.c7, R.id.c8, R.id.c9 }, R.id.ce,
-				R.id.total,getView());
+				R.id.total, getView());
 		cambiar = (Button) getView().findViewById(R.id.cambiar);
 		cambiar.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
@@ -261,7 +272,7 @@ public class FragmentResumen extends Fragment {
 			}
 		});
 	}
-	
+
 	/**
 	 * 
 	 * 
@@ -273,51 +284,56 @@ public class FragmentResumen extends Fragment {
 
 	public interface ResumenListener {
 		/**
-	     * Devuelve la mesa de la comanda actual. 
-	     * 
-	     * @return [Mesa] Mesa de la comanda actual.
-	     */
+		 * Devuelve la mesa de la comanda actual.
+		 * 
+		 * @return [Mesa] Mesa de la comanda actual.
+		 */
 		public Mesa onEnviar();
+
 		/**
-	     * Comunica el id de la comanda a cobrar o cerrar.
-	     * 
-	     * @param cantidad [Cantidad] Cantidad seleccionada.
-	     */
+		 * Comunica el id de la comanda a cobrar o cerrar.
+		 * 
+		 * @param cantidad
+		 *            [Cantidad] Cantidad seleccionada.
+		 */
 		public void onTerminarComanda(int idComanda);
+
 		/**
-	     * Comunica la lista de pedidos de la comanda actual.
-	     * 
-	     * @param pedidosPendientes [pedidosPendientesCamarero[]] Mesa de la comanda actual.
-	     */
+		 * Comunica la lista de pedidos de la comanda actual.
+		 * 
+		 * @param pedidosPendientes
+		 *            [pedidosPendientesCamarero[]] Mesa de la comanda actual.
+		 */
 		public void onPedidosPendientes(
 				PedidosPendientesCamarero pedidosPendientes[]);
 	}
-	
+
 	/**
-     * Permite modificar el listener. 
-     * 
-     * @param resumenListener [ResumenListener] Listener asignado.
-     */
+	 * Permite modificar el listener.
+	 * 
+	 * @param resumenListener
+	 *            [ResumenListener] Listener asignado.
+	 */
 
 	public void setResumenListener(ResumenListener resumenListener) {
 		this.resumenListener = resumenListener;
 	}
-	
+
 	/**
-     * Borra la lista de pedidos de la comanda actual.
-     * 
-     */
+	 * Borra la lista de pedidos de la comanda actual.
+	 * 
+	 */
 
 	public void borrarPedidos() {
 		pedidos.clear();
 		seleccionado = -1;
 		adaptador.notifyDataSetChanged();
 	}
-	
+
 	/**
-     * Envia la lista de pedidos de la comanda actual al servidor.
-     * 
-     */
+	 * Envia la lista de pedidos de la comanda actual al servidor.
+	 * 
+	 */
 
 	public void enviarPedido() {
 		final Comanda comanda;
@@ -387,11 +403,11 @@ public class FragmentResumen extends Fragment {
 			dialog.show();
 		}
 	}
-	
+
 	/**
-     * Imprime,cobra o cierra la comanda de la mesa actual.
-     * 
-     */
+	 * Imprime,cobra o cierra la comanda de la mesa actual.
+	 * 
+	 */
 
 	public void cobrarPedido() {
 		final int idMesa = resumenListener.onEnviar().getId();
@@ -460,8 +476,12 @@ public class FragmentResumen extends Fragment {
 													});
 											dialogo.show();
 										} else {
-											int idCom = Integer.parseInt(respuesta[1]);
-											resumenListener.onTerminarComanda(idCom);
+											if (!respuesta[1].equals("")) {
+												int idCom = Integer
+														.parseInt(respuesta[1]);
+												resumenListener
+														.onTerminarComanda(idCom);
+											}
 										}
 									} catch (NullPointerException e) {
 										AlertDialog.Builder dialogo;
@@ -492,11 +512,13 @@ public class FragmentResumen extends Fragment {
 		});
 		dialog.create().show();
 	}
+
 	/**
-     * Devuelve los productos con sus unidades.
-     * 
-     * @return [HashMap<Producto, Integer>] Hashmap de Productos con sus unidades
-     */
+	 * Devuelve los productos con sus unidades.
+	 * 
+	 * @return [HashMap<Producto, Integer>] Hashmap de Productos con sus
+	 *         unidades
+	 */
 	public HashMap<Producto, Integer> getPedido() {
 		return pedidos;
 	}
