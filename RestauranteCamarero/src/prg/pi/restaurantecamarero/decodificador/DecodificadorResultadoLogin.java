@@ -22,7 +22,7 @@ public class DecodificadorResultadoLogin {
 	/**
 	 * Constructor:
 	 * 
-	 * @param Document [dom] DOM del XMl a interpretar.
+	 * @param dom [Document] DOM del XMl a interpretar.
 	 */
 	public DecodificadorResultadoLogin(Document dom){
 		this.dom = dom;

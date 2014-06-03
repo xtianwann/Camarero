@@ -60,7 +60,7 @@ public class FragmentProductos extends Fragment{
 			/**
 		     * Constructor:
 		     * 
-		     * @param fragment [Fragment] Fragment en el que se encuentra el adaptador.
+		     * @param context [Fragment] Fragment en el que se encuentra el adaptador.
 		     */
 
 			AdaptadorProductos(Fragment context) {

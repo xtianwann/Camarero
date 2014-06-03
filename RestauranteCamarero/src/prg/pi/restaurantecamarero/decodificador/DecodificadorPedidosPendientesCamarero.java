@@ -22,7 +22,7 @@ public class DecodificadorPedidosPendientesCamarero {
 	/**
 	 * Constructor:
 	 * 
-	 * @param Document [dom] DOM del XMl a interpretar.
+	 * @param dom [Document] DOM del XMl a interpretar.
 	 */
 	public DecodificadorPedidosPendientesCamarero(Document dom){
 		this.dom = dom;

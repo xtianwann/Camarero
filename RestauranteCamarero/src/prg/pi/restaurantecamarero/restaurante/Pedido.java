@@ -47,7 +47,7 @@ public class Pedido {
     /**
      * Permite modificar el estado del pedido.
      * 
-     * @param mesa [String] Estado del pedido a modificar.
+     * @param estado [String] Estado del pedido a modificar.
      */
     public void setEstado(String estado) {
         this.estado = estado;

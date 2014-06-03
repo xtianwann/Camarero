@@ -13,7 +13,7 @@ public class XMLCerrarMesa extends XML{
 	 * 
 	 * Constructor:
 	 * 
-	 * @param int [idMesa] Id de la mesa a cerrar.
+	 * @param idMesa [int] Id de la mesa a cerrar.
 	 */
 	public XMLCerrarMesa(int idMesa){
 		init();

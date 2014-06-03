@@ -18,7 +18,7 @@ public class DecodificadorAcuseRecibo {
 	/**
 	 * Constructor:
 	 * 
-	 * @param Document [dom] DOM del XMl a interpretar.
+	 * @param dom [Document] DOM del XMl a interpretar.
 	 */
 	
 	public DecodificadorAcuseRecibo(Document dom) {

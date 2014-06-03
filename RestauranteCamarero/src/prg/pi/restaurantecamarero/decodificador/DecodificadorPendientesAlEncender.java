@@ -22,7 +22,7 @@ public class DecodificadorPendientesAlEncender {
 	/**
 	 * Constructor:
 	 * 
-	 * @param Document [dom] DOM del XMl a interpretar.
+	 * @param dom [Document] DOM del XMl a interpretar.
 	 */
 	public DecodificadorPendientesAlEncender(Document dom){
 		this.dom = dom;

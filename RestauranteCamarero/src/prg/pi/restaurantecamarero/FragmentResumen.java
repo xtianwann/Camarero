@@ -293,8 +293,8 @@ public class FragmentResumen extends Fragment {
 		/**
 		 * Comunica el id de la comanda a cobrar o cerrar.
 		 * 
-		 * @param cantidad
-		 *            [Cantidad] Cantidad seleccionada.
+		 * @param idComanda
+		 *            [int] Id de la comanda.
 		 */
 		public void onTerminarComanda(int idComanda);
 

@@ -26,7 +26,7 @@ public class DecodificadorDameloTodo {
     /**
 	 * Constructor:
 	 * 
-	 * @param Document [dom] DOM del XMl a interpretar.
+	 * @param dom [Document] DOM del XMl a interpretar.
 	 */
     public DecodificadorDameloTodo(Document dom){
         secciones = new ArrayList<Seccion>();

@@ -21,7 +21,7 @@ public class DecodificadorPedidosListos {
 	/**
 	 * Constructor:
 	 * 
-	 * @param Document [dom] DOM del XMl a interpretar.
+	 * @param dom [Document] DOM del XMl a interpretar.
 	 */
 	public DecodificadorPedidosListos(Document dom){
 		this.dom = dom;

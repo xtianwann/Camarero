@@ -67,7 +67,7 @@ public class PedidoListo {
 	/**
      * Permite modificar las unidades listas de un pedido.
      * 
-     * @param unidades [int] Unidades a modificar.
+     * @param listos [int] Unidades listas a modificar.
      */
 	public void setListos(int listos) {
 		this.listos = listos;
