@@ -359,14 +359,30 @@ public class FragmentResumen extends Fragment {
 									.getIpServidor());
 							try {
 								c.init();
-								PedidosPendientesCamarero pedidosPendientes[] = c
-										.getPedidosPendientes()
-										.getPedidosPendientes();
-								Log.e("PedidosPendientes", pedidosPendientes
-										+ "");
-								resumenListener
-										.onPedidosPendientes(pedidosPendientes);
-								borrarPedidos();
+								if (c.getPedidosPendientes()
+										.getPedidosPendientes().length > 0) {
+									resumenListener.onPedidosPendientes(c
+											.getPedidosPendientes()
+											.getPedidosPendientes());
+									borrarPedidos();
+								} else {
+									dialog = new AlertDialog.Builder(getView()
+											.getContext());
+									dialog.setMessage("Esta mesa esta atendida por otro camarero.");
+									dialog.setCancelable(false);
+									dialog.setNeutralButton(
+											"OK",
+											new DialogInterface.OnClickListener() {
+												@Override
+												public void onClick(
+														DialogInterface dialog,
+														int which) {
+													borrarPedidos();
+													dialog.cancel();
+												}
+											});
+									dialog.show();
+								}
 							} catch (NullPointerException e) {
 								dialog = new AlertDialog.Builder(getView()
 										.getContext());

@@ -70,9 +70,6 @@ public class FragmentSeccionMesas extends Fragment {
 				.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		final android.net.NetworkInfo wifi = connMgr
 				.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-		final android.net.NetworkInfo mobile = connMgr
-				.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 		if (wifi.isAvailable()) {
 			if (wifi.getDetailedState() == DetailedState.CONNECTED) {
 				iniciarHilo();
