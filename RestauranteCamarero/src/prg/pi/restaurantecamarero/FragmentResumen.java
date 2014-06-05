@@ -362,16 +362,13 @@ public class FragmentResumen extends Fragment {
 								PedidosPendientesCamarero pedidosPendientes[] = c
 										.getPedidosPendientes()
 										.getPedidosPendientes();
-								if(pedidosPendientes.length > 0){
-								Log.e("PedidosPendientes", pedidosPendientes
-										+ "");
-								resumenListener
-										.onPedidosPendientes(pedidosPendientes);
-								borrarPedidos();
+								if(pedidosPendientes != null){
+									resumenListener.onPedidosPendientes(pedidosPendientes);
+									borrarPedidos();
 								} else {
 									dialog = new AlertDialog.Builder(getView()
 											.getContext());
-									dialog.setMessage("Esta mesa esta atendia por otro camarero.");
+									dialog.setMessage("Esta mesa esta atendida por otro camarero.");
 									dialog.setCancelable(false);
 									dialog.setNeutralButton("OK",
 											new DialogInterface.OnClickListener() {

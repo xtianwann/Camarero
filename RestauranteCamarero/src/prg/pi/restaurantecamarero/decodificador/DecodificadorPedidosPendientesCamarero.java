@@ -6,6 +6,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import android.util.Log;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
 
@@ -35,6 +36,8 @@ public class DecodificadorPedidosPendientesCamarero {
 	 * @return [PedidosPendientesCamarero[]] Pedidos pendientes del camarero.
 	 */
 	public PedidosPendientesCamarero[] getPedidosPendientes(){
+		if(pedidosPendientes.size() == 0)
+			return null;
 		return pedidosPendientes.toArray(new PedidosPendientesCamarero[0]);
 	}
 	/**
@@ -46,7 +49,8 @@ public class DecodificadorPedidosPendientesCamarero {
 		NodeList nodeListMesa = dom.getElementsByTagName("mesa");
 		Node nodeMesa = nodeListMesa.item(0);
 		String nombreMesa = nodeMesa.getFirstChild().getNodeValue();
-		if(!nombreMesa.equals("")){
+		if(!nombreMesa.equals("nopuedeshacerunpedido")){
+			Log.e("deco", "entro en el if");
 			NodeList nodeListSeccion = dom.getElementsByTagName("seccion");
 			Node nodeSeccion = nodeListSeccion.item(0);
 			String nombreSeccion = nodeSeccion.getFirstChild().getNodeValue();
