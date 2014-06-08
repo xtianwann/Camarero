@@ -1,6 +1,6 @@
 package prg.pi.restaurantecamarero.restaurante;
+
 /**
- * 
  * Clase que contiene toda la información sobre pedidos pendientes del camarero.
  * 
  * @author Juan G. Pérez Leo
@@ -15,8 +15,8 @@ public class PedidosPendientesCamarero {
 	private int unidades;
 	private int listos;
 	private int servidos;
+	
 	/**
-     * 
      * Constructor:
      * 
      * @param nombreSeccion [String] Nombre de la sección asociada al pedido.
@@ -34,6 +34,7 @@ public class PedidosPendientesCamarero {
 		this.listos = listos;
 		this.servidos = servidos;
 	}
+	
 	/**
      * Permite obtener el nombre de la sección.
      * 
@@ -42,6 +43,7 @@ public class PedidosPendientesCamarero {
 	public String getNombreSeccion() {
 		return nombreSeccion;
 	}
+	
 	/**
      * Permite modificar el nombre de la sección.
      * 
@@ -50,6 +52,7 @@ public class PedidosPendientesCamarero {
 	public void setNombreSeccion(String nombreSeccion) {
 		this.nombreSeccion = nombreSeccion;
 	}
+	
 	/**
      * Permite obtener el nombre de la mesa.
      * 
@@ -58,14 +61,17 @@ public class PedidosPendientesCamarero {
 	public String getNombreMesa() {
 		return nombreMesa;
 	}
+	
 	/**
      * Permite modificar el nombre de la mesa.
      * 
      * @param nombreMesa [String] Nombre de la mesa a modificar.
      */
+	
 	public void setNombreMesa(String nombreMesa) {
 		this.nombreMesa = nombreMesa;
 	}
+	
 	/**
      * Permite obtener el id de la comanda.
      * 
@@ -74,6 +80,7 @@ public class PedidosPendientesCamarero {
 	public int getIdComanda() {
 		return idComanda;
 	}
+	
 	/**
      * Permite modificar el id de la comanda.
      * 
@@ -82,6 +89,7 @@ public class PedidosPendientesCamarero {
 	public void setIdComanda(int idComanda) {
 		this.idComanda = idComanda;
 	}
+	
 	/**
      * Permite obtener el producto del pedido.
      * 
@@ -90,6 +98,7 @@ public class PedidosPendientesCamarero {
 	public Producto getProducto() {
 		return producto;
 	}
+	
 	/**
      * Permite modificar el producto.
      * 
@@ -98,6 +107,7 @@ public class PedidosPendientesCamarero {
 	public void setProducto(Producto producto) {
 		this.producto = producto;
 	}
+	
 	/**
      * Permite obtener la cantidad de pedidos listos.
      * 
@@ -106,6 +116,7 @@ public class PedidosPendientesCamarero {
 	public int getListos() {
 		return listos;
 	}
+	
 	/**
      * Permite modificar la cantidad de pedidos listos.
      * 
@@ -114,6 +125,7 @@ public class PedidosPendientesCamarero {
 	public void setListos(int listos) {
 		this.listos = listos;
 	}
+	
 	/**
      * Permite obtener la cantidad de pedidos servidos.
      * 
@@ -122,6 +134,7 @@ public class PedidosPendientesCamarero {
 	public int getServidos() {
 		return servidos;
 	}
+	
 	/**
      * Permite modificar la cantidad de pedidos servidos.
      * 
@@ -130,6 +143,7 @@ public class PedidosPendientesCamarero {
 	public void setServidos(int servidos) {
 		this.servidos = servidos;
 	}
+	
 	/**
      * Devuelve si hay mas pedidos listos que servidos
      * 
@@ -138,6 +152,7 @@ public class PedidosPendientesCamarero {
 	public boolean existenListos(){
 		return listos > servidos;
 	}
+	
 	/**
      * Devuelve si se han servido todos los pedidos
      * 
@@ -146,6 +161,7 @@ public class PedidosPendientesCamarero {
 	public boolean isServido(){
 		return unidades <= servidos;
 	}
+	
 	/**
      * Permite obtener la cantidad de pedidos.
      * 
@@ -154,6 +170,7 @@ public class PedidosPendientesCamarero {
 	public int getUnidades() {
 		return unidades;
 	}
+	
 	/**
      * Permite modificar la cantidad de pedidos.
      * 

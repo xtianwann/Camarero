@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
 /**
- * 
  * Fragment encargado de controlar las cantidades de los productos con las que interactua el camarero.
  * 
  * @author Juan G. Pérez Leo
@@ -29,6 +28,7 @@ public class FragmentCantidades extends Fragment {
 	private AdaptadorCantidades adaptador;
 	private int seleccionado = -1;
 	private CantidadesThread hilo;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -39,31 +39,31 @@ public class FragmentCantidades extends Fragment {
 	public void onActivityCreated(Bundle state) {
 		super.onActivityCreated(state);
 	}
+	
 	/**
      * Inicia el hilo para recibir las cantidades de los productos.
      * 
      */
-
 	public void iniciarHilo() {
 		hilo = new CantidadesThread(this);
 		hilo.start();
 	}
+	
 	/**
-	 * 
-	 * 
 	 * Interface para la comunicación con la clase principal.
 	 * 
 	 * @author Juan G. Pérez Leo
 	 * @author Cristian Marín Honor
 	 */
-
 	public interface CantidadListener {
+		
 		/**
 	     * Comunica la cantidad que se ha seleccionado.
 	     * 
 	     * @param cantidad [Cantidad] Cantidad seleccionada.
 	     */
 		public void onCantidadSeleccionada(Cantidad cantidad);
+		
 		/**
 	     * Recibe las cantidades a añadir a la lista de cantidades disponibles.
 	     * 
@@ -77,18 +77,16 @@ public class FragmentCantidades extends Fragment {
      * 
      * @param cantidadListener [CantidadListener] Listener asignado.
      */
-
 	public void setCantidadListener(CantidadListener cantidadListener) {
 		this.cantidadListener = cantidadListener;
 	}
+	
 	/**
-	 * 
 	 * Clase encargada de mostrar las cantidades de lista de cantidades.
 	 * 
 	 * @author Juan G. Pérez Leo
 	 * @author Cristian Marín Honor
 	 */
-
 	public class AdaptadorCantidades extends ArrayAdapter<Cantidad> {
 
 		Activity context;
@@ -98,12 +96,12 @@ public class FragmentCantidades extends Fragment {
 	     * 
 	     * @param fragment [Fragment] Fragment en el que se encuentra el adaptador.
 	     */
-
 		AdaptadorCantidades(Fragment fragment) {
 			super(fragment.getActivity(), R.layout.fragment_cantidades,
 					cantidades);
 			this.context = fragment.getActivity();
 		}
+		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = context.getLayoutInflater();
@@ -120,16 +118,16 @@ public class FragmentCantidades extends Fragment {
 			return (item);
 		}
 	}
+	
 	/**
-	 * 
 	 * Clase encargada de pedir al servidor las cantidades almacenadas en la base de datos.
 	 * 
 	 * @author Juan G. Pérez Leo
 	 * @author Cristian Marín Honor
 	 */
-
 	private class CantidadesThread extends Thread {
 		private Fragment fragment;
+		
 		/**
 	     * Constructor:
 	     * 
@@ -138,6 +136,7 @@ public class FragmentCantidades extends Fragment {
 		public CantidadesThread(Fragment fragment) {
 			this.fragment = fragment;
 		}
+		
 		@Override
 		public void run() {
 			getActivity().runOnUiThread(new Runnable() {
@@ -179,7 +178,6 @@ public class FragmentCantidades extends Fragment {
      * 
      * @return [CantidadThread] Hilo de cantidades.
      */
-
 	public CantidadesThread getHilo() {
 		return hilo;
 	}

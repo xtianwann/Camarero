@@ -29,13 +29,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 /**
+ * Interpreta la cabecera del mensaje y ejecuta la acci�n que le corresponde
+ * para tratarlo.
+ * 
  * @author Juan G. Pérez Leo
  * @author Cristian Marín Honor
  */
 public class GestorMensajes extends Thread {
 
 	private Socket socket;
-	Conexion conn;
+	private Conexion conn;
 	private String mensaje;
 	private MainFragments principal;
 
@@ -45,17 +48,14 @@ public class GestorMensajes extends Thread {
 		try {
 			conn = new Conexion(socket);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		do {
 			try {
 				this.mensaje = conn.leerMensaje();
 			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} while (this.mensaje.length() == 0);
@@ -63,9 +63,7 @@ public class GestorMensajes extends Thread {
 
 	public void run() {
 		try {
-			System.out.println("GestorMesaje: Mensaje!");
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder;
 			mensaje = mensaje.substring(mensaje.indexOf("<"));
 			builder = factory.newDocumentBuilder();
@@ -74,7 +72,8 @@ public class GestorMensajes extends Thread {
 
 			NodeList nodo = dom.getElementsByTagName("tipo");
 			String tipo = nodo.item(0).getChildNodes().item(0).getNodeValue();
-			Log.e("tipo", tipo);
+			
+			/* Tipos de mensaje que puede recibir */
 			if (tipo.equals("PedidosListos")) {
 				new Thread(new Runnable() {
 
@@ -89,6 +88,7 @@ public class GestorMensajes extends Thread {
 					}
 				}).start();
 			}
+			
 			if(tipo.equals("ModificacionCB")){
 				new Thread(new Runnable() {
 
@@ -103,6 +103,7 @@ public class GestorMensajes extends Thread {
 					}
 				}).start();
 			}
+			
 			if(tipo.equals("PendientesAlEncender")){
 				new Thread(new Runnable() {
 

@@ -2,17 +2,17 @@ package prg.pi.restaurantecamarero.xml;
 
 import prg.pi.restaurantecamarero.restaurante.Comanda;
 import XML.XML;
+
 /**
- * 
  * Clase encargada de formar el xml con toda la información para enviar una comanda.
  * 
  * @author Juan G. Pérez Leo
  * @author Cristian Marín Honor
  */
 public class XMLPedidosComanda extends XML {
+	
 	/**
-	 * 
-	 * Constructor:
+	 * Constructor: genera la estructura del mensaje XML con su contenido
 	 * 
 	 * @param comanda [Comanda] Comanda a enviar.
 	 */

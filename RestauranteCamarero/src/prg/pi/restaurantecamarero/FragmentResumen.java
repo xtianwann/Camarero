@@ -20,7 +20,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,6 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 /**
- * 
  * Fragment encargado de mostrar,modificar,enviar,cobrar y cerrar la comanda
  * actual.
  * 
@@ -40,6 +38,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * @author Cristian Marín Honor
  */
 public class FragmentResumen extends Fragment {
+	
 	private ListView resumen;
 	private Button cambiar, mas, menos, x, enviar, cobrar;
 	private Calculadora calculadora;
@@ -62,21 +61,18 @@ public class FragmentResumen extends Fragment {
 	}
 
 	/**
-	 * 
 	 * Clase encargada de mostrar los productos pedidos de la comanda actual.
 	 * 
 	 * @author Juan G. Pérez Leo
 	 * @author Cristian Marín Honor
 	 */
-
 	private class AdaptadorResumen extends BaseAdapter {
 		private LayoutInflater mInflater;
 
 		/**
 		 * Constructor:
 		 * 
-		 * @param context
-		 *            [Context] Contexto en el que se encuentra el adaptador.
+		 * @param context [Context] Contexto en el que se encuentra el adaptador.
 		 */
 		public AdaptadorResumen(Context context) {
 			mInflater = LayoutInflater.from(context);
@@ -135,8 +131,6 @@ public class FragmentResumen extends Fragment {
 		}
 
 		/**
-		 * 
-		 * 
 		 * Clase encargada de almacenar los datos en los textos de la lista de
 		 * productos pedidos de la comanda actual.
 		 * 
@@ -152,10 +146,8 @@ public class FragmentResumen extends Fragment {
 	/**
 	 * Añade a la lista del resumen el producto seleccionado.
 	 * 
-	 * @param producto
-	 *            [Producto] Producto seleccionado.
+	 * @param producto [Producto] Producto seleccionado.
 	 */
-
 	public void apuntarPedido(Producto producto) {
 		seleccionado = -1;
 		if (pedidos.containsKey(producto)) {
@@ -168,9 +160,7 @@ public class FragmentResumen extends Fragment {
 
 	/**
 	 * Limpia todos los productos pedidos en la comanda actual.
-	 * 
 	 */
-
 	public void limpiarPedidos() {
 		pedidos.clear();
 		seleccionado = -1;
@@ -178,13 +168,10 @@ public class FragmentResumen extends Fragment {
 	}
 
 	/**
-	 * 
 	 * Encargado de iniciar el listener de la lista de los productos de la
 	 * comanda actual,su adaptador y todos los listener de los botones de la
 	 * interfaz.
-	 * 
 	 */
-
 	private void prepararListeners() {
 		resumen = (ListView) getView().findViewById(R.id.lv_country);
 		adaptador = new AdaptadorResumen(getView().getContext());
@@ -274,15 +261,13 @@ public class FragmentResumen extends Fragment {
 	}
 
 	/**
-	 * 
-	 * 
 	 * Interface para la comunicación con la clase principal.
 	 * 
 	 * @author Juan G. Pérez Leo
 	 * @author Cristian Marín Honor
 	 */
-
 	public interface ResumenListener {
+		
 		/**
 		 * Devuelve la mesa de la comanda actual.
 		 * 
@@ -293,16 +278,14 @@ public class FragmentResumen extends Fragment {
 		/**
 		 * Comunica el id de la comanda a cobrar o cerrar.
 		 * 
-		 * @param idComanda
-		 *            [int] Id de la comanda.
+		 * @param idComanda [int] Id de la comanda.
 		 */
 		public void onTerminarComanda(int idComanda);
 
 		/**
 		 * Comunica la lista de pedidos de la comanda actual.
 		 * 
-		 * @param pedidosPendientes
-		 *            [pedidosPendientesCamarero[]] Mesa de la comanda actual.
+		 * @param pedidosPendientes [pedidosPendientesCamarero[]] Mesa de la comanda actual.
 		 */
 		public void onPedidosPendientes(
 				PedidosPendientesCamarero pedidosPendientes[]);
@@ -311,19 +294,15 @@ public class FragmentResumen extends Fragment {
 	/**
 	 * Permite modificar el listener.
 	 * 
-	 * @param resumenListener
-	 *            [ResumenListener] Listener asignado.
+	 * @param resumenListener [ResumenListener] Listener asignado.
 	 */
-
 	public void setResumenListener(ResumenListener resumenListener) {
 		this.resumenListener = resumenListener;
 	}
 
 	/**
 	 * Borra la lista de pedidos de la comanda actual.
-	 * 
 	 */
-
 	public void borrarPedidos() {
 		pedidos.clear();
 		seleccionado = -1;
@@ -332,9 +311,7 @@ public class FragmentResumen extends Fragment {
 
 	/**
 	 * Envia la lista de pedidos de la comanda actual al servidor.
-	 * 
 	 */
-
 	public void enviarPedido() {
 		final Comanda comanda;
 		if (pedidos.size() > 0) {
@@ -385,7 +362,7 @@ public class FragmentResumen extends Fragment {
 							} catch (NullPointerException e) {
 								dialog = new AlertDialog.Builder(getView()
 										.getContext());
-								dialog.setMessage("No se pudo conectar con el servidor¿Reintentar?.");
+								dialog.setMessage("No se pudo conectar con el servidor ¿Reintentar?.");
 								dialog.setCancelable(false);
 								dialog.setNeutralButton("OK",
 										new DialogInterface.OnClickListener() {
@@ -421,9 +398,7 @@ public class FragmentResumen extends Fragment {
 
 	/**
 	 * Imprime,cobra o cierra la comanda de la mesa actual.
-	 * 
 	 */
-
 	public void cobrarPedido() {
 		final int idMesa = resumenListener.onEnviar().getId();
 		dialog = new AlertDialog.Builder(getActivity());
@@ -432,28 +407,27 @@ public class FragmentResumen extends Fragment {
 				"Cancelar" }, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int posicion) {
 				boolean enviar = true;
-				// The 'which' argument contains the index position
-				// of the selected item
+				
 				String mensaje = "";
 				switch (posicion) {
-				case 0:
-					// Enviar xml imprimir
+				case 0: /* Caso imprimir */
 					XMLImprimir imprimir = new XMLImprimir(idMesa);
 					mensaje = imprimir.xmlToString(imprimir.getDOM());
 					break;
-				case 1:
+				case 1: /* Caso cobrar */
 					XMLCobrarMesa cobrar = new XMLCobrarMesa(idMesa);
 					mensaje = cobrar.xmlToString(cobrar.getDOM());
 					break;
-				case 2:
+				case 2: /* Caso cerrar */
 					XMLCerrarMesa cerrar = new XMLCerrarMesa(idMesa);
 					mensaje = cerrar.xmlToString(cerrar.getDOM());
 					break;
-				case 3:
+				case 3: /* Caso cancelar */
 					enviar = false;
 					dialog.cancel();
 					break;
 				}
+				
 				if (enviar) {
 					final String mensajeEnviar = mensaje;
 					new Thread(new Runnable() {
@@ -468,7 +442,6 @@ public class FragmentResumen extends Fragment {
 										try {
 											Thread.sleep(2000);
 										} catch (InterruptedException e) {
-											// TODO Auto-generated catch block
 											e.printStackTrace();
 										}
 										String respuesta[] = c.getDecoAcuse()
@@ -531,8 +504,7 @@ public class FragmentResumen extends Fragment {
 	/**
 	 * Devuelve los productos con sus unidades.
 	 * 
-	 * @return [HashMap<Producto, Integer>] Hashmap de Productos con sus
-	 *         unidades
+	 * @return [HashMap<Producto, Integer>] Hashmap de Productos con sus unidades
 	 */
 	public HashMap<Producto, Integer> getPedido() {
 		return pedidos;

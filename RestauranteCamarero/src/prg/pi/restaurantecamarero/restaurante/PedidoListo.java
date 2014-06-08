@@ -1,6 +1,6 @@
 package prg.pi.restaurantecamarero.restaurante;
+
 /**
- * 
  * Clase que contiene toda la información sobre los pedidos listos.
  * 
  * @author Juan G. Pérez Leo
@@ -11,8 +11,8 @@ public class PedidoListo {
 	private int idComanda;
 	private int idMenu;
 	private int listos;
+	
 	/**
-     * 
      * Constructor:
      * 
      * @param idComanda [int] Id de la comanda asociada al pedido.
@@ -24,6 +24,7 @@ public class PedidoListo {
 		this.idMenu = idMenu;
 		this.listos = listos;
 	}
+	
 	/**
      * Permite obtener la id de la comanda.
      * 
@@ -32,6 +33,7 @@ public class PedidoListo {
 	public int getIdComanda() {
 		return idComanda;
 	}
+	
 	/**
      * Permite modificar la id de la comanda.
      * 
@@ -40,6 +42,7 @@ public class PedidoListo {
 	public void setIdComanda(int idComanda) {
 		this.idComanda = idComanda;
 	}
+	
 	/**
      * Permite obtener el id del menu.
      * 
@@ -48,6 +51,7 @@ public class PedidoListo {
 	public int getIdMenu() {
 		return idMenu;
 	}
+	
 	/**
      * Permite modificar el id del menu.
      * 
@@ -56,6 +60,7 @@ public class PedidoListo {
 	public void setIdMenu(int idMenu) {
 		this.idMenu = idMenu;
 	}
+	
 	/**
      * Permite obtener las unidades listas del pedido.
      * 
@@ -64,6 +69,7 @@ public class PedidoListo {
 	public int getListos() {
 		return listos;
 	}
+	
 	/**
      * Permite modificar las unidades listas de un pedido.
      * 

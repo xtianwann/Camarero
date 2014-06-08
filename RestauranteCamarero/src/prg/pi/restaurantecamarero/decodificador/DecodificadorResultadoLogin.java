@@ -1,13 +1,7 @@
 package prg.pi.restaurantecamarero.decodificador;
 
-import java.util.ArrayList;
-
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
-import android.util.Log;
-import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
-import prg.pi.restaurantecamarero.restaurante.Producto;
 /**
  * Clase encargada de decodificar el mensaje ResultadoLoginCamarero del servidor.
  * 
@@ -18,7 +12,7 @@ public class DecodificadorResultadoLogin {
 	
 	private Document dom;
 	private String resultado;
-	private ArrayList<PedidosPendientesCamarero> pedidosPendientes;
+	
 	/**
 	 * Constructor:
 	 * 
@@ -28,6 +22,7 @@ public class DecodificadorResultadoLogin {
 		this.dom = dom;
 		extraerResultado();
 	}
+	
 	/**
 	 * Devuelve la respuesta recibida por del servidor.
 	 * 
@@ -36,6 +31,7 @@ public class DecodificadorResultadoLogin {
 	public String getResultado(){
 		return resultado;
 	}
+	
 	/**
 	 * Interpreta la respuesta recibida por el servidor.
 	 * 

@@ -23,6 +23,7 @@ public class DecodificadorDameloTodo {
     private Document DOMRespuesta;
     private ArrayList<Seccion> secciones;
     private ArrayList<Cantidad> cantidades;
+    
     /**
 	 * Constructor:
 	 * 
@@ -35,9 +36,9 @@ public class DecodificadorDameloTodo {
         generarSecciones();
         generarCantidades();
     }
+    
     /**
 	 * Interpreta el mensaje y genera las secciones del restaurante.
-	 * 
 	 */
     private void generarSecciones(){
         NodeList nodeListSecciones = DOMRespuesta.getElementsByTagName("secciones").item(0).getChildNodes();
@@ -62,9 +63,9 @@ public class DecodificadorDameloTodo {
             secciones.add(new Seccion(nombreSeccion, listaMesas));
         }
     }
+    
     /**
 	 * Interpreta el mensaje y genera las cantidades del restaurante.
-	 * 
 	 */
     private void generarCantidades(){
         NodeList nodeListCantidades = DOMRespuesta.getElementsByTagName("cantidades").item(0).getChildNodes();
@@ -89,6 +90,7 @@ public class DecodificadorDameloTodo {
             cantidades.add(new Cantidad(nombreCantidad, listaProductos));
         }
     }
+    
     /**
 	 * Devuelve las secciones del restaurante.
 	 * 
@@ -97,6 +99,7 @@ public class DecodificadorDameloTodo {
     public ArrayList<Seccion> getSecciones(){
         return secciones;
     }
+    
     /**
 	 * Devuelve las cantidades del restaurante.
 	 * 

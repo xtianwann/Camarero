@@ -1,19 +1,18 @@
 package prg.pi.restaurantecamarero.xml;
 
-import prg.pi.restaurantecamarero.restaurante.Modificado;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import XML.XML;
+
 /**
- * 
  * Clase encargada de formar el xml con toda la información modificar un pedido de un camarero.
  * 
  * @author Juan G. Pérez Leo
  * @author Cristian Marín Honor
  */
 public class XMLModificacionCamarero extends XML{
+	
 	/**
-	 * 
-	 * Constructor:
+	 * Constructor: genera la estructura del mensaje XML con su contenido
 	 * 
 	 * @param modificados [PedidosPendientesCamarero[]] Lista de pedidos a modificar.
 	 */

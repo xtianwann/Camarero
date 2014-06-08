@@ -1,6 +1,6 @@
 package prg.pi.restaurantecamarero.restaurante;
+
 /**
- * 
  * Clase que contiene toda la información sobre pedidos.
  * 
  * @author Juan G. Pérez Leo
@@ -11,8 +11,8 @@ public class Pedido {
     private Producto producto;
     private int unidades;
     private String estado;
+    
     /**
-     * 
      * Constructor:
      * 
      * @param producto [Producto] Producto a añadir al pedido.
@@ -23,8 +23,8 @@ public class Pedido {
         this.unidades = unidades;
         this.estado = null;
     }
+    
     /**
-     * 
      * Constructor:
      * 
      * @param producto [Producto] Producto a añadir al pedido.
@@ -36,6 +36,7 @@ public class Pedido {
         this.unidades = unidades;
         this.estado = estado;
     }
+    
     /**
      * Permite obtener el estado del pedido.
      * 
@@ -44,6 +45,7 @@ public class Pedido {
     public String getEstado() {
         return estado;
     }
+    
     /**
      * Permite modificar el estado del pedido.
      * 
@@ -52,6 +54,7 @@ public class Pedido {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+    
     /**
      * Permite obtener el producto del pedido.
      * 
@@ -60,6 +63,7 @@ public class Pedido {
     public Producto getProducto() {
         return producto;
     }
+    
     /**
      * Permite modificar el producto del pedido.
      * 
@@ -68,6 +72,7 @@ public class Pedido {
     public void setProducto(Producto producto) {
         this.producto = producto;
     }
+    
     /**
      * Permite obtener las unidades del pedido.
      * 
@@ -76,6 +81,7 @@ public class Pedido {
     public int getUnidades() {
         return unidades;
     }
+    
     /**
      * Permite modificar las unidades del pedido.
      * 

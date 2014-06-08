@@ -20,7 +20,6 @@ public class DecodificadorAcuseRecibo {
 	 * 
 	 * @param dom [Document] DOM del XMl a interpretar.
 	 */
-	
 	public DecodificadorAcuseRecibo(Document dom) {
 		this.DOMRespuesta = dom;
 		interpretarRespuesta();
@@ -28,9 +27,7 @@ public class DecodificadorAcuseRecibo {
 	
 	/**
 	 * Interpreta la respuesta recibida por el servidor.
-	 * 
 	 */
-
 	private void interpretarRespuesta() {
 		NodeList nodeListAceptado = DOMRespuesta
 				.getElementsByTagName("respuesta");
@@ -51,7 +48,6 @@ public class DecodificadorAcuseRecibo {
 	 * 
 	 * @return [String[]] Respuesta del servidor.
 	 */
-
 	public String[] getRespuesta() {
 		return new String[] { aceptado, explicacion };
 	}

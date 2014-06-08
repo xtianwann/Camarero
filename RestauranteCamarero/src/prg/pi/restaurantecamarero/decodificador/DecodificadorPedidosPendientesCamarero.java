@@ -20,6 +20,7 @@ public class DecodificadorPedidosPendientesCamarero {
 	
 	private Document dom;
 	private ArrayList<PedidosPendientesCamarero> pedidosPendientes;
+	
 	/**
 	 * Constructor:
 	 * 
@@ -30,6 +31,7 @@ public class DecodificadorPedidosPendientesCamarero {
 		pedidosPendientes = new ArrayList<PedidosPendientesCamarero>();
 		generarPedidos();
 	}
+	
 	/**
 	 * Devuelve la respuesta del servidor y genera los pedidos pendientes del camarero.
 	 * 
@@ -40,9 +42,9 @@ public class DecodificadorPedidosPendientesCamarero {
 			return null;
 		return pedidosPendientes.toArray(new PedidosPendientesCamarero[0]);
 	}
+	
 	/**
 	 * Interpreta la respuesta recibida por el servidor y genera los pedidos pendientes.
-	 * 
 	 */
 	private void generarPedidos(){
 		/* Obtenemos los datos de la mesa */

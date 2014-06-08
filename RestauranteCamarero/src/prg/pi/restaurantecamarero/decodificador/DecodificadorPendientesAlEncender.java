@@ -6,9 +6,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import android.util.Log;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
+
 /**
  * Clase encargada de decodificar el mensaje PedidosPendientesCamareroAlEncenderServer del servidor.
  * 
@@ -19,6 +19,7 @@ public class DecodificadorPendientesAlEncender {
 	
 	private Document dom;
 	private ArrayList<PedidosPendientesCamarero> pendientes;
+	
 	/**
 	 * Constructor:
 	 * 
@@ -29,6 +30,7 @@ public class DecodificadorPendientesAlEncender {
 		pendientes = new ArrayList<PedidosPendientesCamarero>();
 		extraerPendientes();
 	}
+	
 	/**
 	 * Devuelve los pedidos pendientes del camarero recibidos por del servidor.
 	 * 
@@ -37,6 +39,7 @@ public class DecodificadorPendientesAlEncender {
 	public ArrayList<PedidosPendientesCamarero> getPedidosPendientes(){
 		return pendientes;
 	}
+	
 	/**
 	 * Interpreta la respuesta recibida por el servidor y genera los pedidos pendientes del camarero.
 	 * 
@@ -61,8 +64,6 @@ public class DecodificadorPendientesAlEncender {
 				listos += servidos;
 				pendientes.add(new PedidosPendientesCamarero(seccion, mesa, comanda, new Producto(idMenu, nomProd, nomCant), unidades, listos, servidos));
 			}
-			
-			Log.e("tamaño", pendientes.size()+"");
 		}
 	}
 

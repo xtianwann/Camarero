@@ -8,11 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import prg.pi.restaurantecamarero.MainFragments;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
 
 /**
@@ -26,6 +24,11 @@ public class Servidor extends Service{
     private HiloPrincipal hiloPrincipal;
     private MainFragments principal;
     
+    /**
+     * Constructor: lanza el hilo principal y guarda una instancia de la actividad principal
+     * 
+     * @param principal [MainFragments] instancia de la actividad principal
+     */
     public Servidor(MainFragments principal){
     	this.principal = principal;
         try {
@@ -36,7 +39,21 @@ public class Servidor extends Service{
         }
     }
     
-    /* Hilo principal del servidor */
+    /**
+     * Obtiene la instancia de hilo principal
+     * 
+     * @return [HiloPrincipal] instancia del hilo principal
+     */
+    public HiloPrincipal getHiloPrincipal(){
+    	return hiloPrincipal;
+    }
+    
+    /**
+	 *  Hilo principal del servidor
+	 *  
+	 *  @author Juan G. Pérez Leo
+	 *  @author Cristian Marín Honor
+	 */
     public class HiloPrincipal extends Thread{
         
         private ServerSocket socketServidor;
@@ -46,9 +63,9 @@ public class Servidor extends Service{
         /**
          * Constructor de HiloPrincipal
          * 
-         * @param puerto puerto de escucha
-         * @throws IOException en caso de no poder crear el ServerSocket en
-         * el puerto pasado por parÃ¡metro
+         * @param puerto [int] puerto de escucha
+         * @throws IOException excepción lanzada en caso de no poder crear el ServerSocket en
+         * el puerto pasado por parámetro
          */
         public HiloPrincipal(int puerto) throws IOException{
             this.socketServidor = new ServerSocket(puerto);
@@ -71,7 +88,9 @@ public class Servidor extends Service{
             }
         }
         
-        /* Para la ejecución del hilo */
+        /**
+         * Para la ejecución del hilo
+         */
         public void parar(){
             parado = true;
             dispatcher.setParado(true);
@@ -86,7 +105,6 @@ public class Servidor extends Service{
 
 	@Override
 	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
 		return null;
 	}
     

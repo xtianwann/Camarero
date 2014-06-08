@@ -1,6 +1,6 @@
 package prg.pi.restaurantecamarero.restaurante;
+
 /**
- * 
  * Clase que contiene toda la información sobre pedidos que se han modificado.
  * 
  * @author Juan G. Pérez Leo
@@ -11,8 +11,8 @@ public class Modificado {
 	private int idComanda;
 	private int idMenu;
 	private int unidades;
+	
 	/**
-     * 
      * Constructor:
      * 
      * @param idComanda [int] Id de la comanda asociada al pedido.
@@ -24,6 +24,7 @@ public class Modificado {
 		this.idMenu = idMenu;
 		this.unidades = unidades;
 	}
+	
 	/**
      * Permite obtener la id de la comanda.
      * 
@@ -32,6 +33,7 @@ public class Modificado {
 	public int getIdComanda() {
 		return idComanda;
 	}
+	
 	/**
      * Permite modificar la id de la comanda.
      * 
@@ -40,6 +42,7 @@ public class Modificado {
 	public void setIdComanda(int idComanda) {
 		this.idComanda = idComanda;
 	}
+	
 	/**
      * Permite obtener el id del menu.
      * 
@@ -48,6 +51,7 @@ public class Modificado {
 	public int getIdMenu() {
 		return idMenu;
 	}
+	
 	/**
      * Permite modificar el id del menu.
      * 
@@ -56,6 +60,7 @@ public class Modificado {
 	public void setIdMenu(int idMenu) {
 		this.idMenu = idMenu;
 	}
+	
 	/**
      * Permite obtener las unidades del pedido.
      * 
@@ -64,6 +69,7 @@ public class Modificado {
 	public int getUnidades() {
 		return unidades;
 	}
+	
 	/**
      * Permite modificar las unidades de un pedido.
      * 

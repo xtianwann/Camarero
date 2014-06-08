@@ -33,10 +33,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * Actividad de inicio de la aplicación, en ella se solicitará al usuario que se 
+ * identifique para que pueda empezar a trabajar. Sobre la marcha detecta si el dispositivo
+ * tiene el wifi activado, en caso de no tenerlo lo activa. También hace la función de 
+ * pantalla de salida en la que el usuario puede desloguarse del sistema.
+ * 
+ * @author Juan G. Pérez Leo
+ * @author Cristian Marín Honor
+ */
 public class MainActivity extends Activity {
+	
 	private EditText editTextLogin;
 	private Button botonLogin, botonLogout;
-
 	private String usuario;
 	private ProgressDialog pDialog;
 	private DecodificadorResultadoLogin decoResultadoLogin, decoResultadoLogout;
@@ -68,10 +77,12 @@ public class MainActivity extends Activity {
 			new WifiAsincrono().execute();
 		}
 		
+		/* Botón login */
 		botonLogin.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
 				usuario = editTextLogin.getText().toString().toLowerCase();
 				wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
 				if(comprobarSenalWifi(wifi)){
 					if(!usuario.equals(""))
 						new LoginAsincrono().execute(usuario);
@@ -93,6 +104,8 @@ public class MainActivity extends Activity {
 			}
 
 		});
+		
+		/* Botón logout */
 		botonLogout = (Button) findViewById(R.id.botonLogout);
 		botonLogout.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
@@ -120,23 +133,27 @@ public class MainActivity extends Activity {
 		});
 	}
 	
+	/**
+	 * Permite obtener el nombre del usuario que está usando actualmente el dispositivo
+	 * 
+	 * @return [String] nombre del usuario
+	 */
 	public static String getUsuarioActual(){
 		return usuarioActual;
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
+		
 		return true;
 		/** true -> el menú ya está visible */
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		switch (item.getItemId()) {
 		case R.id.configuracion:
 			startActivity(new Intent(this, PreferenciasSet.class));
@@ -147,15 +164,32 @@ public class MainActivity extends Activity {
 		/** true -> consumimos el item, no se propaga */
 	}
 	
+	/**
+	 * Comprueba si se está detectando señal wifi
+	 * 
+	 * @param wifi [NetworkInfo] señal wifi
+	 * @return [boolean] true si detecta señal, false en caso contrario
+	 */
 	public boolean comprobarSenalWifi(android.net.NetworkInfo wifi){
 		boolean resultado = false;
 		if (wifi.getDetailedState() == DetailedState.CONNECTED)
 			resultado = true;
+		
 		return resultado;
 	}
 	
+	/**
+	 * Clase encargada de loguear al usuario evitando que la aplicación quede bloqueada en 
+	 * el proceso. Mientras se realiza la operación se muestra una animación de espera.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
 	public class LoginAsincrono extends AsyncTask<String, String, Boolean> {
 		
+		/**
+		 * Antes de iniciar la operación incializa la animación con las condiciones deseadas
+		 */
 		protected void onPreExecute(){
 			pDialog = new ProgressDialog(MainActivity.this);
 			pDialog.setMessage("Verificando...");
@@ -166,6 +200,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(String... args) {
+			/* Loguea al camarero y obtiene la respuesta del serrvidor */
 			boolean resultado = false;
 			
 			XMLLogin xmlLogin = new XMLLogin(args[0]);
@@ -188,6 +223,11 @@ public class MainActivity extends Activity {
 			return resultado;
 		}
 		
+		/**
+		 * Cuando finaliza la operación principal de la clase se cierra el diálogo y pasa a la
+		 * pantalla principal de la aplicación. En caso de que el usuario introducido sea incorrecto o falla
+		 * la conexión con el servidor mostrará un mensaje acorde.
+		 */
 		protected void onPostExecute(Boolean resultado){
 			if(pDialog != null)
 				pDialog.dismiss();
@@ -216,8 +256,19 @@ public class MainActivity extends Activity {
 		
 	}
 	
+	/**
+	 * Clase encargada de realizar el proceso de deslogueo del usuario sin bloquear la 
+	 * aplicación. Una vez ha finalizado el proceso la aplicación se cierra. Muestra una
+	 * animación de espera durante el proceso.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
 	public class LogoutAsincrono extends AsyncTask<String, String, Boolean> {
 		
+		/**
+		 * Antes de iniciar la operación incializa la animación con las condiciones deseadas
+		 */
 		protected void onPreExecute(){
 			pDialog = new ProgressDialog(MainActivity.this);
 			pDialog.setMessage("Saliendo...");
@@ -228,6 +279,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(String... args) {
+			/* Este método se encarga de realizar el deslogueo del usuario */
 			boolean resultado = false;
 			
 			XMLLogout xmlLogout = new XMLLogout(args[0]);
@@ -248,6 +300,10 @@ public class MainActivity extends Activity {
 			return resultado;
 		}
 		
+		/**
+		 * Una vez finalizado el proceso, se obtiene el resultado. Si todo fue bien la aplicación
+		 * se cerrará, en caso contrario se mostrará algún error.
+		 */
 		protected void onPostExecute(Boolean resultado){
 			pDialog.dismiss();
 			
@@ -259,8 +315,18 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	/**
+	 * Clase encargada de conectar el wifi del dispositivo en caso de que no lo estuviera.
+	 * Muestra una animación de espera durante el proceso.
+	 * 
+	 * @author Juan G. Pérez Leo
+	 * @author Cristian Marín Honor
+	 */
 	public class WifiAsincrono extends AsyncTask<Void, Void, Boolean>{
 		
+		/**
+		 * Antes de iniciar la operación incializa la animación con las condiciones deseadas
+		 */
 		protected void onPreExecute(){
 			pDialog = new ProgressDialog(MainActivity.this);
 			pDialog.setMessage("Activando wifi del dispositivo...");
@@ -271,6 +337,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
+			/* Este método se encarga de conectar el wifi del dispositivo */
 			boolean resultado = false;
 			
 			WifiManager wifiManager = (WifiManager) MainActivity.this
@@ -285,6 +352,9 @@ public class MainActivity extends Activity {
 			return resultado;
 		}
 		
+		/**
+		 * Obtiene el resultado de la operación y muestra un mensaje con el mismo
+		 */
 		protected void onPostExecute(Boolean resultado){
 			pDialog.dismiss();
 			
@@ -296,6 +366,12 @@ public class MainActivity extends Activity {
 		}
 		
 	}
+	
+	/**
+	 * Permite obtener la ip del servidor
+	 * 
+	 * @return [String] ip del servidor
+	 */
 	public static String getIpServidor(){
 		return preferencias.getString("ipServidor", null)+"";
 	}

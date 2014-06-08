@@ -1,8 +1,8 @@
 package prg.pi.restaurantecamarero.restaurante;
 
 import java.util.ArrayList;
+
 /**
- * 
  * Clase que contiene toda la información sobre comandas.
  * 
  * @author Juan G. Pérez Leo
@@ -12,8 +12,8 @@ public class Comanda {
 
     private Mesa mesa;
     private ArrayList<Pedido> pedidos;
+    
     /**
-     * 
      * Constructor:
      * 
      * @param mesa [Mesa] Mesa de la comanda.
@@ -23,6 +23,7 @@ public class Comanda {
         this.mesa = mesa;
         this.pedidos = pedidos;
     }
+    
     /**
      * Permite obtener la mesa de la comanda.
      * 
@@ -31,6 +32,7 @@ public class Comanda {
     public Mesa getMesa() {
         return mesa;
     }
+    
     /**
      * Permite modificar la mesa de la comanda.
      * 
@@ -39,6 +41,7 @@ public class Comanda {
     public void setMesa(Mesa mesa) {
         this.mesa = mesa;
     }
+    
     /**
      * Permite obtener lista de pedidos de la comanda.
      * 
@@ -47,6 +50,7 @@ public class Comanda {
     public ArrayList<Pedido> getPedidos() {
         return pedidos;
     }
+    
     /**
      * Permite modificar la lista de pedidos de la comanda.
      * 
@@ -55,6 +59,7 @@ public class Comanda {
     public void setPedidos(ArrayList<Pedido> pedidos) {
         this.pedidos = pedidos;
     }
+    
     /**
      * Añade un pedido a la lista de pedidos de la comanda.
      * 

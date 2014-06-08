@@ -8,6 +8,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import prg.pi.restaurantecamarero.restaurante.PedidoListo;
+
 /**
  * Clase encargada de decodificar el mensaje PedidosListosServer del servidor.
  * 
@@ -18,6 +19,7 @@ public class DecodificadorPedidosListos {
 	
 	private Document dom;
 	private ArrayList<PedidoListo> pedidosListos;
+	
 	/**
 	 * Constructor:
 	 * 
@@ -28,6 +30,7 @@ public class DecodificadorPedidosListos {
 		pedidosListos = new ArrayList<PedidoListo>();
 		generarPedidos();
 	}
+	
 	/**
 	 * Devuelve los pedidos listos recibidos por del servidor.
 	 * 
@@ -36,9 +39,9 @@ public class DecodificadorPedidosListos {
 	public PedidoListo[] getPedidosListos(){
 		return pedidosListos.toArray(new PedidoListo[0]);
 	}
+	
 	/**
 	 * Interpreta la respuesta recibida por el servidor y genera los pedidos listos.
-	 * 
 	 */
 	private void generarPedidos(){
 		NodeList nodeListPedidos = dom.getElementsByTagName("pedido");

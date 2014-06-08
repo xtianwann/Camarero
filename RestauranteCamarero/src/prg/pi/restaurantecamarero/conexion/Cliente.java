@@ -12,7 +12,6 @@ import prg.pi.restaurantecamarero.decodificador.DecodificadorDameloTodo;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorPedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorPendientesAlEncender;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorResultadoLogin;
-import prg.pi.restaurantecamarero.restaurante.Pedido;
 import Conexion.Conexion;
 import XML.XML;
 
@@ -32,6 +31,13 @@ public class Cliente {
 	private DecodificadorPendientesAlEncender pendientesAlEncender;
 	private DecodificadorAcuseRecibo decoAcuse;
 	private String ipServidor;
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param mensaje [String] mensaje que se le enviará al servidor
+	 * @param ipServidor [String] ip del servidor
+	 */
 	public Cliente(String mensaje,String ipServidor) {
 		this.ipServidor = ipServidor;
 		respuesta = "";
@@ -39,10 +45,8 @@ public class Cliente {
 	}
 	
 	/**
-	 * Envía un mensaje al servidor,espera la respuesta y lo interpreta.
-	 * 
+	 * Método encargado de enviar el mensaje, obtener la respuesta e interpretarla
 	 */
-
 	public void init() {
 		try {
 			enviarMensaje(mensaje);
@@ -58,6 +62,7 @@ public class Cliente {
 			String tipo = nodeListTipo.item(0).getChildNodes().item(0)
 					.getNodeValue();
 
+			/* Tipos de respuesta */
 			if (tipo.equals("AcuseRecibo")) {
 				decoAcuse = new DecodificadorAcuseRecibo(
 						dom);
@@ -99,10 +104,9 @@ public class Cliente {
 	 * Establece conexión con el servidor y envía el mensaje pasado por
 	 * parámetro
 	 * 
-	 * @param msg
-	 *            mensaje a enviar
-	 * @throws IOException
-	 * @throws ConnectException
+	 * @param msg [String] mensaje a enviar
+	 * @throws IOException excepción lanzada en caso de que hubiera algún tipo de error en la entrada o salida de datos
+	 * @throws ConnectException excepción lanzada en caso de haber algún tipo de error en la conexión
 	 */
 	public void enviarMensaje(String msg) throws IOException,
 			NullPointerException {
@@ -113,33 +117,38 @@ public class Cliente {
 	/**
 	 * Espera un mensaje del servidor durante cinco segundos
 	 * 
-	 * @return String de respuestas del servidor
-	 * @return null si excede el límite de tiempo
+	 * @return [String] respuesta del servidor, null si excede el límite de tiempo
 	 */
 	public String recibirMensaje() throws IOException, NullPointerException {
 		String respuesta = null;
-		long espera = System.currentTimeMillis() + 1000;
+		int intento = 0;
 		do {
 			respuesta = conn.leerMensaje();
-		} while (respuesta.length() == 0 || espera < System.currentTimeMillis());
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			intento++;
+			Log.e("cliente", "longitud " + respuesta.length());
+		} while (respuesta.length() == 0 && intento < 10);
 		return respuesta;
 	}
 
 	/**
 	 * Establece conexión con el servidor
 	 * 
-	 * @throws IOException
-	 *             ,ConnectException
+	 * @throws IOException, ConnectException
 	 */
 	private void conexion() throws IOException, NullPointerException {
 		conn = new Conexion(ipServidor, 27000);
 	}
+	
 	/**
 	 * Devuelve el decodificador que interpreta el mensaje DameloTodo.
 	 * 
 	 * @return [DecodificadorDameloTodo] Decodificador de mensaje DameloTodo.
 	 */
-
 	public DecodificadorDameloTodo getTodo() {
 		return todo;
 	}
@@ -149,7 +158,6 @@ public class Cliente {
 	 * 
 	 * @param todo [DecodificadorDameloTodo] Decodificador de mensaje DameloTodo.
 	 */
-
 	public void setTodo(DecodificadorDameloTodo todo) {
 		this.todo = todo;
 	}
@@ -159,10 +167,10 @@ public class Cliente {
 	 * 
 	 * @return [DecodificadorPedidosPendientesCamarero] Decodificador de mensaje PedidosPendientesCamarero.
 	 */
-
 	public DecodificadorPedidosPendientesCamarero getPedidosPendientes() {
 		return pedidosPendientes;
 	}
+	
 	/**
 	 * Devuelve el decodificador que interpreta el mensaje ResultadoLoginCamarero.
 	 * 
@@ -171,6 +179,7 @@ public class Cliente {
 	public DecodificadorResultadoLogin getResultadoLogin(){
 		return resultadoLogin;
 	}
+	
 	/**
 	 * Devuelve el decodificador que interpreta el mensaje PendientesCamareroAlEncender.
 	 * 
@@ -179,6 +188,7 @@ public class Cliente {
 	public DecodificadorPendientesAlEncender getDecoPendientes(){
 		return pendientesAlEncender;
 	}
+	
 	/**
 	 * Devuelve el decodificador que interpreta el mensaje AcuseReciboServer.
 	 * 

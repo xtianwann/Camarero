@@ -14,27 +14,15 @@ import prg.pi.restaurantecamarero.restaurante.PedidoListo;
 import prg.pi.restaurantecamarero.restaurante.PedidosPendientesCamarero;
 import prg.pi.restaurantecamarero.restaurante.Producto;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo.DetailedState;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
-import android.view.Menu;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.app.ActionBarDrawerToggle;
+
 /**
- * 
- * 
  * Clase intermediaria entre la comunicación de los fragments de la aplicación.
  * 
  * @author Juan G. Pérez Leo
@@ -90,6 +78,13 @@ public class MainFragments extends FragmentActivity implements CantidadListener,
 		
 		Toast.makeText(MainFragments.this, "Bienvenido " + MainActivity.getUsuarioActual(), Toast.LENGTH_SHORT).show();
 	}
+	
+	@Override
+	public void onDestroy() {
+		servidor.getHiloPrincipal().parar();
+		servidor = null;
+		super.onDestroy();
+	}
 
 	@Override
 	public void onCantidadSeleccionada(Cantidad cantidad) {
@@ -120,6 +115,7 @@ public class MainFragments extends FragmentActivity implements CantidadListener,
 		fragmentPedidosPendientes.addPedidosPendientes(pedidosPendientes);
 
 	}
+	
 	/**
      * Comunica al fragment encargado de los pedidos pendientes los pedidos listos obtenidos.
      * 
@@ -150,7 +146,6 @@ public class MainFragments extends FragmentActivity implements CantidadListener,
      * 
      * @param pendientes [ArrayList<PedidosPendientesCamarero>] Pedidos pendientes a añadir.
      */
-	
 	public void addPedidosPendientes(ArrayList<PedidosPendientesCamarero> pendientes){
 		fragmentPedidosPendientes.addPedidosPendientesEncendido(pendientes);
 	}

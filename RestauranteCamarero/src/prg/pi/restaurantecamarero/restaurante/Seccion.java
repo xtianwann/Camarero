@@ -1,8 +1,8 @@
 package prg.pi.restaurantecamarero.restaurante;
 
 import java.util.ArrayList;
+
 /**
- * 
  * Clase que contiene toda la información sobre secciones.
  * 
  * @author Juan G. Pérez Leo
@@ -12,8 +12,8 @@ public class Seccion {
     
     private String nombre;
     private ArrayList<Mesa> mesas;
+    
     /**
-     * 
      * Constructor:
      * 
      * @param nombre [String] Nombre de la sección.
@@ -23,6 +23,7 @@ public class Seccion {
         this.nombre = nombre;
         this.mesas = mesas;
     }
+    
     /**
      * Permite obtener la lista de mesas.
      * 
@@ -31,6 +32,7 @@ public class Seccion {
     public ArrayList<Mesa> getMesas() {
         return mesas;
     }
+    
     /**
      * Permite modificar la lista de mesas de la sección.
      * 
@@ -39,6 +41,7 @@ public class Seccion {
     public void setMesas(ArrayList<Mesa> mesas) {
         this.mesas = mesas;
     }
+    
     /**
      * Permite obtener nombre de la sección.
      * 
@@ -47,6 +50,7 @@ public class Seccion {
     public String getNombre() {
         return nombre;
     }
+    
     /**
      * Permite modificar el nombre de la sección.
      * 
@@ -55,6 +59,7 @@ public class Seccion {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+    
     /**
      * Permite añadir una mesa a la lista de mesas de la sección.
      * 

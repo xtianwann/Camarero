@@ -1,40 +1,29 @@
 package prg.pi.restaurantecamarero;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import prg.pi.restaurantecamarero.conexion.Cliente;
 import prg.pi.restaurantecamarero.decodificador.DecodificadorDameloTodo;
 import prg.pi.restaurantecamarero.restaurante.Mesa;
-import prg.pi.restaurantecamarero.restaurante.Producto;
 import prg.pi.restaurantecamarero.restaurante.Seccion;
 import prg.pi.restaurantecamarero.xml.XMLDameloTodo;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.DetailedState;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 /**
- * 
  * Fragment encargado de controlar las secciones y mesas con las que interactua
  * el camarero.
  * 
@@ -99,7 +88,6 @@ public class FragmentSeccionMesas extends Fragment {
 							try {
 								Thread.sleep(15000);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 							iniciarHilo();
@@ -112,9 +100,7 @@ public class FragmentSeccionMesas extends Fragment {
 
 	/**
 	 * Inicia el hilo para recibir las secciones y mesas del servidor.
-	 * 
 	 */
-
 	public void iniciarHilo() {
 		hilo = new SeccionesThread();
 		hilo.start();
@@ -125,7 +111,6 @@ public class FragmentSeccionMesas extends Fragment {
 	 * 
 	 * @return [String[]] Nombre de las secciones.
 	 */
-
 	private String[] dameSecciones() {
 		ArrayList<String> seccionesArray = new ArrayList<String>();
 		try {
@@ -140,11 +125,9 @@ public class FragmentSeccionMesas extends Fragment {
 	/**
 	 * Devuelve el nombre de las mesas de la sección seleccionada
 	 * 
-	 * @param seccion
-	 *            [Seccion] Sección seleccionada
-	 * @return [String[]] Nombres de las mesas.
+	 * @param seccion [Seccion] Sección seleccionada
+	 * @return [String[ ]] Nombres de las mesas.
 	 */
-
 	private String[] dameMesas(Seccion seccion) {
 		ArrayList<String> mesasArray = new ArrayList<String>();
 		for (Mesa mesa : seccion.getMesas())
@@ -153,14 +136,12 @@ public class FragmentSeccionMesas extends Fragment {
 	}
 
 	/**
-	 * 
 	 * Clase encargada de pedir al servidor las secciones y mesas almacenadas en
 	 * la base de datos.
 	 * 
 	 * @author Juan G. Pérez Leo
 	 * @author Cristian Marín Honor
 	 */
-
 	public class SeccionesThread extends Thread {
 		private Seccion seccionesT[];
 
@@ -172,28 +153,20 @@ public class FragmentSeccionMesas extends Fragment {
 				public void run() {
 					XMLDameloTodo xml = new XMLDameloTodo();
 					String mensaje = xml.xmlToString(xml.getDOM());
-					Log.e("SeccionesThread", "he llegado MESAS");
-					Cliente c = new Cliente(mensaje, MainActivity
-							.getIpServidor());
+					Cliente c = new Cliente(mensaje, MainActivity.getIpServidor());
 
 					try {
 						c.init();
 						seccionesMesasListener.onIniciarHiloCantidad();
-						Log.e("SeccionesThread", "he terminado MESAS");
 						decoTodo = c.getTodo();
-						seccionesT = decoTodo.getSecciones().toArray(
-								new Seccion[0]);
+						seccionesT = decoTodo.getSecciones().toArray(new Seccion[0]);
 						secciones = seccionesT;
-						seccion = (Spinner) getView().findViewById(
-								R.id.spinnerSeccion);
+						seccion = (Spinner) getView().findViewById(R.id.spinnerSeccion);
 						mesa = (Spinner) getView().findViewById(
 								R.id.spinnerMesas);
-						adaptadorSeccion = new ArrayAdapter<String>(getView()
-								.getContext(),
-								android.R.layout.simple_spinner_item,
-								dameSecciones());
-						adaptadorSeccion
-								.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+						adaptadorSeccion = new ArrayAdapter<String>(getView().getContext(),
+								android.R.layout.simple_spinner_item, dameSecciones());
+						adaptadorSeccion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 						seccion.setAdapter(adaptadorSeccion);
 
 						seccion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -202,12 +175,9 @@ public class FragmentSeccionMesas extends Fragment {
 									View view, int pos, long id) {
 								posicionSeccion = pos;
 								Seccion seccion = secciones[pos];
-								adaptadorMesa = new ArrayAdapter<String>(
-										getView().getContext(),
-										android.R.layout.simple_spinner_item,
-										dameMesas(seccion));
-								adaptadorMesa
-										.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+								adaptadorMesa = new ArrayAdapter<String>(getView().getContext(),
+										android.R.layout.simple_spinner_item, dameMesas(seccion));
+								adaptadorMesa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 								mesa.setAdapter(adaptadorMesa);
 								mesaSeleccionada = seccion.getMesas().get(0);
 								mesa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -223,16 +193,14 @@ public class FragmentSeccionMesas extends Fragment {
 									@Override
 									public void onNothingSelected(
 											AdapterView<?> parent) {
-										// Do nothing, just another required
-										// interface callback
+										
 									}
 								});
 							}
 
 							@Override
 							public void onNothingSelected(AdapterView<?> parent) {
-								// Do nothing, just another required interface
-								// callback
+								
 							}
 						});
 						seccion.setOnTouchListener(new View.OnTouchListener() {
@@ -260,6 +228,7 @@ public class FragmentSeccionMesas extends Fragment {
 							}
 
 						});
+						
 					} catch (NullPointerException e) {
 						dialog = new AlertDialog.Builder(getView().getContext());
 						dialog.setMessage("No se pudo conectar con el servidor¿Reintentar?.");
@@ -279,15 +248,16 @@ public class FragmentSeccionMesas extends Fragment {
 
 			});
 		}
+		
 		/**
 	     * Devuelve la lista de secciones.
 	     * 
 	     * @return [Seccion[]] Lista de secciones.
 	     */
-
 		public Seccion[] getSeccionesT() {
 			return seccionesT;
 		}
+		
 		/**
 	     * Permite modificar la lista de secciones.
 	     * 
@@ -303,50 +273,47 @@ public class FragmentSeccionMesas extends Fragment {
      * 
      * @return [Mesa] Mesa seleccionada.
      */
-
 	public Mesa getMesaSeleccionada() {
 		return mesaSeleccionada;
 	}
-	//Mirar
+	
 	/**
-	 * 
      * Añade la mesa seleccionada.
      * 
      * @param mesa [Mesa] Mesa seleccionada.
      */
-
 	public void addMesaActiva(Mesa mesa) {
 		if (!mesasActivas.contains(mesa))
 			mesasActivas.add(mesa);
 	}
+	
 	/**
-	 * 
-	 * 
 	 * Interface para la comunicación con la clase principal.
 	 * 
 	 * @author Juan G. Pérez Leo
 	 * @author Cristian Marín Honor
 	 */
-
 	public interface SeccionesMesasListener {
+		
 		/**
 	     * Recibe si existen pedidos en la comanda actual.
 	     * 
 	     * @return [boolean] true si existen pedidos, false si no existen.
 	     */
 		public boolean onExistenPedidos();
+		
 		/**
 	     * Envia los pedidos de la comanda actual.
-	     * 
 	     */
 		public void onEnviarPedidosSinEnviar();
+		
 		/**
 	     * Inicia el hilo del fragment responsable de las cantidades.
-	     * 
 	     */
 		public void onIniciarHiloCantidad();
 
 	}
+	
 	/**
      * Permite modificar el listener. 
      * 
@@ -359,13 +326,13 @@ public class FragmentSeccionMesas extends Fragment {
 	
 	/**
      * Muestra una notificación en el caso de cambiar de mesa sin enviar los pedidos de la misma.
-     * 
      */
 	public void mostrarNotificacion() {
 		AlertDialog.Builder dialog = new AlertDialog.Builder(getView()
 				.getContext());
 		dialog.setMessage("Hay pedidos sin enviar¿Desea enviarlos?");
 		dialog.setCancelable(false);
+		
 		dialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
 
 			@Override
@@ -376,6 +343,7 @@ public class FragmentSeccionMesas extends Fragment {
 				dialog.cancel();
 			}
 		});
+		
 		dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
 
 			@Override
@@ -391,16 +359,13 @@ public class FragmentSeccionMesas extends Fragment {
      * 
      * @return [SeccionesThread] Thread de secciones.
      */
-
 	public SeccionesThread getHilo() {
 		return hilo;
 	}
 	
 	/**
      * Activa el wifi del dispositivo.
-     * 
      */
-
 	private void activarWifi() {
 		WifiManager wifiManager = (WifiManager) getView().getContext()
 				.getSystemService(Context.WIFI_SERVICE);

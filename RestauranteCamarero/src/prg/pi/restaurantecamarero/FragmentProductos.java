@@ -14,8 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+
 /**
- * 
  * Fragment encargado de controlar los productos con los que interactua el camarero.
  * 
  * @author Juan G. Pérez Leo
@@ -29,30 +29,22 @@ public class FragmentProductos extends Fragment{
 	private AdaptadorProductos adaptador;
 
 		@Override
-	    public View onCreateView(LayoutInflater inflater,
-	                             ViewGroup container,
-	                             Bundle savedInstanceState) {
-	 
+	    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	        return inflater.inflate(R.layout.fragment_productos, container, false);
 	    }
 	    
 	    @Override
 		public void onActivityCreated(Bundle state) {
 			super.onActivityCreated(state);
-
 			listaProductos = (ListView) getView().findViewById(R.id.listaProductos);
-			
-
 		}
 	    
 	    /**
-		 * 
 		 * Clase encargada de mostrar los productos de lista de productos.
 		 * 
 		 * @author Juan G. Pérez Leo
 		 * @author Cristian Marín Honor
 		 */
-
 		public class AdaptadorProductos extends ArrayAdapter<Producto> {
 
 			Activity context;
@@ -62,11 +54,11 @@ public class FragmentProductos extends Fragment{
 		     * 
 		     * @param context [Fragment] Fragment en el que se encuentra el adaptador.
 		     */
-
 			AdaptadorProductos(Fragment context) {
 				super(context.getActivity(), R.layout.fragment_productos, cantidad.getProductos());
 				this.context = context.getActivity();
 			}
+			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				LayoutInflater inflater = context.getLayoutInflater();
@@ -84,11 +76,10 @@ public class FragmentProductos extends Fragment{
 		}
 		
 		/**
-	     * Muerstra los productos en la lista de la cantidad seleccionada.
+	     * Muestra los productos en la lista de la cantidad seleccionada.
 	     * 
 	     * @param cantidad [Cantidad] Cantidad seleccionada.
 	     */
-		
 		public void rellenarProductos(Cantidad cantidad){
 			this.cantidad = cantidad;
 			adaptador = new AdaptadorProductos(this);
@@ -109,15 +100,13 @@ public class FragmentProductos extends Fragment{
 		}
 		
 		/**
-		 * 
-		 * 
 		 * Interface para la comunicación con la clase principal.
 		 * 
 		 * @author Juan G. Pérez Leo
 		 * @author Cristian Marín Honor
 		 */
-
 		public interface ProductoListener {
+			
 			/**
 		     * Comunica el producto seleccionado.
 		     * 
@@ -131,7 +120,6 @@ public class FragmentProductos extends Fragment{
 	     * 
 	     * @param productoListener [ProductoListener] Listener asignado.
 	     */
-
 		public void setProductoListener(ProductoListener productoListener) {
 			this.productoListener = productoListener;
 		}
@@ -141,16 +129,15 @@ public class FragmentProductos extends Fragment{
 	     * 
 	     * @return [Cantidad] Cantidad
 	     */
-		
 		public Cantidad getCantidad() {
 			return cantidad;
 		}
+		
 		/**
 	     * Permite modificar la cantidad. 
 	     * 
 	     * @param cantidad [Cantidad] Cantidad.
 	     */
-
 		public void setCantidad(Cantidad cantidad) {
 			this.cantidad = cantidad;
 		}
