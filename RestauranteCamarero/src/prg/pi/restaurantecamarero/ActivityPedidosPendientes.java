@@ -109,7 +109,8 @@ public class ActivityPedidosPendientes extends Fragment {
 		/**
 		 * Constructor:
 		 * 
-		 * @param context [Context] Contexto en el que se encuentra el adaptador.
+		 * @param context
+		 *            [Context] Contexto en el que se encuentra el adaptador.
 		 */
 		public AdaptadorResumen(Context context) {
 			mInflater = LayoutInflater.from(context);
@@ -186,7 +187,7 @@ public class ActivityPedidosPendientes extends Fragment {
 		pedidos = (ListView) getView().findViewById(R.id.pedidosPendientes);
 		adaptador = new AdaptadorResumen(getView().getContext());
 		pedidos.setAdapter(adaptador);
-		
+
 		pedidos.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> list, View view, int pos,
@@ -213,7 +214,7 @@ public class ActivityPedidosPendientes extends Fragment {
 				}
 			}
 		});
-		
+
 		pedidos.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
@@ -234,12 +235,12 @@ public class ActivityPedidosPendientes extends Fragment {
 				return false;
 			}
 		});
-		
+
 		calculadora = new Calculadora(
 				new int[] { R.id.c0, R.id.c1, R.id.c2, R.id.c3, R.id.c4,
 						R.id.c5, R.id.c6, R.id.c7, R.id.c8, R.id.c9 }, R.id.ce,
 				R.id.total, getView());
-		
+
 		/* Botón cambiar */
 		cambiar = (Button) getView().findViewById(R.id.cambiar);
 		cambiar.setOnClickListener(new AdapterView.OnClickListener() {
@@ -270,7 +271,7 @@ public class ActivityPedidosPendientes extends Fragment {
 			}
 
 		});
-		
+
 		/* Botón + */
 		mas = (Button) getView().findViewById(R.id.mas);
 		mas.setOnClickListener(new AdapterView.OnClickListener() {
@@ -297,7 +298,7 @@ public class ActivityPedidosPendientes extends Fragment {
 			}
 
 		});
-		
+
 		/* Botón - */
 		menos = (Button) getView().findViewById(R.id.menos);
 		menos.setOnClickListener(new AdapterView.OnClickListener() {
@@ -323,7 +324,7 @@ public class ActivityPedidosPendientes extends Fragment {
 			}
 
 		});
-		
+
 		/* Botón enviar */
 		enviar = (Button) getView().findViewById(R.id.enviar);
 		enviar.setOnClickListener(new AdapterView.OnClickListener() {
@@ -448,12 +449,11 @@ public class ActivityPedidosPendientes extends Fragment {
 								}
 							}).start();
 						} else {
-							dialog = new AlertDialog.Builder(
-									getView().getContext());
+							dialog = new AlertDialog.Builder(getView()
+									.getContext());
 							dialog.setMessage("No se puede deshacer pedidos servidos, para eso use Devolver.");
 							dialog.setCancelable(false);
-							dialog.setNeutralButton(
-									"OK",
+							dialog.setNeutralButton("OK",
 									new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(
@@ -469,14 +469,15 @@ public class ActivityPedidosPendientes extends Fragment {
 			}
 
 		});
-		
+
 		/* Botón devolver */
 		devolver = (Button) getView().findViewById(R.id.devolver);
 		devolver.setOnClickListener(new AdapterView.OnClickListener() {
 			public void onClick(View view) {
 				if (corregido > -1) {
 					if (pedidosPendientes.get(corregido).getUnidades() <= pedidosPendientes
-							.get(corregido).getServidos() && pedidosPendientes.get(corregido).getUnidades() > 0) {
+							.get(corregido).getServidos()
+							&& pedidosPendientes.get(corregido).getUnidades() > 0) {
 						new Thread(new Runnable() {
 							public void run() {
 								getActivity().runOnUiThread(new Runnable() {
@@ -497,22 +498,41 @@ public class ActivityPedidosPendientes extends Fragment {
 														.getDOM());
 										Cliente c = new Cliente(mensaje,
 												MainActivity.getIpServidor());
-										c.init();
-										modificado.setListos(modificado
-												.getListos()
-												- modificado.getUnidades());
-										modificado.setServidos(modificado
-												.getServidos()
-												- modificado.getUnidades());
-										modificado.setUnidades(unidadesAnterior
-												- modificado.getUnidades());
-										if (modificado.isServido()) {
-											pedidosPendientes
-													.remove(modificado);
+										try {
+											c.init();
+
+											modificado.setListos(modificado
+													.getListos()
+													- modificado.getUnidades());
+											modificado.setServidos(modificado
+													.getServidos()
+													- modificado.getUnidades());
+											modificado.setUnidades(unidadesAnterior
+													- modificado.getUnidades());
+											if (modificado.isServido()) {
+												pedidosPendientes
+														.remove(modificado);
+											}
+											corregido = -1;
+											pedidos.invalidateViews();
+											adaptador.notifyDataSetChanged();
+										} catch (NullPointerException e) {
+											dialog = new AlertDialog.Builder(
+													getView().getContext());
+											dialog.setMessage("No se puede conectar con el servidor.");
+											dialog.setCancelable(false);
+											dialog.setNeutralButton(
+													"OK",
+													new DialogInterface.OnClickListener() {
+														@Override
+														public void onClick(
+																DialogInterface dialog,
+																int which) {
+															dialog.cancel();
+														}
+													});
+											dialog.show();
 										}
-										corregido = -1;
-										pedidos.invalidateViews();
-										adaptador.notifyDataSetChanged();
 									}
 								});
 							}
@@ -526,7 +546,8 @@ public class ActivityPedidosPendientes extends Fragment {
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										pedidosPendientes.get(corregido).setUnidades(unidadesAnterior);
+										pedidosPendientes.get(corregido)
+												.setUnidades(unidadesAnterior);
 										adaptador.notifyDataSetChanged();
 										corregido = -1;
 										dialog.cancel();
@@ -558,7 +579,8 @@ public class ActivityPedidosPendientes extends Fragment {
 		/**
 		 * Constructor:
 		 * 
-		 * @param view [View] Vista a modificar.
+		 * @param view
+		 *            [View] Vista a modificar.
 		 */
 		public PedidoPendienteText(View view) {
 			cantidadTexto = (TextView) view
@@ -575,7 +597,8 @@ public class ActivityPedidosPendientes extends Fragment {
 		 * Modifica el color de todos los textos de la lista de comandas
 		 * pendientes
 		 * 
-		 * @param color [int] Color a modificar.
+		 * @param color
+		 *            [int] Color a modificar.
 		 */
 		public void cambiaColor(int color) {
 			cantidadTexto.setBackgroundColor(color);
@@ -589,12 +612,18 @@ public class ActivityPedidosPendientes extends Fragment {
 		/**
 		 * Añade el contenido de los textos de la lista de comandas pendientes.
 		 * 
-		 * @param seccion [String] Nombre de la seccion.
-		 * @param mesa [String] Nombre de la mesa.
-		 * @param cantidad [int] Cantidad de productos.
-		 * @param producto [String] Nombre del producto.
-		 * @param listo [String] Cantidad de productos listos.
-		 * @param servido [String] Cantidad de productos servidos.
+		 * @param seccion
+		 *            [String] Nombre de la seccion.
+		 * @param mesa
+		 *            [String] Nombre de la mesa.
+		 * @param cantidad
+		 *            [int] Cantidad de productos.
+		 * @param producto
+		 *            [String] Nombre del producto.
+		 * @param listo
+		 *            [String] Cantidad de productos listos.
+		 * @param servido
+		 *            [String] Cantidad de productos servidos.
 		 */
 		public void addTexto(String seccion, String mesa, int cantidad,
 				String producto, int listo, int servido) {
@@ -611,7 +640,8 @@ public class ActivityPedidosPendientes extends Fragment {
 	 * Añade los pedidos de la comanda tomada por el camarero a la lista de
 	 * pedidos pendientes.
 	 * 
-	 * @param pedidosAdd [PedidosPendientesCamarero[]] Pedidos tomados por el camarero
+	 * @param pedidosAdd
+	 *            [PedidosPendientesCamarero[]] Pedidos tomados por el camarero
 	 */
 	public void addPedidosPendientes(PedidosPendientesCamarero[] pedidosAdd) {
 		boolean encontrado;
@@ -652,10 +682,14 @@ public class ActivityPedidosPendientes extends Fragment {
 	 * Añade los pedidos de todas las comanda pendientes del camarero en el
 	 * momento que enciende el dispositivo.
 	 * 
-	 * @param pedidosAdd [PedidosPendientesCamarero[]] Todos los pedidos pendientes del camarero
+	 * @param pedidosAdd
+	 *            [PedidosPendientesCamarero[]] Todos los pedidos pendientes del
+	 *            camarero
 	 */
 	public void addPedidosPendientesEncendido(
 			ArrayList<PedidosPendientesCamarero> pedidosAdd) {
+		pedidosPendientes.clear();
+		pedidosPendientesServidos.clear();
 		for (PedidosPendientesCamarero pedido : pedidosAdd) {
 			if (pedido.isServido())
 				pedidosPendientesServidos.add(pedido);
@@ -668,7 +702,8 @@ public class ActivityPedidosPendientes extends Fragment {
 	/**
 	 * Añade la cantidad de pedidos que están listos en cocina.
 	 * 
-	 * @param pedidosListos [PedidoListo[ ]] Pedidos listos en cocina.
+	 * @param pedidosListos
+	 *            [PedidoListo[ ]] Pedidos listos en cocina.
 	 */
 	public void addPedidosListos(PedidoListo[] pedidosListos) {
 		for (PedidoListo pedidoListo : pedidosListos) {
@@ -688,7 +723,8 @@ public class ActivityPedidosPendientes extends Fragment {
 	 * Comprueba si el pedido se encuentra en la lista de pedidos servidos a
 	 * enviar.
 	 * 
-	 * @param pedido [int] Posicion del pedido en la lista.
+	 * @param pedido
+	 *            [int] Posicion del pedido en la lista.
 	 * @return [boolean] Pedido encontrado.
 	 */
 	public boolean isServido(int pedido) {
@@ -735,7 +771,8 @@ public class ActivityPedidosPendientes extends Fragment {
 	/**
 	 * Borra los pedidos servidos de una comanda pagada o cerrada.
 	 * 
-	 * @param idComanda [int] Id de la comanda a borrar.
+	 * @param idComanda
+	 *            [int] Id de la comanda a borrar.
 	 */
 	public void terminarComanda(int idComanda) {
 		ArrayList<PedidosPendientesCamarero> pedidosBorrar = new ArrayList<PedidosPendientesCamarero>();
