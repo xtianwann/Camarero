@@ -36,7 +36,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
  */
 public class ActivityPedidosPendientes extends Fragment {
 	private ListView pedidos;
-	private Button limpiar, cambiar, mas, menos, devolver, enviar;
+	private Button cambiar, mas, menos, devolver, enviar;
 	private Calculadora calculadora;
 	public ArrayList<PedidosPendientesCamarero> pedidosPendientes = new ArrayList<PedidosPendientesCamarero>();
 	public ArrayList<PedidosPendientesCamarero> pedidosServidos = new ArrayList<PedidosPendientesCamarero>();
